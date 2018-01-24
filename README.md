@@ -1,0 +1,2 @@
+# EasyTokenPermission
+一套用于java RESTful风格服务端api的权限框架，基于jjwt实现前后端分离项目的权限管理，实现java后端基于token验证的权限框架！
