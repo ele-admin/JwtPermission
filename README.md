@@ -3,7 +3,7 @@
 ## 简介
 一套用于实现java RESTful风格服务端api的权限框架，基于jjwt实现前后端分离项目的权限管理，实现java后端基于token验证的权限框架！
      
-可以先一看实现效果[EasyWeb-RESTful](https://github.com/whvcse/EasyWeb-RESTful), 这个项目是基于此框架完成的一个java RESTful风格，前后端分离的后端管理系统。 
+   可以先一看实现效果[EasyWeb-RESTful](https://github.com/whvcse/EasyWeb-RESTful), 这个项目是基于此框架完成的一个java RESTful风格，前后端分离的后端管理系统。 
  
   
 ## 导入
