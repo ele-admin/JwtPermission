@@ -3,6 +3,7 @@
 ## 简介
 一套用于java RESTful风格服务端api的权限框架，基于jjwt实现前后端分离项目的权限管理，实现java后端基于token验证的权限框架！
 
+  
 ## 导入
 #### gradle方式的引入
 需要先在project的build.gradle下添加：
@@ -34,9 +35,11 @@ dependencies {
 </dependency>
 ```
 #### jar包下载
-[EasyTokenPermission-最新版本.jar]()。  此项目依赖于j2ee环境，spring mvc环境，使用jar包导入时请注意导入spring mvc的包，使用maven或者grade方式导入会自动引入。 
- 
+[EasyTokenPermission-最新版本.jar](https://github.com/whvcse/EasyTokenPermission/releases)。  此项目依赖于j2ee环境，spring mvc环境，使用jar包导入时请注意导入spring mvc的包，使用maven或者grade方式导入会自动引入。 
+     
+      
 ## 用法
+  
 ### 第一步、与spring mvc集成：
 此项目的全部配置均在spring mvc的配置文件中进行。 
 ```java
@@ -58,6 +61,7 @@ dependencies {
 <context:component-scan base-package="com.wf.ew.core.auth" />
 
 ```
+  
 ### 第二步、实现UserRealm接口：
 ```java
 package com.wf.ew.core.auth;
@@ -147,6 +151,7 @@ public class UserRealm implements IUserRealm {
 	}
 }
 ```
+  
 ### 第三步、编写登录接口：
 ```java
 /**
@@ -173,6 +178,7 @@ public ResultMap login(String account, String password, HttpServletRequest reque
     return ResultMap.ok("登录成功！").put("user", loginUser);
 }
 ```
+  
 ### 第四步、使用注解或代码限制权限： 
 1.使用注解的方法：
 ```java
@@ -218,10 +224,12 @@ SubjectUtil.getInstance().hasPermission(userId, new String[]{"system","front"}, 
 
 SubjectUtil.getInstance().hasRole(userId, new String[]{"system","front"}, Logical.OR)
 ```
-
+    
+    
 ## 注意事项
 ### 一、异常处理器：
 EasyTokenPermistion会在token验证失败和没有权限的时候抛出异常，框架定义了几个异常(包名`com.wf.etp.authz.exception`)：
+  
 |  异常 | 描述 | 错误信息 |
 |:----:|:----:|:----:|
 | ErrorTokenException | token验证失败 | 错误信息“身份验证400”，错误码401 |
@@ -289,9 +297,15 @@ public class ExceptionHandler implements HandlerExceptionResolver {
 	}
 }
 ```
+  
 ### 二、主动让token失效：
 token签发后没有到过期时间是一直有效的, 如果需要主动设置token失效, 使用下面方法：
 ```java
 //让userId这个用户重新登录
 SubjectUtil.getInstance().expireToken(userId);
 ```
+   
+### 三、关于密码的md5加密处理：
+上面登录接口示例中用到了EndecryptUtil来加密密码，这个工具类是我的另一个开源项目，[加密解密工具类](https://github.com/whvcse/EndecryptUtil)，包含Base64编码转换、16进制编码转换、AES加密、AES解密、Md5加密、Md5加盐加密等。 
+      
+    
