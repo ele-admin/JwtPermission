@@ -27,7 +27,7 @@ import com.wf.etp.authz.exception.UnauthorizedException;
 public class ApiInterceptor implements HandlerInterceptor {
 	
 	public void setUserRealm(IUserRealm userRealm) {
-		PermissionUtil.getInstance(null).setUserRealm(userRealm);
+		SubjectUtil.getInstance().setUserRealm(userRealm);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 			throw new ErrorTokenException();
 		}
 		// 校验token
-		if (!PermissionUtil.getInstance(userId).isUserToken(token)) {
+		if (!SubjectUtil.getInstance().isValidToken(userId, token)) {
 			throw new ExpiredTokenException();
 		}
 		// 检查权限
@@ -87,7 +87,7 @@ public class ApiInterceptor implements HandlerInterceptor {
         }
 		String[] requiresPermissions = annotation.value();
     	Logical logical = annotation.logical();
-    	return PermissionUtil.getInstance(userId).hasPermission(requiresPermissions, logical);
+    	return SubjectUtil.getInstance().hasPermission(userId, requiresPermissions, logical);
 	}
 	
 	/**
@@ -104,6 +104,6 @@ public class ApiInterceptor implements HandlerInterceptor {
         }
 		String[] requiresRoles = annotation.value();
     	Logical logical = annotation.logical();
-		return PermissionUtil.getInstance(userId).hasRole(requiresRoles, logical);
+		return SubjectUtil.getInstance().hasRole(userId, requiresRoles, logical);
 	}
 }

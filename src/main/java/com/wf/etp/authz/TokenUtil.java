@@ -38,10 +38,12 @@ public class TokenUtil {
 	 */
 	public static String createToken(String userId, long ttlMillis) {
 		long nowMillis = System.currentTimeMillis();
-		return Jwts.builder().setSubject(userId)
+		String token = Jwts.builder().setSubject(userId)
 				.signWith(SignatureAlgorithm.HS256, generalKey())
 				.setIssuedAt(new Date(nowMillis))
 				.setExpiration(new Date(nowMillis + ttlMillis)).compact();
+		SubjectUtil.getInstance().setCacheToken(userId, token);
+		return token;
 	}
 
 	/**
@@ -58,7 +60,4 @@ public class TokenUtil {
 		return Jwts.parser().setSigningKey(generalKey()).parseClaimsJws(token).getBody();
 	}
 	
-	public static void main(String[] args) throws Exception {
-		System.out.println(parseToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJHelY1UWgzdSIsImlhdCI6MTUxNjcwMDE2MiwiZXhwIjoxNTE3MzA0OTYyfQ.CTLVRigM0P2CrGW5M6Kt9Ppd41E5cpZQjTDLfK0rZbk").getSubject());
-	}
 }

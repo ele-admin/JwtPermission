@@ -10,9 +10,15 @@ import java.util.List;
  */
 public interface IUserRealm {
 
-	public boolean isUserToken(String userId, String token);
-
 	public List<String> getUserRoles(String userId);
 
 	public List<String> getUserPermissions(String userId);
+
+	public boolean isSingleUser();
+	
+	public List<String> getCacheArray(String key);
+	
+	public boolean setCacheArray(String key, List<String> strs);
+	
+	public boolean removeCache(String key);
 }
