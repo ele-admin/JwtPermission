@@ -36,8 +36,10 @@ dependencies {
 ```
 #### jar包下载
 [EasyTokenPermission-最新版本.jar](https://github.com/whvcse/EasyTokenPermission/releases)。  此项目依赖于j2ee环境，spring mvc环境，使用jar包导入时请注意导入spring mvc的包，使用maven或者grade方式导入会自动引入。 
-     
-      
+
+-----
+  
+   
 ## 用法
   
 ### 第一步、与spring mvc集成：
@@ -62,6 +64,7 @@ dependencies {
 
 ```
   
+   
 ### 第二步、实现UserRealm接口：
 ```java
 package com.wf.ew.core.auth;
@@ -151,7 +154,8 @@ public class UserRealm implements IUserRealm {
 	}
 }
 ```
-  
+      
+       
 ### 第三步、编写登录接口：
 ```java
 /**
@@ -178,7 +182,9 @@ public ResultMap login(String account, String password, HttpServletRequest reque
     return ResultMap.ok("登录成功！").put("user", loginUser);
 }
 ```
-  
+      
+      
+    
 ### 第四步、使用注解或代码限制权限： 
 1.使用注解的方法：
 ```java
@@ -224,19 +230,24 @@ SubjectUtil.getInstance().hasPermission(userId, new String[]{"system","front"}, 
 
 SubjectUtil.getInstance().hasRole(userId, new String[]{"system","front"}, Logical.OR)
 ```
+
+-----
     
     
 ## 注意事项
 ### 一、异常处理器：
-EasyTokenPermistion会在token验证失败和没有权限的时候抛出异常，框架定义了几个异常(包名`com.wf.etp.authz.exception`)：
-  
+EasyTokenPermistion会在token验证失败和没有权限的时候抛出异常，框架定义了几个异常，位于`com.wf.etp.authz.exception`包下面：
+    
 |  异常 | 描述 | 错误信息 |
 |:----:|:----:|:----:|
 | ErrorTokenException | token验证失败 | 错误信息“身份验证400”，错误码401 |
 | ExpiredTokenException | token已经过期 | 错误信息“登录已过期”，错误码401 |
- |UnauthorizedException | 没有权限 | 错误信息“没有访问权限”，错误码403 |
-   
-所以建议使用异常处理器来捕获异常并返回json数据给前台：
+|UnauthorizedException | 没有权限 | 错误信息“没有访问权限”，错误码403 |
+
+--------
+   
+   
+建议使用异常处理器来捕获异常并返回json数据给前台：
 ```java
 <!-- 在spring mvc中配置 -->
 <!-- 异常处理 -->
