@@ -240,7 +240,7 @@ EasyTokenPermistion会在token验证失败和没有权限的时候抛出异常�
     
 |  异常 | 描述 | 错误信息 |
 |:----:|:----:|:----:|
-| ErrorTokenException | token验证失败 | 错误信息“身份验证400”，错误码401 |
+| ErrorTokenException | token验证失败 | 错误信息“身份验证失败”，错误码401 |
 | ExpiredTokenException | token已经过期 | 错误信息“登录已过期”，错误码401 |
 |UnauthorizedException | 没有权限 | 错误信息“没有访问权限”，错误码403 |
 
