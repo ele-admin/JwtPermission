@@ -37,7 +37,7 @@ dependencies {
 </dependency>
 ```
 #### jar包下载
-[EasyTokenPermission-最新版本.jar](https://github.com/whvcse/EasyTokenPermission/releases)。  此项目依赖于j2ee环境，spring mvc环境，使用jar包导入时请注意导入spring mvc的包，使用maven或者grade方式导入会自动引入。 
+[EasyTokenPermission-最新版本.jar](https://github.com/whvcse/EasyTokenPermission/releases)。  此项目依赖于j2ee环境，spring mvc环境，jjwt包，使用jar包导入时请注意导入spring mvc、jjwt的jar包，使用maven或者grade方式导入会自动引入。 
 
 -----
   
@@ -319,6 +319,6 @@ SubjectUtil.getInstance().expireToken(userId);
 ```
    
 ### 三、关于密码的md5加密处理：
-上面登录接口示例中用到了EndecryptUtil来加密密码，这个工具类是我的另一个开源项目，[加密解密工具类](https://github.com/whvcse/EndecryptUtil)，包含Base64编码转换、16进制编码转换、AES加密、AES解密、Md5加密、Md5加盐加密等。 
+上面登录接口示例中用到了EndecryptUtil来加密密码，这个工具类是我的另一个开源项目：[加密解密工具类](https://github.com/whvcse/EndecryptUtil)，包含Base64编码转换、16进制编码转换、AES加密、AES解密、Md5加密、Md5加盐加密等。 
       
     
