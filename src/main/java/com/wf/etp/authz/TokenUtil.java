@@ -23,8 +23,8 @@ public class TokenUtil {
 	 * 
 	 * @return
 	 */
-	private static Key generalKey() {
-		byte[] encodedKey = Base64Codec.BASE64.encode("e-t-p".getBytes()).getBytes();
+	private static Key generalKey(String key) {
+		byte[] encodedKey = Base64Codec.BASE64.encode(key.getBytes()).getBytes();
 		return new SecretKeySpec(encodedKey, "AES");
 	}
 
@@ -36,13 +36,12 @@ public class TokenUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String createToken(String userId, long ttlMillis) {
+	protected static String createToken(String userId, String key, long ttlMillis) {
 		long nowMillis = System.currentTimeMillis();
 		String token = Jwts.builder().setSubject(userId)
-				.signWith(SignatureAlgorithm.HS256, generalKey())
+				.signWith(SignatureAlgorithm.HS256, generalKey(key))
 				.setIssuedAt(new Date(nowMillis))
 				.setExpiration(new Date(nowMillis + ttlMillis)).compact();
-		SubjectUtil.getInstance().setCacheToken(userId, token);
 		return token;
 	}
 
@@ -53,11 +52,11 @@ public class TokenUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Claims parseToken(String token) throws Exception {
+	protected static Claims parseToken(String token, String key) throws Exception {
 		if (token == null) {
 			throw new NullPointerException("token不能为null");
 		}
-		return Jwts.parser().setSigningKey(generalKey()).parseClaimsJws(token).getBody();
+		return Jwts.parser().setSigningKey(generalKey(key)).parseClaimsJws(token).getBody();
 	}
 	
 }

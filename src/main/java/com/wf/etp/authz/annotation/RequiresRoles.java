@@ -5,6 +5,12 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * 角色判断注解
+ * 
+ * @author wangfan
+ * @date 2018-2-1 上午10:50:34
+ */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiresRoles {

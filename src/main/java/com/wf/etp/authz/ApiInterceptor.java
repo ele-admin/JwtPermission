@@ -25,51 +25,57 @@ import com.wf.etp.authz.exception.UnauthorizedException;
  * @date 2017-7-17 上午8:55:20
  */
 public class ApiInterceptor implements HandlerInterceptor {
-	
+
 	public void setUserRealm(IUserRealm userRealm) {
 		SubjectUtil.getInstance().setUserRealm(userRealm);
 	}
 
-	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
+	public void setTokenKey(String tokenKey) {
+		SubjectUtil.getInstance().setTokenKey(tokenKey);
 	}
 
 	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		
+	public void afterCompletion(HttpServletRequest request,
+			HttpServletResponse response, Object handler, Exception ex)
+			throws Exception {
 	}
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+	public void postHandle(HttpServletRequest request,
+			HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+	}
+
+	@Override
+	public boolean preHandle(HttpServletRequest request,
+			HttpServletResponse response, Object handler) throws Exception {
 		String userId = null;
 		String token = request.getHeader("token");
 		if (token == null) {
 			token = request.getParameter("token");
 		}
-		try {  // 解析token
-			userId = TokenUtil.parseToken(token).getSubject();
-	        request.setAttribute("userId", userId);
+		try { // 解析token
+			userId = SubjectUtil.getInstance().parseToken(token).getSubject();
 		} catch (ExpiredJwtException e) {
-			e.printStackTrace();
 			throw new ExpiredTokenException();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ErrorTokenException();
 		}
-		// 校验token
+		// 校验服务器是否存在token
 		if (!SubjectUtil.getInstance().isValidToken(userId, token)) {
 			throw new ExpiredTokenException();
 		}
 		// 检查权限
-        if (handler instanceof HandlerMethod) {
-            Method method = ((HandlerMethod)handler).getMethod();
-            if(method != null){
-            	if (!checkPermission(method,userId) || !checkRole(method,userId)) {
-            		throw new UnauthorizedException();
-            	}
-            }
-        }
+		if (handler instanceof HandlerMethod) {
+			Method method = ((HandlerMethod) handler).getMethod();
+			if (method != null) {
+				if (!checkPermission(method, userId)
+						|| !checkRole(method, userId)) {
+					throw new UnauthorizedException();
+				}
+			}
+		}
+		request.setAttribute("userId", userId);
 		return true;
 	}
 
@@ -80,16 +86,18 @@ public class ApiInterceptor implements HandlerInterceptor {
 	 * @param userId
 	 * @return
 	 */
-	private boolean checkPermission(Method method, String userId){
-		RequiresPermissions annotation = method.getAnnotation(RequiresPermissions.class);
-        if (annotation == null) {
-            return true;
-        }
+	private boolean checkPermission(Method method, String userId) {
+		RequiresPermissions annotation = method
+				.getAnnotation(RequiresPermissions.class);
+		if (annotation == null) {
+			return true;
+		}
 		String[] requiresPermissions = annotation.value();
-    	Logical logical = annotation.logical();
-    	return SubjectUtil.getInstance().hasPermission(userId, requiresPermissions, logical);
+		Logical logical = annotation.logical();
+		return SubjectUtil.getInstance().hasPermission(userId,
+				requiresPermissions, logical);
 	}
-	
+
 	/**
 	 * 检查角色
 	 * 
@@ -97,13 +105,14 @@ public class ApiInterceptor implements HandlerInterceptor {
 	 * @param userId
 	 * @return
 	 */
-	private boolean checkRole(Method method, String userId){
+	private boolean checkRole(Method method, String userId) {
 		RequiresRoles annotation = method.getAnnotation(RequiresRoles.class);
-        if (annotation == null) {
-            return true;
-        }
+		if (annotation == null) {
+			return true;
+		}
 		String[] requiresRoles = annotation.value();
-    	Logical logical = annotation.logical();
-		return SubjectUtil.getInstance().hasRole(userId, requiresRoles, logical);
+		Logical logical = annotation.logical();
+		return SubjectUtil.getInstance()
+				.hasRole(userId, requiresRoles, logical);
 	}
 }
