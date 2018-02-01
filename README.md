@@ -18,7 +18,7 @@ allprojects {
 ```
 ```java
 dependencies {
-    compile 'com.github.whvcse:EasyTokenPermission:1.0.1'
+    compile 'com.github.whvcse:EasyTokenPermission:1.0.2'
 }
 ```
 #### maven方式引入
@@ -33,7 +33,7 @@ dependencies {
 <dependency>
     <groupId>com.github.whvcse</groupId>
     <artifactId>EasyTokenPermission</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 #### jar包下载
@@ -50,10 +50,11 @@ dependencies {
 <!-- token拦截器配置 -->
 <mvc:interceptors>
     <mvc:interceptor>
-        <mvc:mapping path="/**" /> <!-- 拦截所有  -->
-        <mvc:exclude-mapping path="/login/**" />  <!-- 排除登录接口 -->
+        <mvc:mapping path="/api/**" /> <!-- 拦截所有  -->
+        <mvc:exclude-mapping path="/api/login" />  <!-- 排除登录接口 -->
         <bean class="com.wf.etp.authz.ApiInterceptor">  <!-- 框架提供的拦截器 -->
             <property name="userRealm" ref="userRealm" />  <!-- 需要提供UserRealm -->
+            <property name="tokenKey" value="e-t-p" />  <!-- 生成token的key,可以不写默认是'e-t-p' -->
         </bean>
     </mvc:interceptor>
 </mvc:interceptors>
@@ -83,13 +84,12 @@ import com.wf.ew.system.service.PermissionService;
 import com.wf.ew.system.service.UserService;
 
 /**
- * UserRealm需要实现IUserRealm接口
+ * UserRealm需要实现IUserRealm接口(IUserRealm在1.0.2版本开始改成了抽象类)
  * 
  * @author wangfan
  * @date 2018-1-22 上午8:30:17
  */
-@SuppressWarnings("unchecked")
-public class UserRealm implements IUserRealm {
+public class UserRealm extends IUserRealm {
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -101,8 +101,8 @@ public class UserRealm implements IUserRealm {
 	 * 获取用户的角色
 	 */
 	@Override
-	public List<String> getUserRoles(String userId) {
-		List<String> roles = new ArrayList<>();
+	public Set<String> getUserRoles(String userId) {
+		Set<String> roles = new HashSet<String>();
 		roles.add(userService.getUserById(userId).getRoleId());
 		return roles;
 	}
@@ -111,17 +111,17 @@ public class UserRealm implements IUserRealm {
 	 * 获取用户的权限
 	 */
 	@Override
-	public List<String> getUserPermissions(String userId) {
-		List<String> permissionValues = new ArrayList<>();
-		List<Permission> permissions = permissionService.getPermissionsByRoleId(getUserRoles(userId).get(0));
-		for(int i=0;i<permissions.size();i++){
+	public Set<String> getUserPermissions(String userId) {
+		Set<String> permissionValues = new HashSet<String>();
+		List<Permission> permissions = permissionService.getPermissionsByRoleId(getUserRoles(userId).iterator().next());
+		for (int i = 0; i < permissions.size(); i++) {
 			permissionValues.add(permissions.get(i).getPermissionValue());
 		}
 		return permissionValues;
 	}
 
 	/**
-	 * 是否是单账号登录,如果为true,一个账号只能在一个设备使用
+	 * 是否是单账号登录,如果为true,一个账号只能在一个设备使用,可以不重写此方法,默认是false
 	 */
 	@Override
 	public boolean isSingleUser() {
@@ -134,25 +134,24 @@ public class UserRealm implements IUserRealm {
 	 * 获取缓存的list
 	 */
 	@Override
-	public List<String> getCacheArray(String key) {
-		return (List<String>) redisUtil.get(key);
+	public List<String> getCacheSet(String key) {
+		return redisUtil.listRange(key, 0, -1);
 	}
 
 	/**
 	 * 移除缓存
 	 */
 	@Override
-	public boolean removeCache(String key) {
-		redisUtil.remove(key);
-		return true;
+	public boolean clearCacheSet(String key) {
+		return redisUtil.listTrim(key, 1, 0);
 	}
 
 	/**
 	 * 缓存list
 	 */
 	@Override
-	public boolean setCacheArray(String key, List<String> strs) {
-		return redisUtil.set(key, strs);
+	public boolean putCacheInSet(String key, Set<String> strs) {
+		return redisUtil.listLeftPushAll(key, values) > 0;
 	}
 }
 ```
@@ -179,9 +178,8 @@ public ResultMap login(String account, String password, HttpServletRequest reque
     //添加到登录日志
     addLoginRecord(request, loginUser.getUserId());
     //使用框架提供的TokenUtil生成token 
-    String token = TokenUtil.createToken(loginUser.getUserId(), 1000*360*24*30);  //第二个参数是过期时间(单位s) 
-    loginUser.setToken(token);
-    return ResultMap.ok("登录成功！").put("user", loginUser);
+    String token = SubjectUtil.getInstance().createToken(loginUser.getUserId(), 1000*360*24*30);  //第二个参数是过期时间(单位s) 
+    return ResultMap.ok("登录成功！").put("token",token).put("user", loginUser);
 }
 ```
       
@@ -228,9 +226,12 @@ public ResultMap d() {
 ```
 2.使用代码的方式：
 ```java
+//是否有system权限
+SubjectUtil.getInstance().hasPermission(userId, "system");
+//是否有system或者front权限
 SubjectUtil.getInstance().hasPermission(userId, new String[]{"system","front"}, Logical.OR);
-
-SubjectUtil.getInstance().hasRole(userId, new String[]{"system","front"}, Logical.OR)
+//是否有admin或者user角色
+SubjectUtil.getInstance().hasRole(userId, new String[]{"admin","user"}, Logical.OR)
 ```
 
 -----
@@ -282,15 +283,14 @@ public class ExceptionHandler implements HandlerExceptionResolver {
 
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object obj, Exception ex) {
-		ex.printStackTrace();
-		logger.error(ex.getMessage(), ex.getCause());
 		// 根据不同错误获取错误信息,EasyTokenPermission的异常全部都继承于EtpException,在这里可以统一处理
 		if(ex instanceof EtpException){
 			writerJson(response, ((EtpException) ex).getCode(), ex.getMessage());
 		} else {
 			writerJson(response, 500, "未知错误，请稍后再试！");
+			logger.error(ex.getMessage(), ex.getCause());
 		}
-		return null;
+		return new ModelAndView();
 	}
 
 	/**
@@ -302,7 +302,7 @@ public class ExceptionHandler implements HandlerExceptionResolver {
 		response.setContentType("application/json;charset=UTF-8");
 		try {
 			PrintWriter out = response.getWriter();
-			out.print("{\"code\":"+code+",\"msg\":\""+msg+"\"}");
+			out.write("{\"code\":"+code+",\"msg\":\""+msg+"\"}");
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -318,7 +318,19 @@ token签发后没有到过期时间是一直有效的, 如果需要主动设置t
 SubjectUtil.getInstance().expireToken(userId);
 ```
    
-### 三、关于密码的md5加密处理：
+### 三、更新角色和权限的缓存
+用户的角色和权限是在第一次调用了判断权限的方法的时候才会从数据库查询，然后永久存储在缓存中，如果管理员修改了用户的角色和权限，请不要忘记调用如下方法来更新缓存的用户角色和权限列表：
+```java
+//更新用户角色缓存
+SubjectUtil.getInstance().updateCacheRoles(userId);
+
+//更新用户权限缓存
+SubjectUtil.getInstance().updateCachePermission(userId);
+```
+   
+### 四、关于密码的md5加密处理：
 上面登录接口示例中用到了EndecryptUtil来加密密码，这个工具类是我的另一个开源项目：[加密解密工具类](https://github.com/whvcse/EndecryptUtil)，包含Base64编码转换、16进制编码转换、AES加密、AES解密、Md5加密、Md5加盐加密等。 
       
     
+### 五、关于Redis的使用：
+上面示例中的RedisUtil这个工具类我也放到github上面了，大家可以去看看：[RedisUtil](https://github.com/whvcse/RedisUtil)，我在里面详细介绍了StringRedisTemplate和RedisTemplate的区别，以及如何规范的操作Redis。
