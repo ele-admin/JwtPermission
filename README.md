@@ -18,7 +18,7 @@ allprojects {
 ```
 ```java
 dependencies {
-    compile 'com.github.whvcse:EasyTokenPermission:1.0.2'
+    compile 'com.github.whvcse:EasyTokenPermission:1.0.3'
 }
 ```
 #### maven方式引入
@@ -33,7 +33,7 @@ dependencies {
 <dependency>
     <groupId>com.github.whvcse</groupId>
     <artifactId>EasyTokenPermission</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 #### jar包下载
@@ -54,6 +54,7 @@ dependencies {
         <mvc:exclude-mapping path="/api/login" />  <!-- 排除登录接口 -->
         <bean class="com.wf.etp.authz.ApiInterceptor">  <!-- 框架提供的拦截器 -->
             <property name="userRealm" ref="userRealm" />  <!-- 需要提供UserRealm -->
+			<property name="cache" ref="etpCache" /> <!-- 需要提供缓存实现 -->
             <property name="tokenKey" value="e-t-p" />  <!-- 生成token的key,可以不写默认是'e-t-p' -->
         </bean>
     </mvc:interceptor>
@@ -62,33 +63,29 @@ dependencies {
 <!-- 实现UserRealm -->
 <bean id="userRealm" class="com.wf.ew.core.auth.UserRealm" />
 
-<!-- 扫描UserRealm所在的包 -->
+<!-- 自定义缓存实现 -->
+<bean id="etpCache" class="com.wf.ew.core.auth.EtpCache" />
+
+<!-- 扫描UserRealm和EtpCache所在的包 -->
 <context:component-scan base-package="com.wf.ew.core.auth" />
 
 ```
   
    
-### 第二步、实现UserRealm接口：
+### 第二步、实现UserRealm接口和缓存接口：
+#### 1.自定义UserRealm, 需要实现IUserRealm接口(IUserRealm在1.0.2版本开始改成了抽象类)
 ```java
 package com.wf.ew.core.auth;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.wf.etp.authz.IUserRealm;
 import com.wf.ew.core.utils.RedisUtil;
 import com.wf.ew.system.model.Permission;
 import com.wf.ew.system.service.PermissionService;
 import com.wf.ew.system.service.UserService;
 
-/**
- * UserRealm需要实现IUserRealm接口(IUserRealm在1.0.2版本开始改成了抽象类)
- * 
- * @author wangfan
- * @date 2018-1-22 上午8:30:17
- */
 public class UserRealm extends IUserRealm {
 	@Autowired
 	private UserService userService;
@@ -127,35 +124,45 @@ public class UserRealm extends IUserRealm {
 	public boolean isSingleUser() {
 		return false;
 	}
+}
+```
+   
+2.自定义缓存,需要实现IEtpCache, IEtpCache目前设计为抽象类
+```java
+package com.wf.ew.core.auth;
 
-	
-	/** 以下三个方法是缓存的实现,这里使用redis完成缓存 */
-	/**
-	 * 获取缓存的list
-	 */
+import java.util.List;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.wf.etp.authz.IEtpCache;
+import com.wf.ew.core.utils.RedisUtil;
+
+public class EtpCache extends IEtpCache {
+	@Autowired
+	private RedisUtil redisUtil;
+
 	@Override
 	public List<String> getCacheSet(String key) {
 		return redisUtil.listRange(key, 0, -1);
 	}
 
-	/**
-	 * 移除缓存
-	 */
+	@Override
+	public boolean putCacheInSet(String key, Set<String> values) {
+		return redisUtil.listLeftPushAll(key, values) > 0;
+	}
+
 	@Override
 	public boolean clearCacheSet(String key) {
 		return redisUtil.listTrim(key, 1, 0);
 	}
 
-	/**
-	 * 缓存list
-	 */
 	@Override
-	public boolean putCacheInSet(String key, Set<String> strs) {
-		return redisUtil.listLeftPushAll(key, values) > 0;
+	public boolean removeCacheSetValue(String key, String value) {
+		return redisUtil.listRemove(key, 0, value) > 0;
 	}
 }
 ```
-      
+   
        
 ### 第三步、编写登录接口：
 ```java
@@ -178,7 +185,7 @@ public ResultMap login(String account, String password, HttpServletRequest reque
     //添加到登录日志
     addLoginRecord(request, loginUser.getUserId());
     //使用框架提供的TokenUtil生成token 
-    String token = SubjectUtil.getInstance().createToken(loginUser.getUserId(), 1000*360*24*30);  //第二个参数是过期时间(单位s) 
+    String token = SubjectUtil.getInstance().createToken(loginUser.getUserId(), DateUtil.getAppointDate(new Date(), 30));  //第二个参数是过期时间
     return ResultMap.ok("登录成功！").put("token",token).put("user", loginUser);
 }
 ```
@@ -316,6 +323,9 @@ token签发后没有到过期时间是一直有效的, 如果需要主动设置t
 ```java
 //让userId这个用户重新登录
 SubjectUtil.getInstance().expireToken(userId);
+
+//让user的某一个token失效
+SubjectUtil.getInstance().expireToken(userId, token);
 ```
    
 ### 三、更新角色和权限的缓存

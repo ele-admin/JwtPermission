@@ -3,6 +3,7 @@ package com.wf.etp.authz;
 import io.jsonwebtoken.Claims;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class SubjectUtil {
 	private static final String KEY_PRE_TOKEN = "etp-"; // token缓存的key前缀
 	private static volatile SubjectUtil instance;
 	private static IUserRealm userRealm;
+	private static IEtpCache cache;
 	private static String tokenKey = "e-t-p";
 
 	private SubjectUtil() {
@@ -53,6 +55,14 @@ public class SubjectUtil {
 		return SubjectUtil.tokenKey;
 	}
 
+	protected void setCache(IEtpCache cache) {
+		SubjectUtil.cache = cache;
+	}
+
+	public IEtpCache getCache() {
+		return SubjectUtil.cache;
+	}
+
 	/**
 	 * 检查是否有指定角色
 	 * 
@@ -63,14 +73,14 @@ public class SubjectUtil {
 	public boolean hasRole(String userId, String[] roles, Logical logical) {
 		checkUserRealm();
 		boolean result = false;
-		List<String> cacheRoles = userRealm.getCacheSet(KEY_PRE_RS + userId);
+		List<String> cacheRoles = cache.getCacheSet(KEY_PRE_RS + userId);
 		if (cacheRoles == null) {
 			cacheRoles = new ArrayList<String>();
 			Set<String> userRoles = userRealm.getUserRoles(userId);
 			if (userRoles != null) {
 				cacheRoles.addAll(userRoles);
 			}
-			userRealm.putCacheInSet(KEY_PRE_RS + userId, userRoles);
+			cache.putCacheInSet(KEY_PRE_RS + userId, userRoles);
 		}
 		for (int i = 0; i < roles.length; i++) {
 			result = cacheRoles.contains(roles[i]);
@@ -96,15 +106,14 @@ public class SubjectUtil {
 			Logical logical) {
 		checkUserRealm();
 		boolean result = false;
-		List<String> cachePermissions = userRealm.getCacheSet(KEY_PRE_PS
-				+ userId);
+		List<String> cachePermissions = cache.getCacheSet(KEY_PRE_PS + userId);
 		if (permissions == null) {
 			cachePermissions = new ArrayList<String>();
 			Set<String> userPermissions = userRealm.getUserPermissions(userId);
 			if (userPermissions != null) {
 				cachePermissions.addAll(userPermissions);
 			}
-			userRealm.putCacheInSet(KEY_PRE_PS + userId, userPermissions);
+			cache.putCacheInSet(KEY_PRE_PS + userId, userPermissions);
 		}
 		for (int i = 0; i < permissions.length; i++) {
 			result = cachePermissions.contains(permissions[i]);
@@ -127,11 +136,10 @@ public class SubjectUtil {
 	 */
 	public boolean updateCachePermission(String userId) {
 		checkUserRealm();
-		boolean result = userRealm.clearCacheSet(KEY_PRE_PS + userId);
+		boolean result = cache.clearCacheSet(KEY_PRE_PS + userId);
 		if (result) {
 			Set<String> userPermissions = userRealm.getUserPermissions(userId);
-			result = userRealm.putCacheInSet(KEY_PRE_PS + userId,
-					userPermissions);
+			result = cache.putCacheInSet(KEY_PRE_PS + userId, userPermissions);
 		}
 		return result;
 	}
@@ -144,10 +152,10 @@ public class SubjectUtil {
 	 */
 	public boolean updateCacheRoles(String userId) {
 		checkUserRealm();
-		boolean result = userRealm.clearCacheSet(KEY_PRE_RS + userId);
+		boolean result = cache.clearCacheSet(KEY_PRE_RS + userId);
 		if (result) {
 			Set<String> userRoles = userRealm.getUserRoles(userId);
-			result = userRealm.putCacheInSet(KEY_PRE_RS + userId, userRoles);
+			result = cache.putCacheInSet(KEY_PRE_RS + userId, userRoles);
 		}
 		return result;
 	}
@@ -161,7 +169,7 @@ public class SubjectUtil {
 	 */
 	protected boolean isValidToken(String userId, String token) {
 		checkUserRealm();
-		List<String> tokens = userRealm.getCacheSet(KEY_PRE_TOKEN + userId);
+		List<String> tokens = cache.getCacheSet(KEY_PRE_TOKEN + userId);
 		return tokens != null && tokens.contains(token);
 	}
 
@@ -174,21 +182,32 @@ public class SubjectUtil {
 	private boolean setCacheToken(String userId, String token) {
 		checkUserRealm();
 		if (!userRealm.isSingleUser()) {
-			userRealm.clearCacheSet(KEY_PRE_TOKEN + userId);
+			cache.clearCacheSet(KEY_PRE_TOKEN + userId);
 		}
 		Set<String> tokens = new HashSet<String>();
 		tokens.add(token);
-		return userRealm.putCacheInSet(KEY_PRE_TOKEN + userId, tokens);
+		return cache.putCacheInSet(KEY_PRE_TOKEN + userId, tokens);
 	}
 
 	/**
-	 * 主动让token失效
+	 * 主动让user的所有token失效
 	 * 
 	 * @param userId
 	 * @return
 	 */
 	public boolean expireToken(String userId) {
-		return userRealm.clearCacheSet(KEY_PRE_TOKEN + userId);
+		return cache.clearCacheSet(KEY_PRE_TOKEN + userId);
+	}
+
+	/**
+	 * 移除user的某一个token
+	 * 
+	 * @param userId
+	 * @param token
+	 * @return
+	 */
+	public boolean expireToken(String userId, String token) {
+		return cache.removeCacheSetValue(KEY_PRE_TOKEN + userId, token);
 	}
 
 	/**
@@ -207,8 +226,8 @@ public class SubjectUtil {
 	 * @param ttlMillis
 	 * @return
 	 */
-	public String createToken(String userId, long ttlMillis) {
-		String token = TokenUtil.createToken(userId, tokenKey, ttlMillis);
+	public String createToken(String userId, Date expireDate) {
+		String token = TokenUtil.createToken(userId, tokenKey, expireDate);
 		setCacheToken(userId, token);
 		return token;
 	}

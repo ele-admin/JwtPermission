@@ -1,6 +1,5 @@
 package com.wf.etp.authz;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,29 +34,4 @@ public abstract class IUserRealm {
 	public boolean isSingleUser() {
 		return false;
 	}
-
-	/**
-	 * 获取缓存的集合
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public abstract List<String> getCacheSet(String key);
-
-	/**
-	 * 把集合加入缓存
-	 * 
-	 * @param key
-	 * @param values
-	 * @return
-	 */
-	public abstract boolean putCacheInSet(String key, Set<String> values);
-
-	/**
-	 * 清除缓存
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public abstract boolean clearCacheSet(String key);
 }

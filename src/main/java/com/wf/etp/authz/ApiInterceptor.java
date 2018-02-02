@@ -34,6 +34,10 @@ public class ApiInterceptor implements HandlerInterceptor {
 		SubjectUtil.getInstance().setTokenKey(tokenKey);
 	}
 
+	public void setCache(IEtpCache cache) {
+		SubjectUtil.getInstance().setCache(cache);
+	}
+
 	@Override
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
@@ -57,6 +61,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 		try { // 解析token
 			userId = SubjectUtil.getInstance().parseToken(token).getSubject();
 		} catch (ExpiredJwtException e) {
+			SubjectUtil.getInstance().expireToken(userId, token); // 从缓存中移除过期的token
 			throw new ExpiredTokenException();
 		} catch (Exception e) {
 			throw new ErrorTokenException();
