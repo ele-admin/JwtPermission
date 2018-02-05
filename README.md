@@ -18,7 +18,7 @@ allprojects {
 ```
 ```java
 dependencies {
-    compile 'com.github.whvcse:EasyTokenPermission:1.0.3'
+    compile 'com.github.whvcse:EasyTokenPermission:1.0.4'
 }
 ```
 #### maven方式引入
@@ -33,7 +33,7 @@ dependencies {
 <dependency>
     <groupId>com.github.whvcse</groupId>
     <artifactId>EasyTokenPermission</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 #### jar包下载
@@ -110,9 +110,12 @@ public class UserRealm extends IUserRealm {
 	@Override
 	public Set<String> getUserPermissions(String userId) {
 		Set<String> permissionValues = new HashSet<String>();
-		List<Permission> permissions = permissionService.getPermissionsByRoleId(getUserRoles(userId).iterator().next());
-		for (int i = 0; i < permissions.size(); i++) {
-			permissionValues.add(permissions.get(i).getPermissionValue());
+		List<String> userRoles = SubjectUtil.getInstance().getUserRoles(userId);
+		if(userRoles.size()>0){
+			List<Permission> permissions = permissionService.getPermissionsByRoleId(userRoles.get(0));
+			for (int i = 0; i < permissions.size(); i++) {
+				permissionValues.add(permissions.get(i).getPermissionValue());
+			}
 		}
 		return permissionValues;
 	}
@@ -293,6 +296,7 @@ public class ExceptionHandler implements HandlerExceptionResolver {
 		// 根据不同错误获取错误信息,EasyTokenPermission的异常全部都继承于EtpException,在这里可以统一处理
 		if(ex instanceof EtpException){
 			writerJson(response, ((EtpException) ex).getCode(), ex.getMessage());
+			//ex.getMessage()返回的信息如上面表格所示,如果需要修改返回的信息和code,可以分开捕获上述表格中的每一个异常
 		} else {
 			writerJson(response, 500, "未知错误，请稍后再试！");
 			logger.error(ex.getMessage(), ex.getCause());
@@ -338,9 +342,19 @@ SubjectUtil.getInstance().updateCacheRoles(userId);
 SubjectUtil.getInstance().updateCachePermission(userId);
 ```
    
-### 四、关于密码的md5加密处理：
+### 四、代码获取user的角色和权限
+```java
+//获取角色
+SubjectUtil.getInstance().getUserRoles(String userId);
+//获取权限
+SubjectUtil.getInstance().getUserPermissions(String userId);
+
+```   
+   
+   
+### 五、关于密码的md5加密处理：
 上面登录接口示例中用到了EndecryptUtil来加密密码，这个工具类是我的另一个开源项目：[加密解密工具类](https://github.com/whvcse/EndecryptUtil)，包含Base64编码转换、16进制编码转换、AES加密、AES解密、Md5加密、Md5加盐加密等。 
       
     
-### 五、关于Redis的使用：
+### 六、关于Redis的使用：
 上面示例中的RedisUtil这个工具类我也放到github上面了，大家可以去看看：[RedisUtil](https://github.com/whvcse/RedisUtil)，我在里面详细介绍了StringRedisTemplate和RedisTemplate的区别，以及如何规范的操作Redis。

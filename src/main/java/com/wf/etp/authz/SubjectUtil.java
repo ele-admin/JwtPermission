@@ -73,15 +73,7 @@ public class SubjectUtil {
 	public boolean hasRole(String userId, String[] roles, Logical logical) {
 		checkUserRealm();
 		boolean result = false;
-		List<String> cacheRoles = cache.getCacheSet(KEY_PRE_RS + userId);
-		if (cacheRoles == null) {
-			cacheRoles = new ArrayList<String>();
-			Set<String> userRoles = userRealm.getUserRoles(userId);
-			if (userRoles != null) {
-				cacheRoles.addAll(userRoles);
-			}
-			cache.putCacheInSet(KEY_PRE_RS + userId, userRoles);
-		}
+		List<String> cacheRoles = getUserRoles(userId);
 		for (int i = 0; i < roles.length; i++) {
 			result = cacheRoles.contains(roles[i]);
 			if (logical == (result ? Logical.OR : Logical.AND)) {
@@ -106,15 +98,7 @@ public class SubjectUtil {
 			Logical logical) {
 		checkUserRealm();
 		boolean result = false;
-		List<String> cachePermissions = cache.getCacheSet(KEY_PRE_PS + userId);
-		if (permissions == null) {
-			cachePermissions = new ArrayList<String>();
-			Set<String> userPermissions = userRealm.getUserPermissions(userId);
-			if (userPermissions != null) {
-				cachePermissions.addAll(userPermissions);
-			}
-			cache.putCacheInSet(KEY_PRE_PS + userId, userPermissions);
-		}
+		List<String> cachePermissions = getUserPermissions(userId);
 		for (int i = 0; i < permissions.length; i++) {
 			result = cachePermissions.contains(permissions[i]);
 			if (logical == (result ? Logical.OR : Logical.AND)) {
@@ -126,6 +110,42 @@ public class SubjectUtil {
 
 	public boolean hasPermission(String userId, String permissions) {
 		return hasPermission(userId, new String[] { permissions }, Logical.OR);
+	}
+	
+	/**
+	 * 获取用户的角色
+	 * @param userId
+	 * @return
+	 */
+	public List<String> getUserRoles(String userId){
+		List<String> cacheRoles = cache.getCacheSet(KEY_PRE_RS + userId);
+		if (cacheRoles == null || cacheRoles.size()==0) {
+			cacheRoles = new ArrayList<String>();
+			Set<String> userRoles = userRealm.getUserRoles(userId);
+			if (userRoles != null) {
+				cacheRoles.addAll(userRoles);
+			}
+			cache.putCacheInSet(KEY_PRE_RS + userId, userRoles);
+		}
+		return cacheRoles;
+	}
+	
+	/**
+	 * 获取用户的权限
+	 * @param userId
+	 * @return
+	 */
+	public List<String> getUserPermissions(String userId){
+		List<String> cachePermissions = cache.getCacheSet(KEY_PRE_PS + userId);
+		if (cachePermissions == null || cachePermissions.size()==0) {
+			cachePermissions = new ArrayList<String>();
+			Set<String> userPermissions = userRealm.getUserPermissions(userId);
+			if (userPermissions != null) {
+				cachePermissions.addAll(userPermissions);
+			}
+			cache.putCacheInSet(KEY_PRE_PS + userId, userPermissions);
+		}
+		return cachePermissions;
 	}
 
 	/**
