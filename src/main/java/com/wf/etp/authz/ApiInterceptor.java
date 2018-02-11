@@ -64,6 +64,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 			SubjectUtil.getInstance().expireToken(userId, token); // 从缓存中移除过期的token
 			throw new ExpiredTokenException();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ErrorTokenException();
 		}
 		// 校验服务器是否存在token
