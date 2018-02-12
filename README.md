@@ -356,7 +356,8 @@ SubjectUtil.getInstance().getUserPermissions(String userId);
 ### 六、关于Redis的使用：
 上面示例中的RedisUtil这个工具类我也放到github上面了，大家可以去看看：[RedisUtil](https://github.com/whvcse/RedisUtil)，我在里面详细介绍了StringRedisTemplate和RedisTemplate的区别，以及如何规范的操作Redis。
      
-      
+  --------------
+  
 ## 联系方式
 ### 1、欢迎加入“前后端分离技术交流群”：
 ![群二维码](https://github.com/whvcse/EasyWeb-RESTful/blob/master/WebRoot/assets/images/images_qqgroup.png)
