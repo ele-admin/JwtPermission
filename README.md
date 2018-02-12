@@ -1,4 +1,8 @@
-# EasyTokenPermission
+# EasyTokenPermission 
+[![GitHub release](https://img.shields.io/github/release/whvcse/EasyTokenPermission.svg)]()
+[![GitHub Release Date](https://img.shields.io/github/release-date/whvcse/EasyTokenPermission.svg)]()
+[![JitPack](https://img.shields.io/jitpack/v/whvcse/EasyTokenPermission.svg)]()
+[![author](https://img.shields.io/badge/author-wangfan-ff69b4.svg)]()
 
 ## 简介
    一套用于实现java RESTful风格服务端api的权限框架，基于jjwt实现前后端分离项目的权限管理，实现java后端基于token验证的权限框架！
