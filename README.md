@@ -1,8 +1,8 @@
 # EasyTokenPermission 
-[![GitHub release](https://img.shields.io/github/release/whvcse/EasyTokenPermission.svg)]()
-[![GitHub Release Date](https://img.shields.io/github/release-date/whvcse/EasyTokenPermission.svg)]()
-[![JitPack](https://img.shields.io/jitpack/v/whvcse/EasyTokenPermission.svg)]()
-[![author](https://img.shields.io/badge/author-wangfan-ff69b4.svg)]()
+[![GitHub release](https://img.shields.io/github/release/whvcse/EasyTokenPermission.svg)](https://github.com/whvcse/EasyTokenPermission/releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date/whvcse/EasyTokenPermission.svg)](#)
+[![JitPack](https://img.shields.io/jitpack/v/whvcse/EasyTokenPermission.svg)](#)
+[![author](https://img.shields.io/badge/author-wangfan-ff69b4.svg)](#)
 
 ## 简介
    一套用于实现java RESTful风格服务端api的权限框架，基于jjwt实现前后端分离项目的权限管理，实现java后端基于token验证的权限框架！
@@ -22,7 +22,7 @@ allprojects {
 ```
 ```java
 dependencies {
-    compile 'com.github.whvcse:EasyTokenPermission:1.0.4'
+    compile 'com.github.whvcse:EasyTokenPermission:1.0.5'
 }
 ```
 #### maven方式引入
@@ -37,7 +37,7 @@ dependencies {
 <dependency>
     <groupId>com.github.whvcse</groupId>
     <artifactId>EasyTokenPermission</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 #### jar包下载
@@ -146,23 +146,30 @@ public class EtpCache extends IEtpCache {
 	private RedisUtil redisUtil;
 
 	@Override
-	public List<String> getCacheSet(String key) {
+	public List<String> getSet(String key) {
 		return redisUtil.listRange(key, 0, -1);
 	}
-
 	@Override
-	public boolean putCacheInSet(String key, Set<String> values) {
+	public boolean putSet(String key, Set<String> values) {
 		return redisUtil.listLeftPushAll(key, values) > 0;
 	}
-
 	@Override
-	public boolean clearCacheSet(String key) {
-		return redisUtil.listTrim(key, 1, 0);
-	}
-
-	@Override
-	public boolean removeCacheSetValue(String key, String value) {
+	public boolean removeSet(String key, String value) {
 		return redisUtil.listRemove(key, 0, value) > 0;
+	}
+	@Override
+	public boolean delete(String key) {
+		redisUtil.delete(key);
+		return true;
+	}
+	@Override
+	public boolean delete(Collection<String> keys) {
+		redisUtil.delete(keys);
+		return true;
+	}
+	@Override
+	public Set<String> keys(String pattern) {
+		return redisUtil.keys(pattern);
 	}
 }
 ```
@@ -338,9 +345,11 @@ SubjectUtil.getInstance().expireToken(userId, token);
 ```java
 //更新用户角色缓存
 SubjectUtil.getInstance().updateCacheRoles(userId);
-
+SubjectUtil.getInstance().updateCacheRoles();  //更新所有用户 
+ 
 //更新用户权限缓存
 SubjectUtil.getInstance().updateCachePermission(userId);
+SubjectUtil.getInstance().updateCachePermission();  //更新所有用户 
 ```
    
 ### 四、代码获取user的角色和权限
