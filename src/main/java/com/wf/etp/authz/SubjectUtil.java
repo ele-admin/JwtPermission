@@ -118,14 +118,14 @@ public class SubjectUtil {
 	 * @return
 	 */
 	public List<String> getUserRoles(String userId){
-		List<String> cacheRoles = cache.getCacheSet(KEY_PRE_RS + userId);
+		List<String> cacheRoles = cache.getSet(KEY_PRE_RS + userId);
 		if (cacheRoles == null || cacheRoles.size()==0) {
 			cacheRoles = new ArrayList<String>();
 			Set<String> userRoles = userRealm.getUserRoles(userId);
 			if (userRoles != null) {
 				cacheRoles.addAll(userRoles);
 			}
-			cache.putCacheInSet(KEY_PRE_RS + userId, userRoles);
+			cache.putSet(KEY_PRE_RS + userId, userRoles);
 		}
 		return cacheRoles;
 	}
@@ -136,14 +136,14 @@ public class SubjectUtil {
 	 * @return
 	 */
 	public List<String> getUserPermissions(String userId){
-		List<String> cachePermissions = cache.getCacheSet(KEY_PRE_PS + userId);
+		List<String> cachePermissions = cache.getSet(KEY_PRE_PS + userId);
 		if (cachePermissions == null || cachePermissions.size()==0) {
 			cachePermissions = new ArrayList<String>();
 			Set<String> userPermissions = userRealm.getUserPermissions(userId);
 			if (userPermissions != null) {
 				cachePermissions.addAll(userPermissions);
 			}
-			cache.putCacheInSet(KEY_PRE_PS + userId, userPermissions);
+			cache.putSet(KEY_PRE_PS + userId, userPermissions);
 		}
 		return cachePermissions;
 	}
@@ -156,12 +156,12 @@ public class SubjectUtil {
 	 */
 	public boolean updateCachePermission(String userId) {
 		checkUserRealm();
-		boolean result = cache.clearCacheSet(KEY_PRE_PS + userId);
-		if (result) {
-			Set<String> userPermissions = userRealm.getUserPermissions(userId);
-			result = cache.putCacheInSet(KEY_PRE_PS + userId, userPermissions);
-		}
-		return result;
+		return cache.delete(KEY_PRE_PS + userId);
+	}
+	
+	public boolean updateCachePermission(){
+		checkUserRealm();
+		return cache.delete(cache.keys(KEY_PRE_PS+"*"));
 	}
 
 	/**
@@ -172,12 +172,12 @@ public class SubjectUtil {
 	 */
 	public boolean updateCacheRoles(String userId) {
 		checkUserRealm();
-		boolean result = cache.clearCacheSet(KEY_PRE_RS + userId);
-		if (result) {
-			Set<String> userRoles = userRealm.getUserRoles(userId);
-			result = cache.putCacheInSet(KEY_PRE_RS + userId, userRoles);
-		}
-		return result;
+		return cache.delete(KEY_PRE_RS + userId);
+	}
+	
+	public boolean updateCacheRoles(){
+		checkUserRealm();
+		return cache.delete(cache.keys(KEY_PRE_RS+"*"));
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class SubjectUtil {
 	 */
 	protected boolean isValidToken(String userId, String token) {
 		checkUserRealm();
-		List<String> tokens = cache.getCacheSet(KEY_PRE_TOKEN + userId);
+		List<String> tokens = cache.getSet(KEY_PRE_TOKEN + userId);
 		return tokens != null && tokens.contains(token);
 	}
 
@@ -202,11 +202,11 @@ public class SubjectUtil {
 	private boolean setCacheToken(String userId, String token) {
 		checkUserRealm();
 		if (!userRealm.isSingleUser()) {
-			cache.clearCacheSet(KEY_PRE_TOKEN + userId);
+			cache.delete(KEY_PRE_TOKEN + userId);
 		}
 		Set<String> tokens = new HashSet<String>();
 		tokens.add(token);
-		return cache.putCacheInSet(KEY_PRE_TOKEN + userId, tokens);
+		return cache.putSet(KEY_PRE_TOKEN + userId, tokens);
 	}
 
 	/**
@@ -216,7 +216,7 @@ public class SubjectUtil {
 	 * @return
 	 */
 	public boolean expireToken(String userId) {
-		return cache.clearCacheSet(KEY_PRE_TOKEN + userId);
+		return cache.delete(KEY_PRE_TOKEN + userId);
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class SubjectUtil {
 	 * @return
 	 */
 	public boolean expireToken(String userId, String token) {
-		return cache.removeCacheSetValue(KEY_PRE_TOKEN + userId, token);
+		return cache.removeSet(KEY_PRE_TOKEN + userId, token);
 	}
 
 	/**

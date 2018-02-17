@@ -1,5 +1,6 @@
 package com.wf.etp.authz;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -11,38 +12,21 @@ import java.util.Set;
  */
 public abstract class IEtpCache {
 
-	/**
-	 * 获取缓存的集合
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public abstract List<String> getCacheSet(String key);
+	// 获取缓存的集合
+	public abstract List<String> getSet(String key);
 
-	/**
-	 * 把集合加入缓存
-	 * 
-	 * @param key
-	 * @param values
-	 * @return
-	 */
-	public abstract boolean putCacheInSet(String key, Set<String> values);
+	// 把集合加入缓存
+	public abstract boolean putSet(String key, Set<String> values);
 
-	/**
-	 * 清除缓存
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public abstract boolean clearCacheSet(String key);
+	// 删除集合的某一元素
+	public abstract boolean removeSet(String key, String value);
 
-	/**
-	 * 删除集合的某一元素
-	 * 
-	 * @param key
-	 * @param value
-	 * @return
-	 */
-	public abstract boolean removeCacheSetValue(String key, String value);
+	// 清除缓存
+	public abstract boolean delete(String key);
+
+	public abstract boolean delete(Collection<String> keys);
+
+	// 获取匹配keys
+	public abstract Set<String> keys(String pattern);
 
 }
