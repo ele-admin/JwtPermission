@@ -352,5 +352,5 @@ SubjectUtil.getInstance().getUserPermissions(String userId);
 ### 1、欢迎加入“前后端分离技术交流群”：
 ![群二维码](https://raw.githubusercontent.com/whvcse/EasyWeb/master/WebRoot/assets/images/images_qqgroup.png)
      
-### 2、赞赏项目：
-右上角点个star就行！多谢！ 
+### 2、点个star再走：
+如果JwtPermission帮到了你，请留下一颗小星星，非常感谢！ 
