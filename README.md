@@ -1,8 +1,8 @@
 # EasyTokenPermission 
-[![GitHub release](https://img.shields.io/github/release/whvcse/EasyTokenPermission.svg)](https://github.com/whvcse/EasyTokenPermission/releases)
-[![GitHub Release Date](https://img.shields.io/github/release-date/whvcse/EasyTokenPermission.svg)](#easytokenpermission)
-[![JitPack](https://img.shields.io/jitpack/v/whvcse/EasyTokenPermission.svg)](#easytokenpermission)
-[![author](https://img.shields.io/badge/author-wangfan-ff69b4.svg)](#easytokenpermission)
+[![GitHub release](https://img.shields.io/github/release/whvcse/EasyTokenPermission.svg)](releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date/whvcse/EasyTokenPermission.svg)](#简介)
+[![JitPack](https://img.shields.io/jitpack/v/whvcse/EasyTokenPermission.svg)](#简介)
+[![author](https://img.shields.io/badge/author-wangfan-ff69b4.svg)](#简介)
 
 ## 简介
    一套用于实现java RESTful风格服务端api的权限框架，基于jjwt实现前后端分离项目的权限管理，实现java后端基于token验证的权限框架！
@@ -373,7 +373,7 @@ SubjectUtil.getInstance().getUserPermissions(String userId);
   
 ## 联系方式
 ### 1、欢迎加入“前后端分离技术交流群”：
-![群二维码](https://github.com/whvcse/EasyWeb-RESTful/blob/master/WebRoot/assets/images/images_qqgroup.png)
+![群二维码](https://raw.githubusercontent.com/whvcse/EasyWeb/master/WebRoot/assets/images/images_qqgroup.png)
      
 ### 2、赞赏项目：
 右上角点个star就行！多谢！ 
