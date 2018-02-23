@@ -1,13 +1,13 @@
-# EasyTokenPermission 
-[![GitHub release](https://img.shields.io/github/release/whvcse/EasyTokenPermission.svg)](releases)
-[![GitHub Release Date](https://img.shields.io/github/release-date/whvcse/EasyTokenPermission.svg)](#简介)
-[![JitPack](https://img.shields.io/jitpack/v/whvcse/EasyTokenPermission.svg)](#简介)
+# JwtPermission 
+[![GitHub release](https://img.shields.io/github/release/whvcse/JwtPermission.svg)](https://github.com/whvcse/JwtPermission/releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date/whvcse/JwtPermission.svg)](#简介)
+[![JitPack](https://img.shields.io/jitpack/v/whvcse/JwtPermission.svg)](#简介)
 [![author](https://img.shields.io/badge/author-wangfan-ff69b4.svg)](#简介)
 
 ## 简介
-   一套用于实现java RESTful风格服务端api的权限框架，基于jjwt实现前后端分离项目的权限管理，实现java后端基于token验证的权限框架！
+   基于jjwt实现的一套用于RESTful风格服务端架构的权限管理框架，用于前后端分离项目的权限管理，实现基于token验证的Java权限框架，参考shiro设计，用法与shiro相近，简单实用！
      
-   可以先一看实现效果[EasyWeb-RESTful](https://github.com/whvcse/EasyWeb-RESTful), 这个项目是基于此框架完成的一个java RESTful风格，前后端分离的后端管理系统。 
+   可以先一看实现效果[EasyWeb](https://github.com/whvcse/EasyWeb), EasyWeb是基于此权限框架完成的一个RESTful风格、前后端分离的后端管理系统模板。 
  
   
 ## 导入
@@ -22,7 +22,7 @@ allprojects {
 ```
 ```java
 dependencies {
-    compile 'com.github.whvcse:EasyTokenPermission:1.0.5'
+    compile 'com.github.whvcse:JwtPermission:1.0.6'
 }
 ```
 #### maven方式引入
@@ -34,14 +34,16 @@ dependencies {
     </repository>
 </repositories>
 
-<dependency>
-    <groupId>com.github.whvcse</groupId>
-    <artifactId>EasyTokenPermission</artifactId>
-    <version>1.0.5</version>
-</dependency>
+<dependencies>
+   <dependency>
+      <groupId>com.github.whvcse</groupId>
+      <artifactId>JwtPermission</artifactId>
+      <version>1.0.6</version>
+   </dependency>
+</dependencies>
 ```
 #### jar包下载
-[EasyTokenPermission-最新版本.jar](https://github.com/whvcse/EasyTokenPermission/releases)。  此项目依赖于j2ee环境，spring mvc环境，jjwt包，使用jar包导入时请注意导入spring mvc、jjwt的jar包，使用maven或者grade方式导入会自动引入。 
+[JwtPermission-最新版本.jar](https://github.com/whvcse/JwtPermission/releases)。  此项目依赖于j2ee环境，spring mvc环境，jjwt包，使用jar包导入时请注意导入spring mvc、jjwt的jar包，使用maven或者grade方式导入会自动引入。 
 
 -----
   
@@ -79,11 +81,6 @@ dependencies {
 ### 第二步、实现UserRealm接口和缓存接口：
 #### 1.自定义UserRealm, 需要实现IUserRealm接口(IUserRealm在1.0.2版本开始改成了抽象类)
 ```java
-package com.wf.ew.core.auth;
-
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.wf.etp.authz.IUserRealm;
 import com.wf.ew.system.model.Permission;
 import com.wf.ew.system.service.PermissionService;
@@ -131,13 +128,8 @@ public class UserRealm extends IUserRealm {
 }
 ```
    
-2.自定义缓存,需要实现IEtpCache, IEtpCache目前设计为抽象类
+2.自定义缓存,需要实现IEtpCache, 这里演示用redis实现缓存操作
 ```java
-package com.wf.ew.core.auth;
-
-import java.util.List;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.wf.etp.authz.IEtpCache;
 import com.wf.ew.core.utils.RedisUtil;
 
@@ -196,7 +188,7 @@ public ResultMap login(String account, String password, HttpServletRequest reque
     //添加到登录日志
     addLoginRecord(request, loginUser.getUserId());
     //使用框架提供的TokenUtil生成token 
-    String token = SubjectUtil.getInstance().createToken(loginUser.getUserId(), DateUtil.getAppointDate(new Date(), 30));  //第二个参数是过期时间
+    String token = SubjectUtil.getInstance().createToken(loginUser.getUserId(), DateUtil.getAppointDate(new Date(), 30));  //第二个参数是到期时间
     return ResultMap.ok("登录成功！").put("token",token).put("user", loginUser);
 }
 ```
@@ -275,25 +267,10 @@ EasyTokenPermistion会在token验证失败和没有权限的时候抛出异常�
 <bean id="exceptionHandler" class="com.wf.ew.core.exception.ExceptionHandler" />
 ```
 ```java
-package com.wf.ew.core.exception;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.wf.etp.authz.exception.EtpException;
 
 /**
  * 统一异常处理器
- * 
- * @author wangfan
- * @date 2017-7-14 下午3:27:35
  */
 public class ExceptionHandler implements HandlerExceptionResolver {
 	//日志输出对象
