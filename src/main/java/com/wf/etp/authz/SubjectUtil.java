@@ -122,10 +122,10 @@ public class SubjectUtil {
 		if (cacheRoles == null || cacheRoles.size()==0) {
 			cacheRoles = new ArrayList<String>();
 			Set<String> userRoles = userRealm.getUserRoles(userId);
-			if (userRoles != null) {
+			if (userRoles != null && userRoles.size()>0) {
 				cacheRoles.addAll(userRoles);
+				cache.putSet(KEY_PRE_RS + userId, userRoles);
 			}
-			cache.putSet(KEY_PRE_RS + userId, userRoles);
 		}
 		return cacheRoles;
 	}
@@ -140,10 +140,10 @@ public class SubjectUtil {
 		if (cachePermissions == null || cachePermissions.size()==0) {
 			cachePermissions = new ArrayList<String>();
 			Set<String> userPermissions = userRealm.getUserPermissions(userId);
-			if (userPermissions != null) {
+			if (userPermissions != null && userPermissions.size()>0) {
 				cachePermissions.addAll(userPermissions);
+				cache.putSet(KEY_PRE_PS + userId, userPermissions);
 			}
-			cache.putSet(KEY_PRE_PS + userId, userPermissions);
 		}
 		return cachePermissions;
 	}
