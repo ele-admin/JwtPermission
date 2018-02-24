@@ -128,7 +128,7 @@ public class UserRealm extends IUserRealm {
 }
 ```
    
-2.自定义缓存,需要实现IEtpCache, 这里演示用redis实现缓存操作
+#### 2.自定义缓存,需要实现IEtpCache, 这里演示用redis实现缓存操作
 ```java
 import com.wf.etp.authz.IEtpCache;
 import com.wf.ew.core.utils.RedisUtil;
@@ -249,7 +249,7 @@ SubjectUtil.getInstance().hasRole(userId, new String[]{"admin","user"}, Logical.
     
 ## 注意事项
 ### 一、异常处理器：
-EasyTokenPermistion会在token验证失败和没有权限的时候抛出异常，框架定义了几个异常，位于`com.wf.etp.authz.exception`包下面：
+JwtPermistion会在token验证失败和没有权限的时候抛出异常，框架定义了几个异常，位于`com.wf.etp.authz.exception`包下面：
     
 |  异常 | 描述 | 错误信息 |
 |:----:|:----:|:----:|
