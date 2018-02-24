@@ -139,15 +139,15 @@ public class EtpCache extends IEtpCache {
 
 	@Override
 	public List<String> getSet(String key) {
-		return redisUtil.listRange(key, 0, -1);
+		return redisUtil.lRange(key, 0, -1);
 	}
 	@Override
 	public boolean putSet(String key, Set<String> values) {
-		return redisUtil.listLeftPushAll(key, values) > 0;
+		return redisUtil.lLeftPushAll(key, values) > 0;
 	}
 	@Override
 	public boolean removeSet(String key, String value) {
-		return redisUtil.listRemove(key, 0, value) > 0;
+		return redisUtil.lRemove(key, 0, value) > 0;
 	}
 	@Override
 	public boolean delete(String key) {
