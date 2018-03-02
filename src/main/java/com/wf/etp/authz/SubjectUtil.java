@@ -201,7 +201,7 @@ public class SubjectUtil {
 	 */
 	private boolean setCacheToken(String userId, String token) {
 		checkUserRealm();
-		if (!userRealm.isSingleUser()) {
+		if (userRealm.isSingleUser()) {
 			cache.delete(KEY_PRE_TOKEN + userId);
 		}
 		Set<String> tokens = new HashSet<String>();
