@@ -348,6 +348,13 @@ SubjectUtil.getInstance().getUserPermissions(String userId);
      
   --------------
   
+## 框架原理及流程介绍 
+使用jjwt生成token，并且把userId设置为token的载体(payload)，使用spring mvc的拦截器拦截指定的controller，先从request中获取token(先getHeader，没有再getParam)，然后解析token，解析失败或者token过期抛出异常，解析成功将载体userId存入request域中，然后继续解析controller上面的自定义注解，然后判断是否有权限，通过userRealm根据userId获取对应的权限来判断，没有权限抛出异常。
+注：所以controller可以直接使用request.getAttribute("userId")来获取userId，异常使用异常处理器来处理返回需要的json数据，上文有写。  
+ 
+ 
+ ------------
+ 
 ## 联系方式
 ### 1、欢迎加入“前后端分离技术交流群”：
 ![群二维码](https://raw.githubusercontent.com/whvcse/EasyWeb/master/WebRoot/assets/images/images_qqgroup.png)
