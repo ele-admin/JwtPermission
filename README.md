@@ -6,7 +6,7 @@
 
 ## 简介
    基于jjwt实现的一套用于RESTful风格服务端架构的权限管理框架，用于前后端分离项目的权限管理，实现基于token验证的Java权限框架，参考shiro设计，用法与shiro相近，简单实用！
-     
+     <br/>
    可以先一看实现效果[EasyWeb](https://github.com/whvcse/EasyWeb), EasyWeb是基于此权限框架完成的一个RESTful风格、前后端分离的后端管理系统模板。 
  
   
@@ -43,7 +43,9 @@ dependencies {
 </dependencies>
 ```
 #### jar包下载
-[JwtPermission-最新版本.jar](https://github.com/whvcse/JwtPermission/releases)。  此项目依赖于j2ee环境，spring mvc环境，jjwt包，使用jar包导入时请注意导入spring mvc、jjwt的jar包，使用maven或者grade方式导入会自动引入。 
+[JwtPermission-最新版本.jar](https://github.com/whvcse/JwtPermission/releases)。  
+<br/>
+此项目依赖于j2ee环境，spring mvc环境，jjwt包，使用jar包导入时请注意导入spring mvc、jjwt的jar包，使用maven或者grade方式导入会自动引入。 
 
 -----
   
@@ -244,9 +246,12 @@ SubjectUtil.getInstance().hasPermission(userId, new String[]{"system","front"}, 
 SubjectUtil.getInstance().hasRole(userId, new String[]{"admin","user"}, Logical.OR)
 ```
 
------
-    
-    
+<br/>
+
+-------
+
+    <br/>
+    <br/>
 ## 注意事项
 ### 一、异常处理器：
 JwtPermistion会在token验证失败和没有权限的时候抛出异常，框架定义了几个异常，位于`com.wf.etp.authz.exception`包下面：
@@ -257,9 +262,12 @@ JwtPermistion会在token验证失败和没有权限的时候抛出异常，框�
 | ExpiredTokenException | token已经过期 | 错误信息“登录已过期”，错误码401 |
 |UnauthorizedException | 没有权限 | 错误信息“没有访问权限”，错误码403 |
 
+<br/>
+
 --------
-   
-   
+
+   <br/>
+  <br/> 
 建议使用异常处理器来捕获异常并返回json数据给前台：
 ```java
 <!-- 在spring mvc中配置 -->
@@ -341,23 +349,29 @@ SubjectUtil.getInstance().getUserPermissions(String userId);
    
 ### 五、关于密码的md5加密处理：
 上面登录接口示例中用到了EndecryptUtil来加密密码，这个工具类是我的另一个开源项目：[加密解密工具类](https://github.com/whvcse/EndecryptUtil)，包含Base64编码转换、16进制编码转换、AES加密、AES解密、Md5加密、Md5加盐加密等。 
-      
-    
+      <br/>
+    <br/>
 ### 六、关于Redis的使用：
 上面示例中的RedisUtil这个工具类我也放到github上面了，大家可以去看看：[RedisUtil](https://github.com/whvcse/RedisUtil)，我在里面详细介绍了StringRedisTemplate和RedisTemplate的区别，以及如何规范的操作Redis。
      
+     <br/>
+     
   --------------
   
+  <br/><br/><br/>
+  
 ## 框架原理及流程介绍 
-使用jjwt生成token，并且把userId设置为token的载体(payload)，使用spring mvc的拦截器拦截指定的controller，先从request中获取token(先getHeader，没有再getParam)，然后解析token，解析失败或者token过期抛出异常，解析成功将载体userId存入request域中，然后继续解析controller上面的自定义注解，然后判断是否有权限，通过userRealm根据userId获取对应的权限来判断，没有权限抛出异常。
+使用jjwt生成token，并且把userId设置为token的载体(payload)，使用spring mvc的拦截器拦截指定的controller，先从request中获取token(先getHeader，没有再getParam)，然后解析token，解析失败或者token过期抛出异常，解析成功将载体userId存入request域中，然后继续解析controller上面的自定义注解，然后判断是否有权限，通过userRealm根据userId获取对应的权限来判断，没有权限抛出异常。<br/>
 注：所以controller可以直接使用request.getAttribute("userId")来获取userId，异常使用异常处理器来处理返回需要的json数据，上文有写。  
- 
+ <br/>
+ <br/><br/>
  
  ------------
  
+ <br/><br/>
 ## 联系方式
 ### 1、欢迎加入“前后端分离技术交流群”：
 ![群二维码](https://raw.githubusercontent.com/whvcse/EasyWeb/master/WebRoot/assets/images/images_qqgroup.png)
-     
+     <br/>
 ### 2、点个star再走：
 如果JwtPermission帮到了你，请留下一颗小星星，非常感谢！ 
