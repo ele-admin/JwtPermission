@@ -5,7 +5,7 @@
 [![Author](https://img.shields.io/badge/Author-Synchronized-ff69b4.svg)](#简介)
 
 ## 简介
-   基于jjwt实现的一套用于RESTful风格服务端架构的权限管理框架，用于前后端分离项目的权限管理，实现基于token验证的Java权限框架，参考shiro设计，用法与shiro相近，简单实用！
+   基于jjwt实现的一套用于前后端分离项目的权限管理，实现基于token验证的Java权限框架，参考shiro设计，用法与shiro相近，简单实用！
      <br/>
    可以先一看实现效果[EasyWeb](https://github.com/whvcse/EasyWeb), EasyWeb是基于此权限框架完成的一个RESTful风格、前后端分离的后端管理系统模板。 
  
