@@ -262,4 +262,18 @@ public class SubjectUtil {
 	protected Claims parseToken(String token) throws Exception {
 		return TokenUtil.parseToken(token, tokenKey);
 	}
+	
+	/**
+	 * 解析token的载体subject
+	 * @param token
+	 * @return
+	 */
+	public String getTokenSubject(String token) {
+		try {
+			return parseToken(token).getSubject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
