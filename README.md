@@ -22,9 +22,11 @@ allprojects {
 ```
 ```java
 dependencies {
-    compile 'com.github.whvcse:JwtPermission:1.0.6'
+    compile 'com.github.whvcse:JwtPermission:最新版本'
 }
 ```
+最新的版本号在上面的彩色标签里面↑↑↑
+
 #### maven方式引入
 ```java
 <repositories>
@@ -38,7 +40,7 @@ dependencies {
    <dependency>
       <groupId>com.github.whvcse</groupId>
       <artifactId>JwtPermission</artifactId>
-      <version>1.0.6</version>
+      <version>最新版本</version>
    </dependency>
 </dependencies>
 ```
