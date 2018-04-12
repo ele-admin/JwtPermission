@@ -1,6 +1,7 @@
 package com.wf.etp.authz;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,7 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.wf.etp.authz.annotation.Logical;
+import com.wf.etp.authz.exception.ErrorTokenException;
+import com.wf.etp.authz.exception.ExpiredTokenException;
 
 /**
  * 权限检查工具类
@@ -229,6 +234,22 @@ public class SubjectUtil {
 	public boolean expireToken(String userId, String token) {
 		return cache.removeSet(KEY_PRE_TOKEN + userId, token);
 	}
+	
+	/**
+	 * 移除过期的token
+	 * @param token
+	 * @return
+	 */
+	public boolean expireBadToken(String token) {
+		Set<String> keys = cache.keys(KEY_PRE_TOKEN + "*");
+		for(String keyOne : keys){
+			List<String> tokens = cache.getSet(keyOne);
+			if(tokens.contains(token)){
+				return cache.removeSet(keyOne, token);
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * 检查userRealm是否注入
@@ -260,7 +281,20 @@ public class SubjectUtil {
 	 * @throws Exception
 	 */
 	protected Claims parseToken(String token) throws Exception {
-		return TokenUtil.parseToken(token, tokenKey);
+		try {
+			Claims claims = TokenUtil.parseToken(token, tokenKey);
+			// 校验服务器是否存在token
+			if (!isValidToken(claims.getSubject(), token)) {
+				throw new ExpiredTokenException();
+			}
+			return claims;
+		} catch (ExpiredJwtException e) {  //token过期
+			expireBadToken(token);
+			throw new ExpiredTokenException();
+		} catch (Exception e) {  //token解析失败
+			e.printStackTrace();
+			throw new ErrorTokenException();
+		}
 	}
 	
 	/**
@@ -275,5 +309,18 @@ public class SubjectUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * 从request中获取token
+	 * @param request
+	 * @return
+	 */
+	public String getRequestToken(HttpServletRequest request){
+		String token = request.getHeader("token");
+		if (token == null) {
+			token = request.getParameter("token");
+		}
+		return token;
 	}
 }

@@ -2,8 +2,6 @@ package com.wf.etp.authz;
 
 import java.lang.reflect.Method;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,8 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.wf.etp.authz.annotation.Logical;
 import com.wf.etp.authz.annotation.RequiresPermissions;
 import com.wf.etp.authz.annotation.RequiresRoles;
-import com.wf.etp.authz.exception.ErrorTokenException;
-import com.wf.etp.authz.exception.ExpiredTokenException;
 import com.wf.etp.authz.exception.UnauthorizedException;
 
 /**
@@ -51,32 +47,17 @@ public class ApiInterceptor implements HandlerInterceptor {
 	}
 
 	@Override
-	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler) throws Exception {
-		String userId = null;
-		String token = request.getHeader("token");
-		if (token == null) {
-			token = request.getParameter("token");
-		}
-		try { // 解析token
-			userId = SubjectUtil.getInstance().parseToken(token).getSubject();
-		} catch (ExpiredJwtException e) {
-			SubjectUtil.getInstance().expireToken(userId, token); // 从缓存中移除过期的token
-			throw new ExpiredTokenException();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ErrorTokenException();
-		}
-		// 校验服务器是否存在token
-		if (!SubjectUtil.getInstance().isValidToken(userId, token)) {
-			throw new ExpiredTokenException();
-		}
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		SubjectUtil subjectUtil = SubjectUtil.getInstance();
+		
+		String token = subjectUtil.getRequestToken(request);
+		String userId = subjectUtil.parseToken(token).getSubject();
+		
 		// 检查权限
 		if (handler instanceof HandlerMethod) {
 			Method method = ((HandlerMethod) handler).getMethod();
 			if (method != null) {
-				if (!checkPermission(method, userId)
-						|| !checkRole(method, userId)) {
+				if (!checkPermission(method, userId) || !checkRole(method, userId)) {
 					throw new UnauthorizedException();
 				}
 			}
