@@ -25,7 +25,7 @@ dependencies {
     compile 'com.github.whvcse:JwtPermission:1.0.8'
 }
 ```
-最新的版本号在上面的彩色标签里面:point_up_2::point_up_2::point_up_2:，最好是使用最新版本:simple_smile::simple_smile 。
+最新的版本号在上面的彩色标签里面:point_up_2::point_up_2::point_up_2:，最好是使用最新版本:dog::dog:哈。
 
 #### maven方式引入
 ```java
