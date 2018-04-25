@@ -29,6 +29,7 @@ public class SubjectUtil {
 	private static IUserRealm userRealm;
 	private static IEtpCache cache;
 	private static String tokenKey = "e-t-p";
+	private static boolean debug = false;
 
 	private SubjectUtil() {
 	}
@@ -58,6 +59,14 @@ public class SubjectUtil {
 
 	public String getTokenKey() {
 		return SubjectUtil.tokenKey;
+	}
+	
+	public boolean isDebug() {
+		return SubjectUtil.debug;
+	}
+
+	public void setDebug(boolean debug) {
+		SubjectUtil.debug = debug;
 	}
 
 	protected void setCache(IEtpCache cache) {
@@ -288,11 +297,17 @@ public class SubjectUtil {
 				throw new ExpiredTokenException();
 			}
 			return claims;
-		} catch (ExpiredJwtException e) {  //token过期
+		} catch (NullPointerException e) {  //token为null
+			throw new ErrorTokenException(e.getMessage());
+		}  catch (ExpiredJwtException e) {  //token过期
 			expireBadToken(token);
 			throw new ExpiredTokenException();
-		} catch (Exception e) {  //token解析失败
-			e.printStackTrace();
+		}catch (Exception e) {  //token解析失败
+			if (debug) {
+				e.printStackTrace();
+			} else {
+				System.out.println(e.getMessage());
+			}
 			throw new ErrorTokenException();
 		}
 	}
@@ -306,7 +321,7 @@ public class SubjectUtil {
 		try {
 			return parseToken(token).getSubject();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 		return null;
 	}

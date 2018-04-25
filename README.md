@@ -22,7 +22,7 @@ allprojects {
 ```
 ```java
 dependencies {
-    compile 'com.github.whvcse:JwtPermission:1.0.8'
+    compile 'com.github.whvcse:JwtPermission:1.0.9'
 }
 ```
 最新的版本号在上面的彩色标签里面:point_up_2::point_up_2::point_up_2:，最好是使用最新版本:dog::dog:哈。
@@ -40,7 +40,7 @@ dependencies {
    <dependency>
       <groupId>com.github.whvcse</groupId>
       <artifactId>JwtPermission</artifactId>
-      <version>1.0.8</version>
+      <version>1.0.9</version>
    </dependency>
 </dependencies>
 ```

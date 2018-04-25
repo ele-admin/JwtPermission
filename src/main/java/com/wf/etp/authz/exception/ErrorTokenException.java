@@ -12,4 +12,8 @@ public class ErrorTokenException extends EtpException {
 	public ErrorTokenException() {
 		super(401, "身份验证失败");
 	}
+	
+	public ErrorTokenException(String message) {
+		super(401, message);
+	}
 }

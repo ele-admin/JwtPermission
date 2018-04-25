@@ -52,8 +52,7 @@ public class TokenUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	protected static Claims parseToken(String token, String key)
-			throws Exception {
+	protected static Claims parseToken(String token, String key) throws Exception {
 		if (token == null) {
 			throw new NullPointerException("token不能为null");
 		}

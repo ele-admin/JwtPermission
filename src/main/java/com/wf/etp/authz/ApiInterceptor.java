@@ -33,6 +33,10 @@ public class ApiInterceptor implements HandlerInterceptor {
 	public void setCache(IEtpCache cache) {
 		SubjectUtil.getInstance().setCache(cache);
 	}
+	
+	public void setDebug(boolean debug) {
+		SubjectUtil.getInstance().setDebug(debug);
+	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request,
@@ -62,6 +66,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 				}
 			}
 		}
+		//权限校验通过将userId存入request中方便controller获取
 		request.setAttribute("userId", userId);
 		return true;
 	}
