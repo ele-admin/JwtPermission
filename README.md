@@ -66,6 +66,7 @@ dependencies {
             <property name="userRealm" ref="userRealm" />  <!-- 需要提供UserRealm -->
             <property name="cache" ref="etpCache" /> <!-- 需要提供缓存实现 -->
             <property name="tokenKey" value="e-t-p" />  <!-- 生成token的key,可以不写默认是'e-t-p' -->
+	    <property name="debug" value="true" />  <!-- 是否输出详细错误，可以不写，默认为fasle -->
         </bean>
     </mvc:interceptor>
 </mvc:interceptors>
