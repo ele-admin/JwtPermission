@@ -11,6 +11,9 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.wf.etp.authz.annotation.Logical;
 import com.wf.etp.authz.exception.ErrorTokenException;
 import com.wf.etp.authz.exception.ExpiredTokenException;
@@ -30,6 +33,7 @@ public class SubjectUtil {
 	private static IEtpCache cache;
 	private static String tokenKey = "e-t-p";
 	private static boolean debug = false;
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	private SubjectUtil() {
 	}
@@ -303,11 +307,7 @@ public class SubjectUtil {
 			expireBadToken(token);
 			throw new ExpiredTokenException();
 		}catch (Exception e) {  //token解析失败
-			if (debug) {
-				e.printStackTrace();
-			} else {
-				System.out.println(e.getMessage());
-			}
+			printError(e);
 			throw new ErrorTokenException();
 		}
 	}
@@ -321,7 +321,7 @@ public class SubjectUtil {
 		try {
 			return parseToken(token).getSubject();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			printError(e);
 		}
 		return null;
 	}
@@ -331,11 +331,19 @@ public class SubjectUtil {
 	 * @param request
 	 * @return
 	 */
-	public String getRequestToken(HttpServletRequest request){
+	public String getRequestToken(HttpServletRequest request) {
 		String token = request.getHeader("token");
 		if (token == null) {
 			token = request.getParameter("token");
 		}
 		return token;
+	}
+	
+	private void printError(Exception e) {
+		if (debug) {
+			logger.error(e.getMessage(), e);
+		} else {
+			logger.info(e.getMessage());
+		}
 	}
 }
