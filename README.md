@@ -249,6 +249,31 @@ SubjectUtil.getInstance().hasPermission(userId, new String[]{"system","front"}, 
 SubjectUtil.getInstance().hasRole(userId, new String[]{"admin","user"}, Logical.OR)
 ```
 
+### 第五步、前端页面（ajax）的使用：
+可以把token放在参数里面，也可以放在header里面： 
+```javascript
+//放在参数
+$.get("api/role", {
+	token: getToken()
+}, function(data) {
+	//
+});
+
+//放在header
+$.ajax({
+	url: "api/user/"+obj.data.userId, 
+	type: "DELETE", 
+	dataType: "JSON",
+	beforeSend: function(request) {
+		request.setRequestHeader("token", getToken());
+	},
+	success: function(data){
+		//
+	}
+});
+```
+
+
 -------
 
 ## 注意事项
