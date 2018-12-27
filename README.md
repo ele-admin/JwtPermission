@@ -13,14 +13,14 @@
 ## 导入
 #### gradle方式的引入
 需要先在project的build.gradle下添加：
-```java
+```
 allprojects {
     repositories {
         maven { url 'https://jitpack.io' }
     }
 }
 ```
-```java
+```
 dependencies {
     compile 'com.github.whvcse:JwtPermission:1.0.9'
 }
@@ -28,7 +28,7 @@ dependencies {
 最新的版本号在上面的彩色标签里面:point_up_2::point_up_2::point_up_2:，最好是使用最新版本:dog::dog:哈。
 
 #### maven方式引入
-```java
+```xml
 <repositories>
     <repository>
     <id>jitpack.io</id>
@@ -56,7 +56,7 @@ dependencies {
   
 ### 第一步、与spring mvc集成：
 此项目的全部配置均在spring mvc的配置文件中进行。 
-```java
+```xml
 <!-- token拦截器配置 -->
 <mvc:interceptors>
     <mvc:interceptor>
@@ -135,7 +135,7 @@ public class UserRealm extends IUserRealm {
    
 #### 2.自定义缓存,需要实现IEtpCache, 这里演示用redis实现缓存操作
 ```java
-import com.wf.etp.authz.IEtpCache;
+import com.wf.etp.authz.cache.IEtpCache;
 import com.wf.ew.core.utils.RedisUtil;
 
 public class EtpCache extends IEtpCache {

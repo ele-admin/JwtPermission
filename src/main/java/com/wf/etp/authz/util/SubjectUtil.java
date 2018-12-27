@@ -1,5 +1,7 @@
-package com.wf.etp.authz;
+package com.wf.etp.authz.util;
 
+import com.wf.etp.authz.IUserRealm;
+import com.wf.etp.authz.cache.IEtpCache;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -49,7 +51,7 @@ public class SubjectUtil {
 		return instance;
 	}
 
-	protected void setUserRealm(IUserRealm userRealm) {
+	public void setUserRealm(IUserRealm userRealm) {
 		SubjectUtil.userRealm = userRealm;
 	}
 
@@ -57,7 +59,7 @@ public class SubjectUtil {
 		return SubjectUtil.userRealm;
 	}
 
-	protected void setTokenKey(String tokenKey) {
+	public void setTokenKey(String tokenKey) {
 		SubjectUtil.tokenKey = tokenKey;
 	}
 
@@ -73,7 +75,7 @@ public class SubjectUtil {
 		SubjectUtil.debug = debug;
 	}
 
-	protected void setCache(IEtpCache cache) {
+	public void setCache(IEtpCache cache) {
 		SubjectUtil.cache = cache;
 	}
 
@@ -108,7 +110,7 @@ public class SubjectUtil {
 	/**
 	 * 检查是否有指定权限
 	 * 
-	 * @param roles
+	 * @param userId
 	 * @param logical
 	 * @return
 	 */
@@ -205,7 +207,7 @@ public class SubjectUtil {
 	 * @param token
 	 * @return
 	 */
-	protected boolean isValidToken(String userId, String token) {
+	public boolean isValidToken(String userId, String token) {
 		checkUserRealm();
 		List<String> tokens = cache.getSet(KEY_PRE_TOKEN + userId);
 		return tokens != null && tokens.contains(token);
@@ -277,7 +279,7 @@ public class SubjectUtil {
 	 * 创建token
 	 * 
 	 * @param userId
-	 * @param ttlMillis
+	 * @param expireDate
 	 * @return
 	 */
 	public String createToken(String userId, Date expireDate) {
@@ -293,7 +295,7 @@ public class SubjectUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Claims parseToken(String token) throws Exception {
+	public Claims parseToken(String token) throws Exception {
 		try {
 			Claims claims = TokenUtil.parseToken(token, tokenKey);
 			// 校验服务器是否存在token

@@ -1,4 +1,4 @@
-package com.wf.etp.authz;
+package com.wf.etp.authz.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -33,7 +33,7 @@ public class TokenUtil {
 	 * 创建token
 	 * 
 	 * @param userId
-	 * @param ttlMillis
+	 * @param expireDate
 	 * @return
 	 * @throws Exception
 	 */

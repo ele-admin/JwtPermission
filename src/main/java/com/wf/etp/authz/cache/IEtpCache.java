@@ -1,4 +1,4 @@
-package com.wf.etp.authz;
+package com.wf.etp.authz.cache;
 
 import java.util.Collection;
 import java.util.List;
