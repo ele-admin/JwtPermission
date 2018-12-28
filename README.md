@@ -62,7 +62,7 @@ dependencies {
     <mvc:interceptor>
         <mvc:mapping path="/api/**" /> <!-- 拦截所有  -->
         <mvc:exclude-mapping path="/api/login" />  <!-- 排除登录接口 -->
-        <bean class="com.wf.etp.authz.ApiInterceptor">  <!-- 框架提供的拦截器 -->
+        <bean class="ApiInterceptor">  <!-- 框架提供的拦截器 -->
             <property name="userRealm" ref="userRealm" />  <!-- 需要提供UserRealm -->
             <property name="cache" ref="etpCache" /> <!-- 需要提供缓存实现 -->
             <property name="tokenKey" value="e-t-p" />  <!-- 生成token的key,可以不写默认是'e-t-p' -->
