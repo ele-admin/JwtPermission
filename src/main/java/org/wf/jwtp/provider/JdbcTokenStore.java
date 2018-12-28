@@ -117,7 +117,7 @@ public class JdbcTokenStore implements TokenStore {
         String roleJson = null;
         try {
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            roleJson = mapper.writeValueAsString(token.getPermissions());
+            roleJson = mapper.writeValueAsString(token.getRoles());
         } catch (Exception e) {
             e.printStackTrace();
         }

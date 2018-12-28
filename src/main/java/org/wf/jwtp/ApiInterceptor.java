@@ -25,6 +25,13 @@ public class ApiInterceptor extends HandlerInterceptorAdapter {
 
     private TokenStore tokenStore;
 
+    public ApiInterceptor() {
+    }
+
+    public ApiInterceptor(TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
+    }
+
     public TokenStore getTokenStore() {
         return tokenStore;
     }
