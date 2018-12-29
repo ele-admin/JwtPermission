@@ -1,10 +1,9 @@
 package org.wf.jwtp.util;
 
+import org.wf.jwtp.annotation.Logical;
 import org.wf.jwtp.provider.Token;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.wf.jwtp.annotation.Logical;
 
 /**
  * 权限检查工具类
@@ -13,6 +12,7 @@ import org.wf.jwtp.annotation.Logical;
  * @date 2018-1-23 上午9:58:40
  */
 public class SubjectUtil {
+    public static final String REQUEST_TOKEN_NAME = "JWTP_TOKEN";
 
     /**
      * 检查是否有指定角色
@@ -29,7 +29,7 @@ public class SubjectUtil {
         boolean rs = false;
         for (int i = 0; i < roles.length; i++) {
             if (token.getRoles() != null) {
-                rs = token.getRoles().contains(roles[i]);
+                rs = contains(token.getRoles(), roles[i]);
             }
             if (logical == (rs ? Logical.OR : Logical.AND)) {
                 break;
@@ -65,7 +65,7 @@ public class SubjectUtil {
         boolean rs = false;
         for (int i = 0; i < permissions.length; i++) {
             if (token.getPermissions() != null) {
-                rs = token.getPermissions().contains(permissions[i]);
+                rs = contains(token.getPermissions(), permissions[i]);
             }
             if (logical == (rs ? Logical.OR : Logical.AND)) {
                 break;
@@ -93,7 +93,15 @@ public class SubjectUtil {
      * @return
      */
     public static Token getToken(HttpServletRequest request) {
-        return (Token) request.getAttribute("");
+        return (Token) request.getAttribute(REQUEST_TOKEN_NAME);
     }
 
+    private static boolean contains(String[] strs, String str) {
+        for (int i = 0; i < strs.length; i++) {
+            if (strs[i].equals(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

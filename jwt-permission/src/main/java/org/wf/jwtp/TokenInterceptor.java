@@ -1,5 +1,8 @@
 package org.wf.jwtp;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.wf.jwtp.annotation.Logical;
 import org.wf.jwtp.annotation.RequiresPermissions;
 import org.wf.jwtp.annotation.RequiresRoles;
@@ -10,9 +13,6 @@ import org.wf.jwtp.provider.Token;
 import org.wf.jwtp.provider.TokenStore;
 import org.wf.jwtp.util.SubjectUtil;
 import org.wf.jwtp.util.TokenUtil;
-import io.jsonwebtoken.ExpiredJwtException;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,14 +21,14 @@ import java.lang.reflect.Method;
 /**
  * Created by wangfan on 2018-12-27 下午 4:46.
  */
-public class ApiInterceptor extends HandlerInterceptorAdapter {
+public class TokenInterceptor extends HandlerInterceptorAdapter {
 
     private TokenStore tokenStore;
 
-    public ApiInterceptor() {
+    public TokenInterceptor() {
     }
 
-    public ApiInterceptor(TokenStore tokenStore) {
+    public TokenInterceptor(TokenStore tokenStore) {
         this.tokenStore = tokenStore;
     }
 
@@ -42,12 +42,12 @@ public class ApiInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String access_token = request.getHeader("Authorization");
-        if (access_token != null && access_token.length() >= 14) {
-            access_token = access_token.substring(14);
-        }
+        String access_token = request.getParameter("access_token");
         if (access_token == null || access_token.trim().isEmpty()) {
-            access_token = request.getParameter("access_token");
+            access_token = request.getHeader("Authorization");
+            if (access_token != null && access_token.length() >= 14) {
+                access_token = access_token.substring(7);
+            }
         }
         if (access_token == null || access_token.trim().isEmpty()) {
             throw new ErrorTokenException();
@@ -70,6 +70,7 @@ public class ApiInterceptor extends HandlerInterceptorAdapter {
                     }
                 }
             }
+            request.setAttribute(SubjectUtil.REQUEST_TOKEN_NAME, token);
         } catch (ExpiredJwtException e) {
             tokenStore.removeToken(token.getUserId(), access_token);
             throw new ExpiredTokenException();

@@ -9,7 +9,9 @@ import org.wf.jwtp.util.TokenUtil;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by wangfan on 2018-12-28 下午 1:00.

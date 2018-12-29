@@ -1,16 +1,15 @@
 package org.wf.jwtp.util;
 
-import org.wf.jwtp.provider.Token;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-
-import java.security.Key;
-import java.util.Date;
+import org.wf.jwtp.provider.Token;
 
 import javax.crypto.SecretKey;
+import java.security.Key;
+import java.util.Date;
 
 /**
  * Token工具类

@@ -52,7 +52,7 @@ public class RedisTokenStore implements TokenStore {
     @Override
     public int storeToken(Token token) {
         // 存储access_token
-        redisTemplate.opsForSet().add(KEY_PRE_TOKEN + token.getUserId(), token.getAccessToken());
+        redisTemplate.opsForList().rightPush(KEY_PRE_TOKEN + token.getUserId(), token.getAccessToken());
         // 存储权限
         String permKey = KEY_PRE_PERM + token.getUserId();
         for (int i = 0; i < redisTemplate.opsForSet().size(permKey); i++) {

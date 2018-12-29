@@ -1,7 +1,6 @@
 package org.wf.jwtp.provider;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by wangfan on 2018-12-28 上午 9:21.
