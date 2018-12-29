@@ -29,13 +29,17 @@ public class TokenUtil {
     }
 
     public static Token buildToken(String subject, long expire) {
+        return buildToken(subject, expire, getKey());
+    }
+
+    public static Token buildToken(String subject, long expire, Key key) {
         Date expireDate = new Date(new Date().getTime() + 1000 * expire);  // 单位毫秒
-        Key key = getKey();
         String access_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(expireDate).compact();
         Token token = new Token();
         token.setTokenKey(Hex.encodeToString(key.getEncoded()));
         token.setAccessToken(access_token);
         token.setUserId(subject);
+        token.setExpireTime(expireDate);
         return token;
     }
 
@@ -58,7 +62,11 @@ public class TokenUtil {
      * 生成16进制的key
      */
     public static String getHexKey() {
-        return Hex.encodeToString(getKey().getEncoded());
+        return getHexKey(getKey());
+    }
+
+    public static String getHexKey(Key key) {
+        return Hex.encodeToString(key.getEncoded());
     }
 
     /**

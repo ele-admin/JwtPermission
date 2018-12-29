@@ -7,13 +7,17 @@ import java.util.List;
  */
 public interface TokenStore {
 
+    Token createNewToken(String userId, String[] permissions, String[] roles);
+
+    Token createNewToken(String userId, String[] permissions, String[] roles, long expire);
+
     int storeToken(Token token);
 
     Token findToken(String access_token);
 
     List<Token> findTokensByUserId(String userId);
 
-    int removeToken(String access_token);
+    int removeToken(String userId, String access_token);
 
     int removeTokensByUserId(String userId);
 

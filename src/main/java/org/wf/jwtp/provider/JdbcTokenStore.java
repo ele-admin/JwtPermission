@@ -4,6 +4,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
+import org.wf.jwtp.util.TokenUtil;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -33,13 +34,29 @@ public class JdbcTokenStore implements TokenStore {
 
     private static final String SQL_UPDATE_ROLES = "update oauth_token set roles = ? where user_id = ?";
 
-    private static final String SQL_DELETE = "delete from oauth_token where access_token = ?";
+    private static final String SQL_DELETE = "delete from oauth_token where user_id = ? and access_token = ?";
 
     private static final String SQL_DELETE_BY_USER_ID = "delete from oauth_token where user_id = ?";
 
     public JdbcTokenStore(DataSource dataSource) {
         Assert.notNull(dataSource, "DataSource required");
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public Token createNewToken(String userId, String[] permissions, String[] roles) {
+        return createNewToken(userId, permissions, roles, TokenUtil.DEFAULT_EXPIRE);
+    }
+
+    @Override
+    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
+        Token token = TokenUtil.buildToken(userId, expire);
+        token.setPermissions(permissions);
+        token.setRoles(roles);
+        if (storeToken(token) > 0) {
+            return token;
+        }
+        return null;
     }
 
     @Override
@@ -67,8 +84,8 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public int removeToken(String access_token) {
-        return jdbcTemplate.update(SQL_DELETE, access_token);
+    public int removeToken(String userId, String access_token) {
+        return jdbcTemplate.update(SQL_DELETE, userId, access_token);
     }
 
     @Override
@@ -166,7 +183,7 @@ public class JdbcTokenStore implements TokenStore {
             if (permissions != null) {
                 try {
                     com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                    token.setPermissions((List<String>) mapper.readValue(permissions, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class)));
+                    token.setPermissions(listToArray((List<String>) mapper.readValue(permissions, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class))));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -174,12 +191,23 @@ public class JdbcTokenStore implements TokenStore {
             if (roles != null) {
                 try {
                     com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                    token.setRoles((List<String>) mapper.readValue(roles, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class)));
+                    token.setRoles(listToArray((List<String>) mapper.readValue(roles, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class))));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             return token;
+        }
+
+        private String[] listToArray(List<String> list) {
+            if (list == null) {
+                return null;
+            }
+            String[] objects = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                objects[i] = list.get(i);
+            }
+            return objects;
         }
     }
 }

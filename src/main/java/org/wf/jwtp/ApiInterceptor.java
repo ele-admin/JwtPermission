@@ -43,6 +43,9 @@ public class ApiInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String access_token = request.getHeader("Authorization");
+        if (access_token != null && access_token.length() >= 14) {
+            access_token = access_token.substring(14);
+        }
         if (access_token == null || access_token.trim().isEmpty()) {
             access_token = request.getParameter("access_token");
         }
@@ -51,12 +54,12 @@ public class ApiInterceptor extends HandlerInterceptorAdapter {
         }
         Token token = tokenStore.findToken(access_token);
         if (token == null) {
-            throw new ErrorTokenException("token被篡改");
+            throw new ErrorTokenException();
         }
         try {
             String subject = TokenUtil.parseToken(access_token, token.getTokenKey());
             if (!token.getUserId().equals(subject)) {
-                throw new ErrorTokenException();
+                throw new ErrorTokenException("token被篡改");
             }
             // 检查权限
             if (handler instanceof HandlerMethod) {
@@ -68,6 +71,7 @@ public class ApiInterceptor extends HandlerInterceptorAdapter {
                 }
             }
         } catch (ExpiredJwtException e) {
+            tokenStore.removeToken(token.getUserId(), access_token);
             throw new ExpiredTokenException();
         } catch (Exception e) {
             throw new ErrorTokenException();

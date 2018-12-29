@@ -3,7 +3,7 @@ package org.wf.jwtp.util;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by 王帆 on 2018-09-21 下午 4:20.
+ * Created by wangfan on 2018-09-21 下午 4:20.
  */
 public class Hex {
     private static final char[] DIGITS = {

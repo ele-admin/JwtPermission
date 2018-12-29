@@ -14,9 +14,9 @@ public class Token {
 
     private String userId;
 
-    private List<String> permissions;
+    private String[] permissions;
 
-    private List<String> roles;
+    private String[] roles;
 
     private String tokenKey;  // 生成token时的key
 
@@ -52,19 +52,19 @@ public class Token {
         this.userId = userId;
     }
 
-    public List<String> getPermissions() {
+    public String[] getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<String> permissions) {
+    public void setPermissions(String[] permissions) {
         this.permissions = permissions;
     }
 
-    public List<String> getRoles() {
+    public String[] getRoles() {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(String[] roles) {
         this.roles = roles;
     }
 
