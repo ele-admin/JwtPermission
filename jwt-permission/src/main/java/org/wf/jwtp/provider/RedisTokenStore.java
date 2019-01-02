@@ -20,7 +20,6 @@ public class RedisTokenStore implements TokenStore {
 
     private StringRedisTemplate redisTemplate;
 
-
     public RedisTokenStore(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
@@ -44,6 +43,14 @@ public class RedisTokenStore implements TokenStore {
         token.setPermissions(permissions);
         token.setRoles(roles);
         if (storeToken(token) > 0) {
+            if (Config.getInstance().getMaxToken() != null && Config.getInstance().getMaxToken() != -1) {
+                List<Token> userTokens = findTokensByUserId(userId);
+                if (userTokens.size() > Config.getInstance().getMaxToken()) {
+                    for (int i = 0; i < userTokens.size() - Config.getInstance().getMaxToken(); i++) {
+                        removeToken(userId, userTokens.get(i).getAccessToken());
+                    }
+                }
+            }
             return token;
         }
         return null;

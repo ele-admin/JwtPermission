@@ -64,7 +64,7 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
         if (excludePath == null) {
             excludePath = new String[]{};
         }
-        registry.addInterceptor(new TokenInterceptor(tokenStore()))
+        registry.addInterceptor(new TokenInterceptor(tokenStore(), properties.getMaxToken()))
                 .addPathPatterns(path)
                 .excludePathPatterns(excludePath);
     }

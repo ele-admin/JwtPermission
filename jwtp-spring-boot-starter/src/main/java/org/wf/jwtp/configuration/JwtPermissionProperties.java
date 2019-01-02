@@ -14,6 +14,8 @@ public class JwtPermissionProperties {
 
     private String[] excludePath;
 
+    private Integer maxToken;
+
     public Integer getStoreType() {
         return storeType;
     }
@@ -36,5 +38,13 @@ public class JwtPermissionProperties {
 
     public void setExcludePath(String[] excludePath) {
         this.excludePath = excludePath;
+    }
+
+    public Integer getMaxToken() {
+        return maxToken;
+    }
+
+    public void setMaxToken(Integer maxToken) {
+        this.maxToken = maxToken;
     }
 }

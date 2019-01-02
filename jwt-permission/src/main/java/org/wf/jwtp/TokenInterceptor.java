@@ -9,6 +9,7 @@ import org.wf.jwtp.annotation.RequiresRoles;
 import org.wf.jwtp.exception.ErrorTokenException;
 import org.wf.jwtp.exception.ExpiredTokenException;
 import org.wf.jwtp.exception.UnauthorizedException;
+import org.wf.jwtp.provider.Config;
 import org.wf.jwtp.provider.Token;
 import org.wf.jwtp.provider.TokenStore;
 import org.wf.jwtp.util.SubjectUtil;
@@ -25,11 +26,19 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
 
     private TokenStore tokenStore;
 
+    private Integer maxToken;
+
     public TokenInterceptor() {
+        this(null);
     }
 
     public TokenInterceptor(TokenStore tokenStore) {
-        this.tokenStore = tokenStore;
+        this(tokenStore, -1);
+    }
+
+    public TokenInterceptor(TokenStore tokenStore, Integer maxToken) {
+        setTokenStore(tokenStore);
+        setMaxToken(maxToken);
     }
 
     public TokenStore getTokenStore() {
@@ -40,12 +49,21 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         this.tokenStore = tokenStore;
     }
 
+    public Integer getMaxToken() {
+        return maxToken;
+    }
+
+    public void setMaxToken(Integer maxToken) {
+        this.maxToken = maxToken;
+        Config.getInstance().setMaxToken(maxToken);
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String access_token = request.getParameter("access_token");
         if (access_token == null || access_token.trim().isEmpty()) {
             access_token = request.getHeader("Authorization");
-            if (access_token != null && access_token.length() >= 14) {
+            if (access_token != null && access_token.length() >= 7) {
                 access_token = access_token.substring(7);
             }
         }
