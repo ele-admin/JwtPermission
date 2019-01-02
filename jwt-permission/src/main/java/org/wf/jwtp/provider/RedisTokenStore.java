@@ -25,21 +25,23 @@ public class RedisTokenStore implements TokenStore {
     }
 
     @Override
+    public String getTokenKey() {
+        String tokenKey = redisTemplate.opsForValue().get(KEY_TOKEN_KEY);
+        if (tokenKey == null || tokenKey.trim().isEmpty()) {
+            tokenKey = TokenUtil.getHexKey();
+            redisTemplate.opsForValue().set(KEY_TOKEN_KEY, tokenKey);
+        }
+        return tokenKey;
+    }
+
+    @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles) {
         return createNewToken(userId, permissions, roles, TokenUtil.DEFAULT_EXPIRE);
     }
 
     @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
-        Key key;
-        String tokenKey = redisTemplate.opsForValue().get(KEY_TOKEN_KEY);
-        if (tokenKey == null || tokenKey.trim().isEmpty()) {
-            key = TokenUtil.getKey();
-            redisTemplate.opsForValue().set(KEY_TOKEN_KEY, TokenUtil.getHexKey(key));
-        } else {
-            key = TokenUtil.parseHexKey(tokenKey);
-        }
-        Token token = TokenUtil.buildToken(userId, expire, key);
+        Token token = TokenUtil.buildToken(userId, expire, TokenUtil.parseHexKey(getTokenKey()));
         token.setPermissions(permissions);
         token.setRoles(roles);
         if (storeToken(token) > 0) {
@@ -76,24 +78,15 @@ public class RedisTokenStore implements TokenStore {
     }
 
     @Override
-    public Token findToken(String access_token) {
-        String tokenKey = redisTemplate.opsForValue().get(KEY_TOKEN_KEY);
-        if (tokenKey != null && !tokenKey.trim().isEmpty()) {
-            try {
-                String userId = TokenUtil.parseToken(access_token, tokenKey);
-                if (userId != null && !userId.trim().isEmpty()) {
-                    if (redisTemplate.opsForSet().isMember(KEY_PRE_TOKEN + userId, access_token)) {
-                        Token token = new Token();
-                        token.setUserId(userId);
-                        token.setAccessToken(access_token);
-                        token.setPermissions(setToArray(redisTemplate.opsForSet().members(KEY_PRE_PERM + userId)));
-                        token.setRoles(setToArray(redisTemplate.opsForSet().members(KEY_PRE_ROLE + userId)));
-                        token.setTokenKey(tokenKey);
-                        return token;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+    public Token findToken(String userId, String access_token) {
+        if (userId != null && !userId.trim().isEmpty()) {
+            if (redisTemplate.opsForSet().isMember(KEY_PRE_TOKEN + userId, access_token)) {
+                Token token = new Token();
+                token.setUserId(userId);
+                token.setAccessToken(access_token);
+                token.setPermissions(setToArray(redisTemplate.opsForSet().members(KEY_PRE_PERM + userId)));
+                token.setRoles(setToArray(redisTemplate.opsForSet().members(KEY_PRE_ROLE + userId)));
+                return token;
             }
         }
         return null;

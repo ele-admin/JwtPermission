@@ -10,6 +10,6 @@ public class ExpiredTokenException extends TokenException {
     private static final long serialVersionUID = -8019541050781876369L;
 
     public ExpiredTokenException() {
-        super(401, "凭证已过期");
+        super(402, "登录已过期");
     }
 }

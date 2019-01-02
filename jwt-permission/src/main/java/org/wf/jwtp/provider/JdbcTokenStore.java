@@ -24,7 +24,7 @@ public class JdbcTokenStore implements TokenStore {
 
     private static final String BASE_SELECT = "select token_id, " + UPDATE_FIELDS + ", create_time, update_time from oauth_token";
 
-    private static final String SQL_SELECT_BY_TOKEN = BASE_SELECT + " where access_token = ?";
+    private static final String SQL_SELECT_BY_TOKEN = BASE_SELECT + " where user_id = ? and access_token = ?";
 
     private static final String SQL_SELECT_BY_USER_ID = BASE_SELECT + " where user_id = ? order by create_time";
 
@@ -40,9 +40,23 @@ public class JdbcTokenStore implements TokenStore {
 
     private static final String SQL_DELETE_BY_USER_ID = "delete from oauth_token where user_id = ?";
 
+    private static final String SQL_SELECT_KEY = "select token_key from oauth_token_key";
+
+    private static final String SQL_INSERT_KEY = "insert into oauth_token_key (token_key) values (?)";
+
     public JdbcTokenStore(DataSource dataSource) {
         Assert.notNull(dataSource, "DataSource required");
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public String getTokenKey() {
+        String tokenKey = jdbcTemplate.queryForObject(SQL_SELECT_KEY, String.class);
+        if (tokenKey == null || tokenKey.trim().isEmpty()) {
+            tokenKey = TokenUtil.getHexKey();
+            jdbcTemplate.update(SQL_INSERT_KEY, tokenKey);
+        }
+        return tokenKey;
     }
 
     @Override
@@ -76,9 +90,9 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public Token findToken(String access_token) {
+    public Token findToken(String userId, String access_token) {
         try {
-            return jdbcTemplate.queryForObject(SQL_SELECT_BY_TOKEN, rowMapper, access_token);
+            return jdbcTemplate.queryForObject(SQL_SELECT_BY_TOKEN, rowMapper, userId, access_token);
         } catch (EmptyResultDataAccessException e) {
         }
         return null;

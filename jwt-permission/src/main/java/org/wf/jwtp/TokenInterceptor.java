@@ -70,14 +70,11 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         if (access_token == null || access_token.trim().isEmpty()) {
             throw new ErrorTokenException();
         }
-        Token token = tokenStore.findToken(access_token);
-        if (token == null) {
-            throw new ErrorTokenException();
-        }
         try {
-            String subject = TokenUtil.parseToken(access_token, token.getTokenKey());
-            if (!token.getUserId().equals(subject)) {
-                throw new ErrorTokenException("token被篡改");
+            String subject = TokenUtil.parseToken(access_token, tokenStore.getTokenKey());
+            Token token = tokenStore.findToken(subject, access_token);
+            if (token == null) {
+                throw new ErrorTokenException();
             }
             // 检查权限
             if (handler instanceof HandlerMethod) {
@@ -90,7 +87,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             }
             request.setAttribute(SubjectUtil.REQUEST_TOKEN_NAME, token);
         } catch (ExpiredJwtException e) {
-            tokenStore.removeToken(token.getUserId(), access_token);
             throw new ExpiredTokenException();
         } catch (Exception e) {
             throw new ErrorTokenException();

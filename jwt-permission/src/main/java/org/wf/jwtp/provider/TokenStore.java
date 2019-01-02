@@ -7,13 +7,15 @@ import java.util.List;
  */
 public interface TokenStore {
 
+    String getTokenKey();
+
     Token createNewToken(String userId, String[] permissions, String[] roles);
 
     Token createNewToken(String userId, String[] permissions, String[] roles, long expire);
 
     int storeToken(Token token);
 
-    Token findToken(String access_token);
+    Token findToken(String userId, String access_token);
 
     List<Token> findTokensByUserId(String userId);
 
