@@ -38,6 +38,10 @@ public class ApiInterceptor implements HandlerInterceptor {
 		SubjectUtil.getInstance().setDebug(debug);
 	}
 
+	public void setTokenStorageLimit(int tokenStorageLimit) {
+		SubjectUtil.getInstance().setTokenStorageLimit(tokenStorageLimit);
+	}
+
 	@Override
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
@@ -53,10 +57,10 @@ public class ApiInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		SubjectUtil subjectUtil = SubjectUtil.getInstance();
-		
+
 		String token = subjectUtil.getRequestToken(request);
 		String userId = subjectUtil.parseToken(token).getSubject();
-		
+
 		// 检查权限
 		if (handler instanceof HandlerMethod) {
 			Method method = ((HandlerMethod) handler).getMethod();

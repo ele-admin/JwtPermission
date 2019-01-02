@@ -1,13 +1,10 @@
 package com.wf.etp.authz;
 
+import com.wf.etp.authz.exception.DownlineException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,6 +30,7 @@ public class SubjectUtil {
 	private static IEtpCache cache;
 	private static String tokenKey = "e-t-p";
 	private static boolean debug = false;
+	private static int tokenStorageLimit = 10;
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	private SubjectUtil() {
@@ -71,6 +69,14 @@ public class SubjectUtil {
 
 	public void setDebug(boolean debug) {
 		SubjectUtil.debug = debug;
+	}
+
+	public int getTokenStorageLimit() {
+		return tokenStorageLimit;
+	}
+
+	public void setTokenStorageLimit(int tokenStorageLimit) {
+		SubjectUtil.tokenStorageLimit = tokenStorageLimit;
 	}
 
 	protected void setCache(IEtpCache cache) {
@@ -205,10 +211,19 @@ public class SubjectUtil {
 	 * @param token
 	 * @return
 	 */
-	protected boolean isValidToken(String userId, String token) {
+	protected void validToken(String userId, String token){
 		checkUserRealm();
 		List<String> tokens = cache.getSet(KEY_PRE_TOKEN + userId);
-		return tokens != null && tokens.contains(token);
+		if (tokens != null && tokens.contains(token)){
+			if (userRealm.isSingleUser() && userRealm.hasDownlineTip()){
+				if( !token.equals(tokens.get(0))){
+					expireToken(userId,token);
+					throw new DownlineException();
+				}
+			}
+		}else{
+			throw new ExpiredTokenException();
+		}
 	}
 
 	/**
@@ -219,12 +234,18 @@ public class SubjectUtil {
 	 */
 	private boolean setCacheToken(String userId, String token) {
 		checkUserRealm();
-		if (userRealm.isSingleUser()) {
+		if (userRealm.isSingleUser() && !userRealm.hasDownlineTip()) {
 			cache.delete(KEY_PRE_TOKEN + userId);
+		}else{
+			List<String> tokens = cache.getSet(KEY_PRE_TOKEN + userId);
+			if(tokens != null && tokens.size() >= tokenStorageLimit ){
+				tokens = tokens.subList(tokenStorageLimit -1,tokens.size());
+				for(String badToken : tokens){
+					cache.removeSet(KEY_PRE_TOKEN + userId , badToken);
+				}
+			}
 		}
-		Set<String> tokens = new HashSet<String>();
-		tokens.add(token);
-		return cache.putSet(KEY_PRE_TOKEN + userId, tokens);
+		return cache.putSet(KEY_PRE_TOKEN + userId, token);
 	}
 
 	/**
@@ -248,21 +269,6 @@ public class SubjectUtil {
 		return cache.removeSet(KEY_PRE_TOKEN + userId, token);
 	}
 	
-	/**
-	 * 移除过期的token
-	 * @param token
-	 * @return
-	 */
-	public boolean expireBadToken(String token) {
-		Set<String> keys = cache.keys(KEY_PRE_TOKEN + "*");
-		for(String keyOne : keys){
-			List<String> tokens = cache.getSet(keyOne);
-			if(tokens.contains(token)){
-				return cache.removeSet(keyOne, token);
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * 检查userRealm是否注入
@@ -295,17 +301,18 @@ public class SubjectUtil {
 	 */
 	protected Claims parseToken(String token) throws Exception {
 		try {
+
 			Claims claims = TokenUtil.parseToken(token, tokenKey);
-			// 校验服务器是否存在token
-			if (!isValidToken(claims.getSubject(), token)) {
-				throw new ExpiredTokenException();
-			}
+			// 校验服务器的token
+			validToken(claims.getSubject(), token);
+
 			return claims;
 		} catch (NullPointerException e) {  //token为null
 			throw new ErrorTokenException(e.getMessage());
 		}  catch (ExpiredJwtException e) {  //token过期
-			expireBadToken(token);
 			throw new ExpiredTokenException();
+		}  catch (DownlineException e) {  //token下线
+			throw new DownlineException();
 		}catch (Exception e) {  //token解析失败
 			printError(e);
 			throw new ErrorTokenException();

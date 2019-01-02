@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.Base64Codec;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Date;
@@ -53,7 +54,7 @@ public class TokenUtil {
 	 * @throws Exception
 	 */
 	protected static Claims parseToken(String token, String key) throws Exception {
-		if (token == null) {
+		if (StringUtils.isEmpty(token)) {
 			throw new NullPointerException("token不能为null");
 		}
 		return Jwts.parser().setSigningKey(generalKey(key))
