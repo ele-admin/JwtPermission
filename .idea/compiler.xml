@@ -7,12 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jwt-permission" />
-        <module name="jwt-permission-bootstarter" />
+        <module name="jwtp-spring-boot-starter" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="jwt-permission" target="6" />
-      <module name="jwt-permission-bootstarter" target="8" />
+      <module name="jwtp-spring-boot-starter" target="8" />
       <module name="JwtPermission" target="1.5" />
     </bytecodeTargetLevel>
   </component>

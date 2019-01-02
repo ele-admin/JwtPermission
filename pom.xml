@@ -12,7 +12,7 @@
 
     <modules>
         <module>jwt-permission</module>
-        <module>jwt-permission-bootstarter</module>
+        <module>jwtp-spring-boot-starter</module>
     </modules>
 
     <properties>

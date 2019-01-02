@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JwtPermission.iml" filepath="$PROJECT_DIR$/JwtPermission.iml" />
       <module fileurl="file://$PROJECT_DIR$/jwt-permission/jwt-permission.iml" filepath="$PROJECT_DIR$/jwt-permission/jwt-permission.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jwt-permission-bootstarter/jwt-permission-bootstarter.iml" filepath="$PROJECT_DIR$/jwt-permission-bootstarter/jwt-permission-bootstarter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jwtp-spring-boot-starter/jwtp-spring-boot-starter.iml" filepath="$PROJECT_DIR$/jwtp-spring-boot-starter/jwtp-spring-boot-starter.iml" />
     </modules>
   </component>
 </project>
