@@ -14,6 +14,6 @@ CREATE TABLE `oauth_token` (
 CREATE TABLE `oauth_token_key` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `token_key` varchar(128) DEFAULT NULL COMMENT '生成token时的key',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
