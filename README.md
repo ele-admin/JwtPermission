@@ -25,7 +25,7 @@
        <dependency>
           <groupId>com.github.whvcse.JwtPermission</groupId>
           <artifactId>jwt-permission</artifactId>
-          <version>2.0.1</version>
+          <version>2.0.2</version>
        </dependency>
     </dependencies>
 </project>
@@ -36,7 +36,7 @@
 <dependency>
   <groupId>com.github.whvcse.JwtPermission</groupId>
   <artifactId>jwtp-spring-boot-starter</artifactId>
-  <version>2.0.1</version>
+  <version>2.0.2</version>
 </dependency>
 ```
 
