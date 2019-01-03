@@ -72,6 +72,9 @@ public class TokenUtil {
      * 把16进制的key转成Key
      */
     public static Key parseHexKey(String hexKey) {
+        if (hexKey == null || hexKey.trim().isEmpty()) {
+            return null;
+        }
         SecretKey key = Keys.hmacShaKeyFor(Hex.decode(hexKey));
         return key;
     }

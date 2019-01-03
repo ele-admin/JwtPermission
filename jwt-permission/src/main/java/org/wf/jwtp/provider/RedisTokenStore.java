@@ -1,11 +1,11 @@
 package org.wf.jwtp.provider;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.wf.jwtp.util.TokenUtil;
 
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +14,7 @@ import java.util.Set;
  * Created by wangfan on 2018-12-29 上午 9:10.
  */
 public class RedisTokenStore implements TokenStore {
+    protected final Log logger = LogFactory.getLog(this.getClass());
     private static final String KEY_TOKEN_KEY = "oauth_token_key";
     private static final String KEY_PRE_TOKEN = "oauth_token:";
     private static final String KEY_PRE_PERM = "oauth_prem:";
@@ -42,15 +43,19 @@ public class RedisTokenStore implements TokenStore {
 
     @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
-        Token token = TokenUtil.buildToken(userId, expire, TokenUtil.parseHexKey(getTokenKey()));
+        String tokenKey = getTokenKey();
+        logger.debug("-------------------------------------------");
+        logger.debug("构建token使用tokenKey：" + tokenKey);
+        logger.debug("-------------------------------------------");
+        Token token = TokenUtil.buildToken(userId, expire, TokenUtil.parseHexKey(tokenKey));
         token.setPermissions(permissions);
         token.setRoles(roles);
         if (storeToken(token) > 0) {
             if (Config.getInstance().getMaxToken() != null && Config.getInstance().getMaxToken() != -1) {
-                List<Token> userTokens = findTokensByUserId(userId);
-                if (userTokens.size() > Config.getInstance().getMaxToken()) {
-                    for (int i = 0; i < userTokens.size() - Config.getInstance().getMaxToken(); i++) {
-                        removeToken(userId, userTokens.get(i).getAccessToken());
+                Long userTokenSize = redisTemplate.opsForList().size(KEY_PRE_TOKEN + userId);
+                if (userTokenSize > Config.getInstance().getMaxToken()) {
+                    for (int i = 0; i < userTokenSize - Config.getInstance().getMaxToken(); i++) {
+                        redisTemplate.opsForList().leftPop(KEY_PRE_TOKEN + userId);
                     }
                 }
             }
@@ -65,15 +70,11 @@ public class RedisTokenStore implements TokenStore {
         redisTemplate.opsForList().rightPush(KEY_PRE_TOKEN + token.getUserId(), token.getAccessToken());
         // 存储权限
         String permKey = KEY_PRE_PERM + token.getUserId();
-        for (int i = 0; i < redisTemplate.opsForSet().size(permKey); i++) {
-            redisTemplate.opsForSet().pop(permKey);
-        }
+        redisTemplate.delete(permKey);
         redisTemplate.opsForSet().add(permKey, token.getPermissions());
         // 存储角色
         String roleKey = KEY_PRE_ROLE + token.getUserId();
-        for (int i = 0; i < redisTemplate.opsForSet().size(roleKey); i++) {
-            redisTemplate.opsForSet().pop(roleKey);
-        }
+        redisTemplate.delete(roleKey);
         redisTemplate.opsForSet().add(roleKey, token.getRoles());
         return 1;
     }
@@ -81,13 +82,16 @@ public class RedisTokenStore implements TokenStore {
     @Override
     public Token findToken(String userId, String access_token) {
         if (userId != null && !userId.trim().isEmpty()) {
-            if (redisTemplate.opsForSet().isMember(KEY_PRE_TOKEN + userId, access_token)) {
-                Token token = new Token();
-                token.setUserId(userId);
-                token.setAccessToken(access_token);
-                token.setPermissions(setToArray(redisTemplate.opsForSet().members(KEY_PRE_PERM + userId)));
-                token.setRoles(setToArray(redisTemplate.opsForSet().members(KEY_PRE_ROLE + userId)));
-                return token;
+            List<String> accessTokens = redisTemplate.opsForList().range(KEY_PRE_TOKEN + userId, 0, -1);
+            for (int i = 0; i < accessTokens.size(); i++) {
+                if (accessTokens.get(i).equals(access_token)) {
+                    Token token = new Token();
+                    token.setUserId(userId);
+                    token.setAccessToken(access_token);
+                    token.setPermissions(setToArray(redisTemplate.opsForSet().members(KEY_PRE_PERM + userId)));
+                    token.setRoles(setToArray(redisTemplate.opsForSet().members(KEY_PRE_ROLE + userId)));
+                    return token;
+                }
             }
         }
         return null;
@@ -95,15 +99,17 @@ public class RedisTokenStore implements TokenStore {
 
     @Override
     public List<Token> findTokensByUserId(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return null;
+        }
         List<Token> tokens = new ArrayList<Token>();
-        Set<String> accessTokens = redisTemplate.opsForSet().members(KEY_PRE_TOKEN + userId);
+        List<String> accessTokens = redisTemplate.opsForList().range(KEY_PRE_TOKEN + userId, 0, -1);
         if (accessTokens != null || accessTokens.size() > 0) {
             String[] perms = setToArray(redisTemplate.opsForSet().members(KEY_PRE_PERM + userId));
             String[] roles = setToArray(redisTemplate.opsForSet().members(KEY_PRE_ROLE + userId));
-            Iterator<String> iterator = accessTokens.iterator();
-            while (iterator.hasNext()) {
+            for (int i = 0; i < accessTokens.size(); i++) {
                 Token token = new Token();
-                token.setAccessToken(iterator.next());
+                token.setAccessToken(accessTokens.get(i));
                 token.setUserId(userId);
                 token.setPermissions(perms);
                 token.setRoles(roles);
@@ -115,25 +121,20 @@ public class RedisTokenStore implements TokenStore {
 
     @Override
     public int removeToken(String userId, String access_token) {
-        redisTemplate.opsForSet().remove(KEY_PRE_TOKEN + userId, access_token);
+        redisTemplate.opsForList().remove(KEY_PRE_TOKEN + userId, 0, access_token);
         return 1;
     }
 
     @Override
     public int removeTokensByUserId(String userId) {
-        String tPreKey = KEY_PRE_TOKEN + userId;
-        for (int i = 0; i < redisTemplate.opsForSet().size(tPreKey); i++) {
-            redisTemplate.opsForSet().pop(tPreKey);
-        }
+        redisTemplate.delete(KEY_PRE_TOKEN + userId);
         return 1;
     }
 
     @Override
     public int updateRolesByUserId(String userId, String[] roles) {
         String roleKey = KEY_PRE_ROLE + userId;
-        for (int i = 0; i < redisTemplate.opsForSet().size(roleKey); i++) {
-            redisTemplate.opsForSet().pop(roleKey);
-        }
+        redisTemplate.delete(roleKey);
         redisTemplate.opsForSet().add(roleKey, roles);
         return 1;
     }
@@ -141,9 +142,7 @@ public class RedisTokenStore implements TokenStore {
     @Override
     public int updatePermissionsByUserId(String userId, String[] permissions) {
         String permKey = KEY_PRE_PERM + userId;
-        for (int i = 0; i < redisTemplate.opsForSet().size(permKey); i++) {
-            redisTemplate.opsForSet().pop(permKey);
-        }
+        redisTemplate.delete(permKey);
         redisTemplate.opsForSet().add(permKey, permissions);
         return 1;
     }

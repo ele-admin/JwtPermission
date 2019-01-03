@@ -1,5 +1,7 @@
 package org.wf.jwtp.provider;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,6 +20,7 @@ import java.util.List;
  * Created by wangfan on 2018-12-28 下午 1:00.
  */
 public class JdbcTokenStore implements TokenStore {
+    protected final Log logger = LogFactory.getLog(this.getClass());
     private final JdbcTemplate jdbcTemplate;
     private RowMapper<Token> rowMapper = new TokenRowMapper();
 
@@ -52,7 +55,11 @@ public class JdbcTokenStore implements TokenStore {
 
     @Override
     public String getTokenKey() {
-        String tokenKey = jdbcTemplate.queryForObject(SQL_SELECT_KEY, String.class);
+        String tokenKey = null;
+        try {
+            tokenKey = jdbcTemplate.queryForObject(SQL_SELECT_KEY, String.class);
+        } catch (EmptyResultDataAccessException e) {
+        }
         if (tokenKey == null || tokenKey.trim().isEmpty()) {
             tokenKey = TokenUtil.getHexKey();
             jdbcTemplate.update(SQL_INSERT_KEY, tokenKey);
@@ -67,7 +74,11 @@ public class JdbcTokenStore implements TokenStore {
 
     @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
-        Token token = TokenUtil.buildToken(userId, expire);
+        String tokenKey = getTokenKey();
+        logger.debug("-------------------------------------------");
+        logger.debug("构建token使用tokenKey：" + tokenKey);
+        logger.debug("-------------------------------------------");
+        Token token = TokenUtil.buildToken(userId, expire, TokenUtil.parseHexKey(tokenKey));
         token.setPermissions(permissions);
         token.setRoles(roles);
         if (storeToken(token) > 0) {
@@ -191,7 +202,7 @@ public class JdbcTokenStore implements TokenStore {
             String user_id = rs.getString("user_id");
             String permissions = rs.getString("permissions");
             String roles = rs.getString("roles");
-            String token_key = rs.getString("token_key");
+            // String token_key = rs.getString("token_key");
             String refresh_token = rs.getString("refresh_token");
             Date expire_time = rs.getDate("expire_time");
             Date create_time = rs.getDate("create_time");

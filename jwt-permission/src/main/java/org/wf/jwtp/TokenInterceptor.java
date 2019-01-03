@@ -1,6 +1,8 @@
 package org.wf.jwtp;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.wf.jwtp.annotation.Logical;
@@ -24,9 +26,8 @@ import java.lang.reflect.Method;
  * Created by wangfan on 2018-12-27 下午 4:46.
  */
 public class TokenInterceptor extends HandlerInterceptorAdapter {
-
+    protected final Log logger = LogFactory.getLog(this.getClass());
     private TokenStore tokenStore;
-
     private Integer maxToken;
 
     public TokenInterceptor() {
@@ -69,29 +70,38 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             }
         }
         if (access_token == null || access_token.trim().isEmpty()) {
-            throw new ErrorTokenException();
+            throw new ErrorTokenException("token不能为空");
         }
+        String subject;
         try {
-            String subject = TokenUtil.parseToken(access_token, tokenStore.getTokenKey());
-            Token token = tokenStore.findToken(subject, access_token);
-            if (token == null) {
-                throw new ErrorTokenException();
-            }
-            // 检查权限
-            if (handler instanceof HandlerMethod) {
-                Method method = ((HandlerMethod) handler).getMethod();
-                if (method != null) {
-                    if (!checkPermission(method, token) || !checkRole(method, token)) {
-                        throw new UnauthorizedException();
-                    }
-                }
-            }
-            request.setAttribute(SubjectUtil.REQUEST_TOKEN_NAME, token);
+            String tokenKey = tokenStore.getTokenKey();
+            logger.debug("-------------------------------------------");
+            logger.debug("开始解析token：" + access_token);
+            logger.debug("使用tokenKey：" + tokenKey);
+            subject = TokenUtil.parseToken(access_token, tokenKey);
         } catch (ExpiredJwtException e) {
+            logger.debug("token已过期");
             throw new ExpiredTokenException();
         } catch (Exception e) {
+            logger.debug(e.getMessage());
             throw new ErrorTokenException();
         }
+        Token token = tokenStore.findToken(subject, access_token);
+        if (token == null) {
+            logger.debug("token不在系统中");
+            throw new ErrorTokenException();
+        }
+        // 检查权限
+        if (handler instanceof HandlerMethod) {
+            Method method = ((HandlerMethod) handler).getMethod();
+            if (method != null) {
+                if (!checkPermission(method, token) || !checkRole(method, token)) {
+                    throw new UnauthorizedException();
+                }
+            }
+        }
+        request.setAttribute(SubjectUtil.REQUEST_TOKEN_NAME, token);
+        logger.debug("-------------------------------------------");
         return super.preHandle(request, response, handler);
     }
 
