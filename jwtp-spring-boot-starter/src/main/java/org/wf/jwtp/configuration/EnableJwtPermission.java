@@ -7,6 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
+ * 开启自动配置
  * Created by wangfan on 2018-12-29 下午 2:44.
  */
 @Retention(value = java.lang.annotation.RetentionPolicy.RUNTIME)

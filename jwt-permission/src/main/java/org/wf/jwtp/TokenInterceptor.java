@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
+ * 拦截器
  * Created by wangfan on 2018-12-27 下午 4:46.
  */
 public class TokenInterceptor extends HandlerInterceptorAdapter {

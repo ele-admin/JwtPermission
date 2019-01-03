@@ -66,8 +66,14 @@
         </mvc:interceptor>
     </mvc:interceptors>
     
-    <!-- 这里可以选择JdbcTokenStore和RedisTokenStore -->
-    <bean id="tokenStore" class="org.wf.jwtp.provider.JdbcTokenStore" />
+    <!-- 这里可以选择 JdbcTokenStore 和 RedisTokenStore -->
+    <bean id="tokenStore" class="org.wf.jwtp.provider.JdbcTokenStore">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="tokenStore" class="org.wf.jwtp.provider.RedisTokenStore">
+        <property name="redisTemplate" ref="stringRedisTemplate" />
+    </bean>
 </beans>
 ```
 
@@ -77,7 +83,7 @@
 
 &emsp;在你的`Application`类上面加入`@EnableJwtPermission`注解，在`application.properties`有如下配置可选：
 ```text
-## 0是redisTokenStore，1是jdbcTokenStore，默认是0
+## 0是 redisTokenStore ，1是 jdbcTokenStore ，默认是0
 jwtp.store-type=0
 
 ## 拦截路径，默认是/**
@@ -146,7 +152,7 @@ SubjectUtil.hasRole(request, new String[]{"admin","user"}, Logical.OR)
 ### 前端传递token
 放在参数里面用`access_token`传递：
 ```javascript
-$.get("/xxx", { access_token: getToken() }, function(data) {
+$.get("/xxx", { access_token: token }, function(data) {
 
 });
 ```
@@ -155,7 +161,7 @@ $.get("/xxx", { access_token: getToken() }, function(data) {
 $.ajax({
     url: "/xxx", 
     beforeSend: function(xhr) {
-        xhr.setRequestHeader("Authorization", 'Bearer '+getToken());
+        xhr.setRequestHeader("Authorization", 'Bearer '+ token);
     },
     success: function(data){ }
 });
@@ -263,7 +269,7 @@ public class XX {
         tokenStore.updateRolesByUserId(userId, roles);
         
         // 更新用户的权限列表
-        tokenStore.updatePermissionsByUserId(permissions);
+        tokenStore.updatePermissionsByUserId(userId, permissions);
     }
 }
 ```
@@ -275,11 +281,57 @@ public class XX {
 Token token = SubjectUtil.getToken(request);
 ```   
 
+<br>
+
+### RedisTokenStore需要集成redis
+
+1.SpringMvc集成Redis：
+```xml
+<beans>
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="300" />
+        <property name="maxTotal" value="600" />
+        <property name="maxWaitMillis" value="1000" />
+        <property name="testOnBorrow" value="true" />
+    </bean>
+    
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="127.0.0.1" />
+        <property name="password" value="" />
+        <property name="port" value="6379" />
+        <property name="poolConfig" ref="poolConfig" />
+    </bean>
+    
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+    </bean>
+</beans>
+```
+
+<br>
+
+2.SpringBoot集成reids：
+
+maven添加依赖
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+`application.properties`配置：
+```text
+spring.redis.host=127.0.0.1
+spring.redis.database=0
+```
+
+<br>
+
 ## 联系方式
 ### 欢迎加入“前后端分离技术交流群”
 
 ![群二维码](https://ws1.sinaimg.cn/large/006a7GCKgy1fstbxycj1xj305k07m75h.jpg)
 
 ### 推荐
-&emsp;`EasyWeb管理系统模板`一个开箱即用的后台模板，使用简单，模板丰富，包含传统ifram版、spa单页面路由版，
+&emsp;`EasyWeb管理系统模板` 一个开箱即用的后台模板，使用简单，模板丰富，包含传统ifram版、spa单页面路由版，
 [前往查看](https://easyweb.vip)。

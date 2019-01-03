@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * 框架配置
  * Created by wangfan on 2018-12-29 下午 2:11.
  */
 @EnableConfigurationProperties(JwtPermissionProperties.class)

@@ -3,6 +3,7 @@ package org.wf.jwtp.provider;
 import java.util.List;
 
 /**
+ * 操作token的接口
  * Created by wangfan on 2018-12-28 上午 9:21.
  */
 public interface TokenStore {

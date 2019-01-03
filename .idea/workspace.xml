@@ -4,14 +4,19 @@
     <list default="true" id="26b478eb-c35c-43b4-ad89-01a0d0b6cd3e" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jwt-permission/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ExpiredTokenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ExpiredTokenException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ErrorTokenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ErrorTokenException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Token.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/Hex.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/Hex.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/TokenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/TokenUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/数据库脚本.sql" beforeDir="false" afterPath="$PROJECT_DIR$/数据库脚本.sql" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/jwt-permission/target/" />
@@ -25,12 +30,51 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
+      <file leaf-file-name="Logical.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/Logical.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RequiresPermissions.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/RequiresPermissions.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="160">
+              <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RequiresRoles.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/RequiresRoles.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Hex.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/Hex.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="100">
+              <caret line="5" column="9" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="SubjectUtil.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/SubjectUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="491">
-              <caret line="94" column="59" selection-start-line="94" selection-start-column="52" selection-end-line="94" selection-end-column="59" />
+            <state relative-caret-position="160">
+              <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="7" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#967#968#0" expanded="true" />
@@ -40,71 +84,54 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="100">
-                <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-                <folding>
-                  <element signature="n#!!doc" expanded="true" />
-                </folding>
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TokenStore.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java">
+      <file leaf-file-name="TokenUtil.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/TokenUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="27" column="69" selection-start-line="27" selection-start-column="58" selection-end-line="27" selection-end-column="69" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TokenException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/TokenException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="8" column="36" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ExpiredTokenException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ExpiredTokenException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+            <state relative-caret-position="-609">
+              <caret line="7" column="33" selection-start-line="7" selection-start-column="28" selection-end-line="7" selection-end-column="33" />
               <folding>
-                <element signature="e#273#274#0" expanded="true" />
-                <element signature="e#308#309#0" expanded="true" />
+                <element signature="e#1595#1596#0" expanded="true" />
+                <element signature="e#1661#1662#0" expanded="true" />
+                <element signature="e#1735#1736#0" expanded="true" />
+                <element signature="e#1777#1778#0" expanded="true" />
+                <element signature="e#1824#1825#0" expanded="true" />
+                <element signature="e#1883#1884#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UnauthorizedException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/UnauthorizedException.java">
+      <file leaf-file-name="TokenInterceptor.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+            <state relative-caret-position="440">
+              <caret line="22" column="6" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ErrorTokenException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ErrorTokenException.java">
+      <file leaf-file-name="EnableJwtPermission.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+            <state relative-caret-position="100">
+              <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JwtPermissionConfiguration.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="560">
+              <caret line="50" column="5" selection-start-line="50" selection-start-column="5" selection-end-line="50" selection-end-column="5" />
               <folding>
-                <element signature="e#269#270#0" expanded="true" />
-                <element signature="e#305#306#0" expanded="true" />
-                <element signature="e#355#356#0" expanded="true" />
-                <element signature="e#390#391#0" expanded="true" />
+                <element signature="e#4643#4644#0" expanded="true" />
+                <element signature="e#4670#4671#0" expanded="true" />
+                <element signature="e#4745#4746#0" expanded="true" />
+                <element signature="e#4772#4773#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -113,32 +140,14 @@
       <file leaf-file-name="JwtPermissionProperties.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="37" selection-start-line="37" selection-end-line="37" />
+            <state relative-caret-position="100">
+              <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
               <folding>
                 <element signature="e#879#880#0" expanded="true" />
                 <element signature="e#910#911#0" expanded="true" />
                 <element signature="e#959#960#0" expanded="true" />
                 <element signature="e#999#1000#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JwtPermissionConfiguration.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="60" column="16" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EnableJwtPermission.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="15" column="37" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -181,7 +190,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/wf/etp/authz/exception/ExpiredTokenException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/wf/etp/authz/exception/UnauthorizedException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/wf/etp/authz/provider/TokenStore.java" />
-        <option value="$PROJECT_DIR$/数据库脚本.sql" />
         <option value="$PROJECT_DIR$/src/main/java/org/wf/jwtp/util/Hex.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/wf/jwtp/util/TokenUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/wf/jwtp/ApiInterceptor.java" />
@@ -194,19 +202,26 @@
         <option value="$PROJECT_DIR$/jwt-permission-bootstarter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java" />
         <option value="$PROJECT_DIR$/jwt-permission-bootstarter/pom.xml" />
         <option value="$PROJECT_DIR$/jwt-permission-bootstarter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" />
-        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/SubjectUtil.java" />
-        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java" />
-        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java" />
-        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java" />
-        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" />
-        <option value="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java" />
-        <option value="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" />
-        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/jwt-permission/pom.xml" />
         <option value="$PROJECT_DIR$/jwtp-spring-boot-starter/pom.xml" />
         <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ExpiredTokenException.java" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Token.java" />
+        <option value="$PROJECT_DIR$/数据库脚本.sql" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ErrorTokenException.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/Logical.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/Hex.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/TokenUtil.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/SubjectUtil.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" />
+        <option value="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java" />
+        <option value="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java" />
+        <option value="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" />
       </list>
     </option>
   </component>
@@ -236,10 +251,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="260" />
+    <option name="y" value="20" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -247,8 +262,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -291,6 +306,16 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="jwtp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
+              <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
+              <item name="jwt-permission" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="jwtp" type="462c0819:PsiDirectoryNode" />
+              <item name="annotation" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
@@ -366,7 +391,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="F:/学习/学习项目/demo-jwt" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../EasyWeb" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -472,7 +497,8 @@
       <workItem from="1545957415452" duration="19306000" />
       <workItem from="1546044151029" duration="25929000" />
       <workItem from="1546388669401" duration="6710000" />
-      <workItem from="1546412520654" duration="6681000" />
+      <workItem from="1546412520654" duration="7086000" />
+      <workItem from="1546475778290" duration="2349000" />
     </task>
     <task id="LOCAL-00001" summary="提交代码">
       <created>1545900186883</created>
@@ -530,11 +556,18 @@
       <option name="project" value="LOCAL" />
       <updated>1546389140914</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="增加RedisTokenStore">
+      <created>1546421477355</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1546421477355</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67011000" />
+    <option name="totallyTimeSpent" value="69765000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -548,20 +581,20 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.32900432" />
       <window_info anchor="right" id="Maven Projects" order="3" weight="0.27025586" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.45670995" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32900432" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.45670995" />
       <window_info anchor="bottom" id="Spring" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25692964" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2595949" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -582,7 +615,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="增加RedisTokenStore" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wf/jwtp/exception/UnauthorizedException.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/org/wf/jwtp/util/Hex.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/org/wf/jwtp/util/SubjectUtil.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/org/wf/jwtp/util/TokenUtil.java" />
@@ -610,27 +642,6 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/org/wf/jwtp/provider/TokenStore.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/org/wf/jwtp/ApiInterceptor.java" />
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/Logical.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/RequiresPermissions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/RequiresRoles.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/JwtPermission.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
@@ -685,24 +696,10 @@
     <entry file="file://$PROJECT_DIR$/jwt-permission-bootstarter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" />
     <entry file="file://$PROJECT_DIR$/jwt-permission-bootstarter/pom.xml" />
     <entry file="file://$PROJECT_DIR$/jwt-permission-bootstarter/jwtp-spring-boot-starter.iml" />
-    <entry file="file://$PROJECT_DIR$/数据库脚本.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="11" column="26" lean-forward="true" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-jdbc/5.1.3.RELEASE/spring-jdbc-5.1.3.RELEASE.jar!/org/springframework/jdbc/core/JdbcTemplate.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="301">
           <caret line="540" column="17" selection-start-line="540" selection-start-column="17" selection-end-line="540" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="520">
-          <caret line="26" column="9" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -722,28 +719,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="701">
           <caret line="435" column="46" lean-forward="true" selection-start-line="435" selection-start-column="46" selection-end-line="435" selection-end-column="46" />
-          <folding>
-            <element signature="e#19079#19258#0" expanded="true" />
-            <element signature="e#19257#19258#0" expanded="true" />
-            <element signature="e#19394#19586#0" expanded="true" />
-            <element signature="e#19585#19586#0" expanded="true" />
-            <element signature="e#20298#20450#0" expanded="true" />
-            <element signature="e#20449#20450#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/TokenUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="678">
-          <caret line="48" column="91" selection-start-line="48" selection-start-column="91" selection-end-line="48" selection-end-column="91" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Token.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -768,66 +743,78 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="180">
+            <caret line="9" column="4" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="8" column="28" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Token.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="520">
+          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/数据库脚本.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="1" column="45" lean-forward="true" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="18" column="27" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="27" />
+        <state relative-caret-position="3760">
+          <caret line="201" column="37" selection-start-line="201" selection-start-column="37" selection-end-line="201" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="14" column="28" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="28" />
+        <state relative-caret-position="100">
+          <caret line="12" column="18" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java">
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="64" column="59" selection-start-line="64" selection-start-column="46" selection-end-line="64" selection-end-column="59" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="15" column="37" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="37" selection-start-line="37" selection-end-line="37" />
-          <folding>
-            <element signature="e#879#880#0" expanded="true" />
-            <element signature="e#910#911#0" expanded="true" />
-            <element signature="e#959#960#0" expanded="true" />
-            <element signature="e#999#1000#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="60" column="16" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="16" />
+        <state relative-caret-position="100">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ErrorTokenException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+        <state relative-caret-position="60">
+          <caret line="3" column="12" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="14" />
           <folding>
             <element signature="e#269#270#0" expanded="true" />
             <element signature="e#305#306#0" expanded="true" />
             <element signature="e#355#356#0" expanded="true" />
             <element signature="e#390#391#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ExpiredTokenException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="3" column="12" lean-forward="true" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
+          <folding>
+            <element signature="e#273#274#0" expanded="true" />
+            <element signature="e#308#309#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -839,17 +826,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/ExpiredTokenException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
-          <folding>
-            <element signature="e#273#274#0" expanded="true" />
-            <element signature="e#308#309#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/exception/TokenException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
@@ -857,17 +833,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java">
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/Logical.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="27" column="69" selection-start-line="27" selection-start-column="58" selection-end-line="27" selection-end-column="69" />
+        <state relative-caret-position="60">
+          <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/RequiresPermissions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/annotation/RequiresRoles.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/Hex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="9" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/SubjectUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="94" column="59" selection-start-line="94" selection-start-column="52" selection-end-line="94" selection-end-column="59" />
+        <state relative-caret-position="160">
+          <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#967#968#0" expanded="true" />
@@ -876,16 +876,61 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="100">
-            <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-            <folding>
-              <element signature="n#!!doc" expanded="true" />
-            </folding>
-          </first_editor>
-          <second_editor />
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/TokenUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-609">
+          <caret line="7" column="33" selection-start-line="7" selection-start-column="28" selection-end-line="7" selection-end-column="33" />
+          <folding>
+            <element signature="e#1595#1596#0" expanded="true" />
+            <element signature="e#1661#1662#0" expanded="true" />
+            <element signature="e#1735#1736#0" expanded="true" />
+            <element signature="e#1777#1778#0" expanded="true" />
+            <element signature="e#1824#1825#0" expanded="true" />
+            <element signature="e#1883#1884#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="22" column="6" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
+          <folding>
+            <element signature="e#879#880#0" expanded="true" />
+            <element signature="e#910#911#0" expanded="true" />
+            <element signature="e#959#960#0" expanded="true" />
+            <element signature="e#999#1000#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="50" column="5" selection-start-line="50" selection-start-column="5" selection-end-line="50" selection-end-column="5" />
+          <folding>
+            <element signature="e#4643#4644#0" expanded="true" />
+            <element signature="e#4670#4671#0" expanded="true" />
+            <element signature="e#4745#4746#0" expanded="true" />
+            <element signature="e#4772#4773#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

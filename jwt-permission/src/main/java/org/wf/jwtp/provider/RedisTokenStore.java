@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * redis存储token的实现
  * Created by wangfan on 2018-12-29 上午 9:10.
  */
 public class RedisTokenStore implements TokenStore {

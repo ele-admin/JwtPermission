@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * jdbc存储token的实现
  * Created by wangfan on 2018-12-28 下午 1:00.
  */
 public class JdbcTokenStore implements TokenStore {
@@ -163,7 +164,7 @@ public class JdbcTokenStore implements TokenStore {
             e.printStackTrace();
         }
         objects.add(roleJson);
-        objects.add(token.getTokenKey());
+        // objects.add(token.getTokenKey());
         objects.add(token.getRefreshToken());
         objects.add(token.getExpireTime());
         return objects;
@@ -199,7 +200,7 @@ public class JdbcTokenStore implements TokenStore {
             token.setTokenId(token_id);
             token.setAccessToken(access_token);
             token.setUserId(user_id);
-            token.setTokenKey(token_key);
+            // token.setTokenKey(token_key);
             token.setRefreshToken(refresh_token);
             token.setExpireTime(expire_time);
             token.setCreateTime(create_time);

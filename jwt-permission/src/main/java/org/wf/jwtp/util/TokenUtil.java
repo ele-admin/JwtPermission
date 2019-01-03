@@ -35,7 +35,7 @@ public class TokenUtil {
         Date expireDate = new Date(new Date().getTime() + 1000 * expire);  // 单位毫秒
         String access_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(expireDate).compact();
         Token token = new Token();
-        token.setTokenKey(Hex.encodeToString(key.getEncoded()));
+        // token.setTokenKey(Hex.encodeToString(key.getEncoded()));
         token.setAccessToken(access_token);
         token.setUserId(subject);
         token.setExpireTime(expireDate);

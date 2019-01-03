@@ -3,6 +3,7 @@ package org.wf.jwtp.util;
 import java.io.UnsupportedEncodingException;
 
 /**
+ * 16进制编码
  * Created by wangfan on 2018-09-21 下午 4:20.
  */
 public class Hex {

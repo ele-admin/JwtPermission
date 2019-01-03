@@ -1,7 +1,7 @@
 package org.wf.jwtp.exception;
 
 /**
- * token验证失败
+ * token验证失败异常
  *
  * @author wangfan
  * @date 2018-1-23 上午11:37:16

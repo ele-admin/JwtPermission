@@ -7,21 +7,21 @@ import java.util.Date;
  */
 public class Token {
 
-    private Integer tokenId;
+    private Integer tokenId;  // 自增主键
 
-    private String accessToken;
+    private String accessToken;  // token
 
-    private String userId;
+    private String userId;  // 用户id
 
-    private String[] permissions;
+    private String[] permissions;  // 用户权限
 
-    private String[] roles;
+    private String[] roles;  // 用户角色
 
-    private String tokenKey;  // 生成token时的key
+    // private String tokenKey;  // 生成token时的key
 
-    private String refreshToken;
+    private String refreshToken;  // 暂时没用
 
-    private Date expireTime;
+    private Date expireTime;  // 过期时间
 
     private Date createTime;
 
@@ -67,13 +67,13 @@ public class Token {
         this.roles = roles;
     }
 
-    public String getTokenKey() {
+    /*public String getTokenKey() {
         return tokenKey;
     }
 
     public void setTokenKey(String tokenKey) {
         this.tokenKey = tokenKey;
-    }
+    }*/
 
     public String getRefreshToken() {
         return refreshToken;

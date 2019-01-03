@@ -3,6 +3,7 @@ package org.wf.jwtp.configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * 配置属性
  * Created by wangfan on 2018-12-29 下午 2:13.
  */
 @ConfigurationProperties(prefix = "jwtp")
