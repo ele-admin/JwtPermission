@@ -95,7 +95,7 @@ jwtp.exclude-path=/,/index,/login
 ## 单个用户最大token数，默认-1不限制
 jwtp.max-token=10
 
-## 日志级别设置debug可以输入详细信息
+## 日志级别设置debug可以输出详细信息
 logging.level.org.wf.jwtp=DEBUG
 ```
 
