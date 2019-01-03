@@ -21,7 +21,7 @@ public class JdbcTokenStore implements TokenStore {
     private final JdbcTemplate jdbcTemplate;
     private RowMapper<Token> rowMapper = new TokenRowMapper();
 
-    private static final String UPDATE_FIELDS = "access_token, user_id, permissions, roles, token_key, refresh_token, expire_time";
+    private static final String UPDATE_FIELDS = "access_token, user_id, permissions, roles, refresh_token, expire_time";
 
     private static final String BASE_SELECT = "select token_id, " + UPDATE_FIELDS + ", create_time, update_time from oauth_token";
 

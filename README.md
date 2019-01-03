@@ -23,9 +23,9 @@
     
     <dependencies>
        <dependency>
-          <groupId>com.github.whvcse</groupId>
+          <groupId>com.github.whvcse.JwtPermission</groupId>
           <artifactId>jwt-permission</artifactId>
-          <version>1.0.9</version>
+          <version>2.0.1</version>
        </dependency>
     </dependencies>
 </project>
@@ -34,7 +34,7 @@
 **SpringBoot项目导入：**
 ```xml
 <dependency>
-  <groupId>com.github.whvcse</groupId>
+  <groupId>com.github.whvcse.JwtPermission</groupId>
   <artifactId>jwtp-spring-boot-starter</artifactId>
   <version>2.0</version>
 </dependency>
@@ -44,7 +44,7 @@
 
 [jwt-permission最新jar包](https://github.com/whvcse/JwtPermission/releases)
 
-[所依赖的jar包](https://github.com/whvcse/JwtPermission/releases)
+[所依赖的jar包](https://gitee.com/whvse/JwtPermission/attach_files)
 
 <br>
 
@@ -91,6 +91,10 @@ jwtp.path=/**
 
 ## 排除拦截路径，默认无
 jwtp.exclude-path=/,/index,/login
+
+## 单个用户最大token数，默认-1不限制
+jwtp.max-token=10
+
 ```
 
 <br>
@@ -324,6 +328,11 @@ maven添加依赖
 spring.redis.host=127.0.0.1
 spring.redis.database=0
 ```
+
+<br>
+
+### JdbcTokenStore需要导入SQL
+&emsp;使用JdbcTokenStore需要导入SQL，需要配置dataSource。
 
 <br>
 

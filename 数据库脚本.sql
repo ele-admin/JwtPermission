@@ -4,7 +4,6 @@ CREATE TABLE `oauth_token` (
   `user_id` varchar(128) DEFAULT NULL,
   `permissions` varchar(512) DEFAULT NULL,
   `roles` varchar(512) DEFAULT NULL,
-  `token_key` varchar(128) DEFAULT NULL COMMENT '生成token时的key',
   `refresh_token` varchar(128) DEFAULT NULL,
   `expire_time` datetime DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
