@@ -29,7 +29,7 @@ public class JdbcTokenStore implements TokenStore {
 
     private static final String SQL_SELECT_BY_USER_ID = BASE_SELECT + " where user_id = ? order by create_time";
 
-    private static final String SQL_INSERT = "insert into oauth_token (" + UPDATE_FIELDS + ") values (?,?,?,?,?,?,?)";
+    private static final String SQL_INSERT = "insert into oauth_token (" + UPDATE_FIELDS + ") values (?,?,?,?,?,?)";
 
     private static final String SQL_UPDATE = "update oauth_token set " + UPDATE_FIELDS.replaceAll(", ", "=?, ") + "=? where token_id = ?";
 
