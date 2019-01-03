@@ -215,10 +215,12 @@ public class SubjectUtil {
 		checkUserRealm();
 		List<String> tokens = cache.getSet(KEY_PRE_TOKEN + userId);
 		if (tokens != null && tokens.contains(token)){
-			if (userRealm.isSingleUser() && userRealm.hasDownlineTip()){
-				if( !token.equals(tokens.get(0))){
-					expireToken(userId,token);
+			if (userRealm.isSingleUser() && !token.equals(tokens.get(0)) ){
+				expireToken(userId,token);
+				if(userRealm.hasDownlineTip()){
 					throw new DownlineException();
+				}else{
+					throw new ExpiredTokenException();
 				}
 			}
 		}else{
