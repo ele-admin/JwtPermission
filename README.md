@@ -11,6 +11,8 @@
 
 ## 导入
 
+> SpringBoot集成示例：[前往查看](https://gitee.com/whvse/EasyWeb)
+
 **maven方式导入：**
 ```xml
 <project>
@@ -33,11 +35,20 @@
 
 **SpringBoot项目导入：**
 ```xml
-<dependency>
-  <groupId>com.github.whvcse.JwtPermission</groupId>
-  <artifactId>jwtp-spring-boot-starter</artifactId>
-  <version>2.0.2</version>
-</dependency>
+<project>
+    <repositories>
+        <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    
+    <dependency>
+      <groupId>com.github.whvcse.JwtPermission</groupId>
+      <artifactId>jwtp-spring-boot-starter</artifactId>
+      <version>2.0.2</version>
+    </dependency>
+</project>
 ```
 
 **jar包方式导入：**
@@ -68,11 +79,11 @@
     
     <!-- 这里可以选择 JdbcTokenStore 和 RedisTokenStore -->
     <bean id="tokenStore" class="org.wf.jwtp.provider.JdbcTokenStore">
-        <property name="dataSource" ref="dataSource" />
+        <constructor-arg name="dataSource" ref="dataSource" />
     </bean>
     
     <bean id="tokenStore" class="org.wf.jwtp.provider.RedisTokenStore">
-        <property name="redisTemplate" ref="stringRedisTemplate" />
+        <constructor-arg name="redisTemplate" ref="stringRedisTemplate" />
     </bean>
 </beans>
 ```
