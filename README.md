@@ -11,7 +11,7 @@
 
 ## 导入
 
-> SpringBoot集成示例：[前往查看](https://gitee.com/whvse/EasyWeb)
+> SpringBoot集成示例：[前往查看](https://gitee.com/whvse/EasyWeb)，xml配置版集成示例：[前往查看](https://gitee.com/whvse/JwtPermission/attach_files)。
 
 **maven方式导入：**
 ```xml
