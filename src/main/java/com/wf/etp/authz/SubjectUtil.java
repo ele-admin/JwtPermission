@@ -216,10 +216,10 @@ public class SubjectUtil {
 		List<String> tokens = cache.getSet(KEY_PRE_TOKEN + userId);
 		if (tokens != null && tokens.contains(token)){
 			if (userRealm.isSingleUser() && !token.equals(tokens.get(0)) ){
-				expireToken(userId,token);
 				if(userRealm.hasDownlineTip()){
 					throw new DownlineException();
 				}else{
+					expireToken(userId,token);
 					throw new ExpiredTokenException();
 				}
 			}
