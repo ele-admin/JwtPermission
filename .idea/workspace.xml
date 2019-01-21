@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="26b478eb-c35c-43b4-ad89-01a0d0b6cd3e" name="Default" comment="解决bug">
+    <list default="true" id="26b478eb-c35c-43b4-ad89-01a0d0b6cd3e" name="Default" comment="完善文档">
+      <change afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/IUrlPerm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/RestUrlPerm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/SimpleUrlPerm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/jwt-permission/target/" />
@@ -17,15 +20,54 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="FIRST">
-              <first_editor relative-caret-position="500">
-                <caret line="97" column="18" selection-start-line="97" selection-start-column="18" selection-end-line="97" selection-end-column="18" />
-              </first_editor>
-              <second_editor />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="IUrlPerm.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/IUrlPerm.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="11" column="101" selection-start-line="11" selection-start-column="101" selection-end-line="11" selection-end-column="101" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleUrlPerm.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/SimpleUrlPerm.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="17" column="108" selection-start-line="17" selection-start-column="108" selection-end-line="17" selection-end-column="108" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TokenInterceptor.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="471">
+              <caret line="95" column="52" selection-start-line="95" selection-start-column="45" selection-end-line="95" selection-end-column="52" />
+              <folding>
+                <element signature="e#1169#1170#0" expanded="true" />
+                <element signature="e#1195#1196#0" expanded="true" />
+                <element signature="e#1249#1250#0" expanded="true" />
+                <element signature="e#1285#1286#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RestUrlPerm.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/RestUrlPerm.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="211">
+              <caret line="18" column="48" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -98,14 +140,17 @@
         <option value="$PROJECT_DIR$/数据库脚本.sql" />
         <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java" />
         <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/TokenUtil.java" />
-        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" />
-        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java" />
         <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" />
         <option value="$PROJECT_DIR$/jwtp-spring-boot-starter/pom.xml" />
         <option value="$PROJECT_DIR$/jwt-permission/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/IUrlPerm.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/SimpleUrlPerm.java" />
+        <option value="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/RestUrlPerm.java" />
       </list>
     </option>
   </component>
@@ -154,7 +199,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -165,11 +212,6 @@
             <path>
               <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
               <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
-              <item name=".idea" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
-              <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
               <item name="jwt-permission" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -210,69 +252,17 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="jwtp" type="462c0819:PsiDirectoryNode" />
-              <item name="exception" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
-              <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
-              <item name="jwt-permission" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="jwtp" type="462c0819:PsiDirectoryNode" />
-              <item name="provider" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
-              <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
-              <item name="jwt-permission" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="jwtp" type="462c0819:PsiDirectoryNode" />
-              <item name="util" type="462c0819:PsiDirectoryNode" />
+              <item name="perm" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
               <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
               <item name="jwtp-spring-boot-starter" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
-              <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
-              <item name="jwtp-spring-boot-starter" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
-              <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
-              <item name="jwtp-spring-boot-starter" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
-              <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
-              <item name="jwtp-spring-boot-starter" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JwtPermission" type="b2602c69:ProjectViewProjectNode" />
-              <item name="JwtPermission" type="462c0819:PsiDirectoryNode" />
-              <item name="jwtp-spring-boot-starter" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="configuration" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -386,7 +376,10 @@
       <workItem from="1546388669401" duration="6710000" />
       <workItem from="1546412520654" duration="7086000" />
       <workItem from="1546475778290" duration="17268000" />
-      <workItem from="1546495737196" duration="9000" />
+      <workItem from="1546495737196" duration="531000" />
+      <workItem from="1546933142694" duration="667000" />
+      <workItem from="1546936049547" duration="937000" />
+      <workItem from="1548057867993" duration="5226000" />
     </task>
     <task id="LOCAL-00001" summary="提交代码">
       <created>1545900186883</created>
@@ -514,11 +507,32 @@
       <option name="project" value="LOCAL" />
       <updated>1546494729806</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="解决bug">
+      <created>1546495752318</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1546495752318</updated>
+    </task>
+    <task id="LOCAL-00020" summary="完善文档">
+      <created>1546933783616</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1546933783616</updated>
+    </task>
+    <task id="LOCAL-00021" summary="完善文档">
+      <created>1546937266147</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1546937266147</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84693000" />
+    <option name="totallyTimeSpent" value="92045000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -530,22 +544,22 @@
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.32900432" />
-      <window_info anchor="right" id="Maven Projects" order="3" visible="true" weight="0.23081024" />
+      <window_info anchor="right" id="Maven Projects" order="3" weight="0.23081024" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32900432" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.40151516" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32900432" />
       <window_info anchor="bottom" id="Spring" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26226014" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27025586" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -566,7 +580,8 @@
     <MESSAGE value="更新开发文档" />
     <MESSAGE value="提交数据库脚本" />
     <MESSAGE value="解决bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="解决bug" />
+    <MESSAGE value="完善文档" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善文档" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -574,42 +589,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wf/jwtp/ApiInterceptor.java" />
-    <entry file="file://$PROJECT_DIR$/JwtPermission.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="12" lean-forward="true" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-starter/2.0.1.RELEASE/spring-boot-starter-2.0.1.RELEASE.pom">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="54" column="17" lean-forward="true" selection-start-line="50" selection-start-column="22" selection-end-line="54" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/2.0.1.RELEASE/spring-boot-2.0.1.RELEASE.jar!/org/springframework/boot/context/properties/ConfigurationProperties.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/4.3.13.RELEASE/spring-webmvc-4.3.13.RELEASE.jar!/org/springframework/web/servlet/config/annotation/InterceptorRegistration.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="33" column="45" selection-start-line="33" selection-start-column="45" selection-end-line="33" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../jdk1.8.0_151/src.zip!/java/util/Arrays.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="3812" column="35" selection-start-line="3812" selection-start-column="35" selection-end-line="3812" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/../../jdk1.8.0_151/src.zip!/java/util/Objects.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="298">
@@ -786,17 +765,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" column="44" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
-          <folding>
-            <element signature="e#688#689#0" expanded="true" />
-            <element signature="e#728#729#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/4.3.13.RELEASE/spring-webmvc-4.3.13.RELEASE.jar!/org/springframework/web/servlet/AsyncHandlerInterceptor.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -846,39 +814,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2">
-          <caret line="30" column="28" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="77" column="68" selection-start-line="77" selection-start-column="68" selection-end-line="77" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-          <folding>
-            <element signature="e#876#877#0" expanded="true" />
-            <element signature="e#926#927#0" expanded="true" />
-            <element signature="e#4389#4396#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/数据库脚本.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" column="42" lean-forward="true" selection-start-line="4" selection-start-column="42" selection-end-line="4" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jwtp-spring-boot-starter/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -907,13 +842,113 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="740">
+          <caret line="50" column="47" selection-start-line="50" selection-start-column="37" selection-end-line="50" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="72" column="25" selection-start-line="72" selection-start-column="22" selection-end-line="72" selection-end-column="28" />
+          <folding>
+            <element signature="e#850#851#0" expanded="true" />
+            <element signature="e#900#901#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-redis/2.0.7.RELEASE/spring-data-redis-2.0.7.RELEASE.jar!/org/springframework/data/redis/core/RedisTemplate.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7740">
+          <caret line="459" selection-start-line="459" selection-end-line="459" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/数据库脚本.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="16" selection-end-line="25" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="500">
-            <caret line="97" column="18" selection-start-line="97" selection-start-column="18" selection-end-line="97" selection-end-column="18" />
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="20">
+            <caret line="14" selection-start-line="14" selection-end-line="14" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="8" column="44" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
+          <folding>
+            <element signature="e#688#689#0" expanded="true" />
+            <element signature="e#728#729#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../../jdk1.8.0_151/src.zip!/java/lang/reflect/Method.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="520">
+          <caret line="60" column="19" selection-start-line="60" selection-start-column="19" selection-end-line="60" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="95" column="52" selection-start-line="95" selection-start-column="45" selection-end-line="95" selection-end-column="52" />
+          <folding>
+            <element signature="e#1169#1170#0" expanded="true" />
+            <element signature="e#1195#1196#0" expanded="true" />
+            <element signature="e#1249#1250#0" expanded="true" />
+            <element signature="e#1285#1286#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/IUrlPerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="101" selection-start-line="11" selection-start-column="101" selection-end-line="11" selection-end-column="101" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/SimpleUrlPerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="17" column="108" selection-start-line="17" selection-start-column="108" selection-end-line="17" selection-end-column="108" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/4.3.13.RELEASE/spring-web-4.3.13.RELEASE.jar!/org/springframework/web/bind/annotation/GetMapping.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/RestUrlPerm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="18" column="48" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

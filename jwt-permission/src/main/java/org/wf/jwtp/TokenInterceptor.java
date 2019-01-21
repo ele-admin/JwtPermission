@@ -108,7 +108,10 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     private boolean checkPermission(Method method, Token token) {
         RequiresPermissions annotation = method.getAnnotation(RequiresPermissions.class);
         if (annotation == null) {
-            return true;
+            annotation = method.getDeclaringClass().getAnnotation(RequiresPermissions.class);
+            if (annotation == null) {
+                return true;
+            }
         }
         String[] requiresPermissions = annotation.value();
         Logical logical = annotation.logical();
@@ -118,7 +121,10 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     private boolean checkRole(Method method, Token token) {
         RequiresRoles annotation = method.getAnnotation(RequiresRoles.class);
         if (annotation == null) {
-            return true;
+            annotation = method.getDeclaringClass().getAnnotation(RequiresRoles.class);
+            if (annotation == null) {
+                return true;
+            }
         }
         String[] requiresRoles = annotation.value();
         Logical logical = annotation.logical();
