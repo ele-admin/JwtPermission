@@ -31,7 +31,12 @@ public abstract class IUserRealm {
 	 * 
 	 * @return
 	 */
-	public boolean isSingleUser() {
-		return false;
-	}
+	public abstract boolean isSingleUser();
+
+	/**
+	 * 单点登录是否有下线通知,在单点模式下生效
+	 *
+	 * @return
+	 */
+	public abstract boolean hasDownlineTip();
 }

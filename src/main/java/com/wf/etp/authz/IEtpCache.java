@@ -18,6 +18,9 @@ public abstract class IEtpCache {
 	// 把集合加入缓存
 	public abstract boolean putSet(String key, Set<String> values);
 
+	// 把单条数据加入缓存
+	public abstract boolean putSet(String key, String value);
+
 	// 删除集合的某一元素
 	public abstract boolean removeSet(String key, String value);
 
