@@ -133,7 +133,9 @@ public class LoginController {
 
 token默认过期时间是一天，设置过期时间方法（单位秒）：
 
-> Token token = tokenStore.createNewToken(userId, permissions, roles, 60*60*24*30);
+```java
+Token token = tokenStore.createNewToken(userId, permissions, roles, 60*60*24*30);
+```
 
 <br>
 
