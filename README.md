@@ -57,6 +57,44 @@
 
 [所依赖的jar包](https://gitee.com/whvse/JwtPermission/attach_files)
 
+maven导入jar包，在项目根目录创建`libs`文件夹，然后pom.xml添加如下：
+```
+<dependency>
+  <groupId>com.github.whvcse.JwtPermission</groupId>
+  <artifactId>jwtp-spring-boot-starter</artifactId>
+  <version>2.0.2</version>
+  <systemPath>${basedir}/libs/jwt-permission.jar</systemPath>
+</dependency>
+
+<dependency>
+  <groupId>com.github.whvcse.JwtPermission</groupId>
+  <artifactId>jwtp-spring-boot-starter</artifactId>
+  <version>2.0.2</version>
+  <systemPath>${basedir}/libs/jwtp-spring-boot-starter.jar</systemPath>
+</dependency>
+```
+依赖的包：
+```
+<!-- jjwt -->
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.10.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.10.5</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.10.5</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
 <br>
 
 ## 用法
