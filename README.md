@@ -63,14 +63,14 @@ maven导入jar包，在项目根目录创建`libs`文件夹，然后pom.xml添�
   <groupId>com.github.whvcse.JwtPermission</groupId>
   <artifactId>jwtp-spring-boot-starter</artifactId>
   <version>2.0.2</version>
-  <systemPath>${basedir}/libs/jwt-permission.jar</systemPath>
+  <systemPath>${basedir}/libs/jwt-permission-2.0.2.jar</systemPath>
 </dependency>
 
 <dependency>
   <groupId>com.github.whvcse.JwtPermission</groupId>
   <artifactId>jwtp-spring-boot-starter</artifactId>
   <version>2.0.2</version>
-  <systemPath>${basedir}/libs/jwtp-spring-boot-starter.jar</systemPath>
+  <systemPath>${basedir}/libs/jwtp-spring-boot-starter-2.0.2.jar</systemPath>
 </dependency>
 ```
 依赖的包：
