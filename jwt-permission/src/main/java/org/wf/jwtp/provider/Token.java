@@ -3,13 +3,14 @@ package org.wf.jwtp.provider;
 import java.util.Date;
 
 /**
+ * Token
  * Created by wangfan on 2018-12-28 上午 9:21.
  */
 public class Token {
 
     private Integer tokenId;  // 自增主键
 
-    private String accessToken;  // token
+    private String accessToken;  // access_token
 
     private String userId;  // 用户id
 
@@ -17,15 +18,13 @@ public class Token {
 
     private String[] roles;  // 用户角色
 
-    // private String tokenKey;  // 生成token时的key
-
-    private String refreshToken;  // 暂时没用
+    private String refreshToken;  // refresh_token
 
     private Date expireTime;  // 过期时间
 
-    private Date createTime;
+    private Date createTime;  // 创建时间
 
-    private Date updateTime;
+    private Date updateTime;  // 更新时间
 
     public Integer getTokenId() {
         return tokenId;
@@ -66,14 +65,6 @@ public class Token {
     public void setRoles(String[] roles) {
         this.roles = roles;
     }
-
-    /*public String getTokenKey() {
-        return tokenKey;
-    }
-
-    public void setTokenKey(String tokenKey) {
-        this.tokenKey = tokenKey;
-    }*/
 
     public String getRefreshToken() {
         return refreshToken;

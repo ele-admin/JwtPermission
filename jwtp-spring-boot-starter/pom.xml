@@ -6,11 +6,12 @@
 
     <artifactId>jwtp-spring-boot-starter</artifactId>
     <packaging>jar</packaging>
+    <name>jwtp-spring-boot-starter</name>
 
     <parent>
         <artifactId>jwt-permission-parent</artifactId>
-        <groupId>org.wf</groupId>
-        <version>2.0.2</version>
+        <groupId>com.github.whvcse</groupId>
+        <version>2.0.3</version>
     </parent>
 
     <properties>
@@ -21,7 +22,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wf</groupId>
+            <groupId>com.github.whvcse</groupId>
             <artifactId>jwt-permission</artifactId>
         </dependency>
 

@@ -1,6 +1,6 @@
 # JwtPermission 
 
-![JitPack](https://img.shields.io/jitpack/v/whvcse/JwtPermission.svg?style=flat-square)
+![MavenCentral](https://img.shields.io/maven-central/v/com.github.whvcse/jwt-permission?style=flat-square)
 ![Hex.pm](https://img.shields.io/hexpm/l/plug.svg?style=flat-square)
 
 
@@ -15,40 +15,20 @@
 
 **maven方式导入：**
 ```xml
-<project>
-    <repositories>
-        <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-    
-    <dependencies>
-       <dependency>
-          <groupId>com.github.whvcse.JwtPermission</groupId>
-          <artifactId>jwt-permission</artifactId>
-          <version>2.0.2</version>
-       </dependency>
-    </dependencies>
-</project>
+<dependency>
+  <groupId>com.github.whvcse</groupId>
+  <artifactId>jwt-permission</artifactId>
+  <version>2.0.3</version>
+</dependency>
 ```
 
 **SpringBoot项目导入：**
 ```xml
-<project>
-    <repositories>
-        <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-    
-    <dependency>
-      <groupId>com.github.whvcse.JwtPermission</groupId>
-      <artifactId>jwtp-spring-boot-starter</artifactId>
-      <version>2.0.2</version>
-    </dependency>
-</project>
+<dependency>
+  <groupId>com.github.whvcse</groupId>
+  <artifactId>jwtp-spring-boot-starter</artifactId>
+  <version>2.0.3</version>
+</dependency>
 ```
 
 **jar包方式导入：**
@@ -57,43 +37,6 @@
 
 [所依赖的jar包](https://gitee.com/whvse/JwtPermission/attach_files)
 
-maven导入jar包，在项目根目录创建`libs`文件夹，然后pom.xml添加如下：
-```
-<dependency>
-  <groupId>com.github.whvcse.JwtPermission</groupId>
-  <artifactId>jwtp-spring-boot-starter</artifactId>
-  <version>2.0.2</version>
-  <systemPath>${basedir}/libs/jwt-permission-2.0.2.jar</systemPath>
-</dependency>
-
-<dependency>
-  <groupId>com.github.whvcse.JwtPermission</groupId>
-  <artifactId>jwtp-spring-boot-starter</artifactId>
-  <version>2.0.2</version>
-  <systemPath>${basedir}/libs/jwtp-spring-boot-starter-2.0.2.jar</systemPath>
-</dependency>
-```
-依赖的包：
-```
-<!-- jjwt -->
-<dependency>
-    <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt-api</artifactId>
-    <version>0.10.5</version>
-</dependency>
-<dependency>
-    <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt-impl</artifactId>
-    <version>0.10.5</version>
-    <scope>runtime</scope>
-</dependency>
-<dependency>
-    <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt-jackson</artifactId>
-    <version>0.10.5</version>
-    <scope>runtime</scope>
-</dependency>
-```
 
 <br>
 

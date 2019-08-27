@@ -3,8 +3,7 @@ package org.wf.jwtp.exception;
 /**
  * TokenException
  *
- * @author wangfan
- * @date 2018-1-23 上午11:33:21
+ * Created by wangfan on 2018-1-23 上午11:33:21
  */
 public abstract class TokenException extends RuntimeException {
     private static final long serialVersionUID = 2413958299445359500L;

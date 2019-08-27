@@ -6,11 +6,12 @@
 
     <artifactId>jwt-permission</artifactId>
     <packaging>jar</packaging>
+    <name>jwt-permission</name>
 
     <parent>
         <artifactId>jwt-permission-parent</artifactId>
-        <groupId>org.wf</groupId>
-        <version>2.0.2</version>
+        <groupId>com.github.whvcse</groupId>
+        <version>2.0.3</version>
     </parent>
 
     <dependencies>
