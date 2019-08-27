@@ -1,6 +1,6 @@
 # JwtPermission 
 
-![MavenCentral](https://img.shields.io/maven-central/v/com.github.whvcse/jwt-permission?style=flat-square)
+![MavenCentral](https://img.shields.io/maven-central/v/com.github.whvcse/jwtp-spring-boot-starter?style=flat-square)
 ![Hex.pm](https://img.shields.io/hexpm/l/plug.svg?style=flat-square)
 
 
