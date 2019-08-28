@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.wf.jwtp.annotation.Ignore;
 import org.wf.jwtp.annotation.Logical;
 import org.wf.jwtp.annotation.RequiresPermissions;
 import org.wf.jwtp.annotation.RequiresRoles;
@@ -71,6 +72,16 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             response.setHeader("Access-Control-Allow-Headers", "Content-Type, x-requested-with, X-Custom-Header, Authorization");
             return false;
         }
+        // 判断是否忽略
+        if (handler instanceof HandlerMethod) {
+            Method method = ((HandlerMethod) handler).getMethod();
+            if (method != null) {
+                if (checkIgnore(method)){
+                    logger.debug("此请求被@ignore注解，已经放行");
+                    return super.preHandle(request, response, handler);
+                }
+            }
+        }
         String access_token = request.getParameter("access_token");
         if (access_token == null || access_token.trim().isEmpty()) {
             access_token = request.getHeader("Authorization");
@@ -112,6 +123,19 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         request.setAttribute(SubjectUtil.REQUEST_TOKEN_NAME, token);
         logger.debug("-------------------------------------------");
         return super.preHandle(request, response, handler);
+    }
+
+    private boolean checkIgnore(Method method){
+        Ignore annotation = method.getAnnotation(Ignore.class);
+        if (annotation != null) {
+           return true;
+        } else {
+            annotation = method.getDeclaringClass().getAnnotation(Ignore.class);
+            if (annotation != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean checkPermission(Method method, Token token) {
