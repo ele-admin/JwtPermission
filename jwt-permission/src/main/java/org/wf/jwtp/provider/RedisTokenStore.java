@@ -14,13 +14,10 @@ import java.util.Set;
  * Created by wangfan on 2018-12-29 上午 9:10.
  */
 public class RedisTokenStore implements TokenStore {
-    protected final Log logger = LogFactory.getLog(this.getClass());
-    private static final String KEY_TOKEN_KEY = "oauth_token_key";
-    private static final String KEY_PRE_TOKEN = "oauth_token:";
-    private static final String KEY_PRE_PERM = "oauth_prem:";
-    private static final String KEY_PRE_ROLE = "oauth_role:";
-
     private StringRedisTemplate redisTemplate;
+    protected final Log logger = LogFactory.getLog(this.getClass());
+    private static final String KEY_TOKEN_KEY = "oauth_token_key";  // tokenKey存储的key
+    private static final String KEY_PRE_TOKEN = "oauth_token:";  // token存储的key前缀
 
     public RedisTokenStore(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -37,24 +34,20 @@ public class RedisTokenStore implements TokenStore {
     }
 
     @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles) {
-        return createNewToken(userId, permissions, roles, TokenUtil.DEFAULT_EXPIRE);
+    public Token createNewToken(String userId) {
+        return createNewToken(userId, TokenUtil.DEFAULT_EXPIRE);
     }
 
     @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
+    public Token createNewToken(String userId, long expire) {
         String tokenKey = getTokenKey();
-        logger.debug("-------------------------------------------");
-        logger.debug("构建token使用tokenKey：" + tokenKey);
-        logger.debug("-------------------------------------------");
+        logger.debug("TOKEN_KEY: " + tokenKey);
         Token token = TokenUtil.buildToken(userId, expire, TokenUtil.parseHexKey(tokenKey));
-        token.setPermissions(permissions);
-        token.setRoles(roles);
         if (storeToken(token) > 0) {
-            if (Config.getInstance().getMaxToken() != null && Config.getInstance().getMaxToken() != -1) {
+            if (maxToken != -1) {  // 限制用户的最大token数量
                 Long userTokenSize = redisTemplate.opsForList().size(KEY_PRE_TOKEN + userId);
-                if (userTokenSize > Config.getInstance().getMaxToken()) {
-                    for (int i = 0; i < userTokenSize - Config.getInstance().getMaxToken(); i++) {
+                if (userTokenSize > maxToken) {
+                    for (int i = 0; i < userTokenSize - maxToken; i++) {
                         redisTemplate.opsForList().leftPop(KEY_PRE_TOKEN + userId);
                     }
                 }
@@ -66,16 +59,7 @@ public class RedisTokenStore implements TokenStore {
 
     @Override
     public int storeToken(Token token) {
-        // 存储access_token
         redisTemplate.opsForList().rightPush(KEY_PRE_TOKEN + token.getUserId(), token.getAccessToken());
-        // 存储权限
-        String permKey = KEY_PRE_PERM + token.getUserId();
-        redisTemplate.delete(permKey);
-        redisTemplate.opsForSet().add(permKey, token.getPermissions());
-        // 存储角色
-        String roleKey = KEY_PRE_ROLE + token.getUserId();
-        redisTemplate.delete(roleKey);
-        redisTemplate.opsForSet().add(roleKey, token.getRoles());
         return 1;
     }
 
@@ -88,8 +72,6 @@ public class RedisTokenStore implements TokenStore {
                     Token token = new Token();
                     token.setUserId(userId);
                     token.setAccessToken(access_token);
-                    token.setPermissions(setToArray(redisTemplate.opsForSet().members(KEY_PRE_PERM + userId)));
-                    token.setRoles(setToArray(redisTemplate.opsForSet().members(KEY_PRE_ROLE + userId)));
                     return token;
                 }
             }

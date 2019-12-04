@@ -6,18 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 角色判断注解
+ * 忽略权限验证注解
  * <p>
  * Created by wangfan on 2018-2-1 上午10:50:34
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequiresRoles {
+public @interface Ignore {
 
-    String[] value();
-
-    /**
-     * 多个权限的逻辑操作，是and还是or，默认是and
-     */
-    Logical logical() default Logical.AND;
 }

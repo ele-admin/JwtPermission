@@ -19,33 +19,26 @@ import java.util.List;
  * jdbc存储token的实现
  * Created by wangfan on 2018-12-28 下午 1:00.
  */
-public class JdbcTokenStore implements TokenStore {
+public abstract class JdbcTokenStore implements TokenStore {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final JdbcTemplate jdbcTemplate;
     private RowMapper<Token> rowMapper = new TokenRowMapper();
-
-    private static final String UPDATE_FIELDS = "access_token, user_id, permissions, roles, refresh_token, expire_time";
-
-    private static final String BASE_SELECT = "select token_id, " + UPDATE_FIELDS + ", create_time, update_time from oauth_token";
-
+    // sql
+    private static final String UPDATE_FIELDS = "access_token, user_id, refresh_token, expire_time";
+    private static final String BASE_SELECT = "select token_id, " + UPDATE_FIELDS + ", create_time from oauth_token";
+    // 查询用户的某个token
     private static final String SQL_SELECT_BY_TOKEN = BASE_SELECT + " where user_id = ? and access_token = ?";
-
+    // 查询某个用户的全部token
     private static final String SQL_SELECT_BY_USER_ID = BASE_SELECT + " where user_id = ? order by create_time";
-
+    // 插入token
     private static final String SQL_INSERT = "insert into oauth_token (" + UPDATE_FIELDS + ") values (?,?,?,?,?,?)";
-
-    private static final String SQL_UPDATE = "update oauth_token set " + UPDATE_FIELDS.replaceAll(", ", "=?, ") + "=? where token_id = ?";
-
-    private static final String SQL_UPDATE_PERMS = "update oauth_token set permissions = ? where user_id = ?";
-
-    private static final String SQL_UPDATE_ROLES = "update oauth_token set roles = ? where user_id = ?";
-
+    // 删除某个用户指定token
     private static final String SQL_DELETE = "delete from oauth_token where user_id = ? and access_token = ?";
-
+    // 删除某个用户全部token
     private static final String SQL_DELETE_BY_USER_ID = "delete from oauth_token where user_id = ?";
-
+    // 查询tokenKey
     private static final String SQL_SELECT_KEY = "select token_key from oauth_token_key";
-
+    // 插入tokenKey
     private static final String SQL_INSERT_KEY = "insert into oauth_token_key (token_key) values (?)";
 
     public JdbcTokenStore(DataSource dataSource) {
@@ -68,24 +61,20 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles) {
-        return createNewToken(userId, permissions, roles, TokenUtil.DEFAULT_EXPIRE);
+    public Token createNewToken(String userId) {
+        return createNewToken(userId, TokenUtil.DEFAULT_EXPIRE);
     }
 
     @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
+    public Token createNewToken(String userId, long expire) {
         String tokenKey = getTokenKey();
-        logger.debug("-------------------------------------------");
-        logger.debug("构建token使用tokenKey：" + tokenKey);
-        logger.debug("-------------------------------------------");
+        logger.debug("TOKEN_KEY: " + tokenKey);
         Token token = TokenUtil.buildToken(userId, expire, TokenUtil.parseHexKey(tokenKey));
-        token.setPermissions(permissions);
-        token.setRoles(roles);
         if (storeToken(token) > 0) {
-            if (Config.getInstance().getMaxToken() != null && Config.getInstance().getMaxToken() != -1) {
+            if (maxToken != -1) {  // 限制用户的最大token数量
                 List<Token> userTokens = findTokensByUserId(userId);
-                if (userTokens.size() > Config.getInstance().getMaxToken()) {
-                    for (int i = 0; i < userTokens.size() - Config.getInstance().getMaxToken(); i++) {
+                if (userTokens.size() > maxToken) {
+                    for (int i = 0; i < userTokens.size() - maxToken; i++) {
                         removeToken(userId, userTokens.get(i).getAccessToken());
                     }
                 }
@@ -130,57 +119,26 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public int updateRolesByUserId(String userId, String[] roles) {
-        Object[] objects = new Object[2];
-        try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            objects[0] = mapper.writeValueAsString(roles);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        objects[1] = userId;
-        return jdbcTemplate.update(SQL_UPDATE_ROLES, objects);
-    }
+    public abstract String[] findRolesByUserId(String userId);
 
     @Override
-    public int updatePermissionsByUserId(String userId, String[] permissions) {
-        Object[] objects = new Object[2];
-        try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            objects[0] = mapper.writeValueAsString(permissions);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        objects[1] = userId;
-        return jdbcTemplate.update(SQL_UPDATE_PERMS, objects);
-    }
+    public abstract String[] findPermissionsByUserId(String userId);
 
+    /**
+     * 插入、修改操作的参数
+     */
     private List<Object> getFieldsForUpdate(Token token) {
         List<Object> objects = new ArrayList();
         objects.add(token.getAccessToken());
         objects.add(token.getUserId());
-        String permJson = null;
-        try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            permJson = mapper.writeValueAsString(token.getPermissions());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        objects.add(permJson);
-        String roleJson = null;
-        try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            roleJson = mapper.writeValueAsString(token.getRoles());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        objects.add(roleJson);
-        // objects.add(token.getTokenKey());
         objects.add(token.getRefreshToken());
         objects.add(token.getExpireTime());
         return objects;
     }
 
+    /**
+     * listToArray
+     */
     private Object[] listToArray(List<Object> list) {
         if (list == null) {
             return null;
@@ -192,58 +150,27 @@ public class JdbcTokenStore implements TokenStore {
         return objects;
     }
 
-
+    /**
+     * Token结果集映射
+     */
     private static class TokenRowMapper implements RowMapper<Token> {
-
         @Override
         public Token mapRow(ResultSet rs, int rowNum) throws SQLException {
             int token_id = rs.getInt("token_id");
             String access_token = rs.getString("access_token");
             String user_id = rs.getString("user_id");
-            String permissions = rs.getString("permissions");
-            String roles = rs.getString("roles");
-            // String token_key = rs.getString("token_key");
             String refresh_token = rs.getString("refresh_token");
             Date expire_time = rs.getDate("expire_time");
             Date create_time = rs.getDate("create_time");
-            Date update_time = rs.getDate("update_time");
             Token token = new Token();
             token.setTokenId(token_id);
             token.setAccessToken(access_token);
             token.setUserId(user_id);
-            // token.setTokenKey(token_key);
             token.setRefreshToken(refresh_token);
             token.setExpireTime(expire_time);
             token.setCreateTime(create_time);
-            token.setUpdateTime(update_time);
-            if (permissions != null) {
-                try {
-                    com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                    token.setPermissions(listToArray((List<String>) mapper.readValue(permissions, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class))));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (roles != null) {
-                try {
-                    com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                    token.setRoles(listToArray((List<String>) mapper.readValue(roles, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class))));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
             return token;
         }
-
-        private String[] listToArray(List<String> list) {
-            if (list == null) {
-                return null;
-            }
-            String[] objects = new String[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                objects[i] = list.get(i);
-            }
-            return objects;
-        }
     }
+
 }
