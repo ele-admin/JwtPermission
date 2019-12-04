@@ -118,12 +118,6 @@ public abstract class JdbcTokenStore implements TokenStore {
         return jdbcTemplate.update(SQL_DELETE_BY_USER_ID, userId);
     }
 
-    @Override
-    public abstract String[] findRolesByUserId(String userId);
-
-    @Override
-    public abstract String[] findPermissionsByUserId(String userId);
-
     /**
      * 插入、修改操作的参数
      */

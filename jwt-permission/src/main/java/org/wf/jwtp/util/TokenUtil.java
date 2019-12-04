@@ -13,7 +13,7 @@ import java.util.Date;
 
 /**
  * Token工具类
- *
+ * <p>
  * Created by wangfan on 2018-1-21 下午4:30:59
  */
 public class TokenUtil {
@@ -53,12 +53,12 @@ public class TokenUtil {
         Date expireDate = new Date(new Date().getTime() + 1000 * expire);
         String access_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(expireDate).compact();
         // 生成refresh_token
-        /*Date refreshExpireDate = new Date(expireDate.getTime() + 1000 * 60 * 60 * 24 * 30);
-        String refresh_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(refreshExpireDate).compact();*/
+        Date refreshExpireDate = new Date(new Date().getTime() + 1000 * expire * 2);
+        String refresh_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(refreshExpireDate).compact();
         // 返回Token
         Token token = new Token();
         token.setAccessToken(access_token);
-        // token.setRefreshToken(refresh_token);
+        token.setRefreshToken(refresh_token);
         token.setUserId(subject);
         token.setExpireTime(expireDate);
         return token;

@@ -24,8 +24,6 @@ public class Token {
 
     private Date createTime;  // 创建时间
 
-    private Date updateTime;  // 更新时间
-
     public Integer getTokenId() {
         return tokenId;
     }
@@ -90,11 +88,4 @@ public class Token {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

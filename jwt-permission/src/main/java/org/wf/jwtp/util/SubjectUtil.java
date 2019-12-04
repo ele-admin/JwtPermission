@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 权限检查工具类
- *
+ * <p>
  * Created by wangfan on 2018-1-23 上午9:58:40
  */
 public class SubjectUtil {
