@@ -47,10 +47,10 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 放行options请求
-        if (request.getMethod().equals("OPTIONS")) {
+        if (request.getMethod().toUpperCase().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             response.setHeader("Access-Control-Max-Age", "3600");
             response.setHeader("Access-Control-Allow-Headers", "Content-Type, x-requested-with, X-Custom-Header, Authorization");
             return false;
@@ -91,9 +91,9 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         if (token == null) {
             throw new ErrorTokenException();
         }
-        // 查询用户的权限和角色
-        token.setPermissions(tokenStore.findPermissionsByUserId(userId));
-        token.setPermissions(tokenStore.findRolesByUserId(userId));
+        // 查询用户的角色和权限
+        token.setRoles(tokenStore.findRolesByUserId(userId, token));
+        token.setPermissions(tokenStore.findPermissionsByUserId(userId, token));
         // 检查权限
         if (method != null && (!checkPermission(method, token) || !checkRole(method, token))) {
             throw new UnauthorizedException();

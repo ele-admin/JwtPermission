@@ -1,28 +1,26 @@
 package org.wf.jwtp.provider;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Token实体类
  * Created by wangfan on 2018-12-28 上午 9:21.
  */
-public class Token {
-
+public class Token implements Serializable {
     private Integer tokenId;  // 自增主键
-
-    private String accessToken;  // access_token
 
     private String userId;  // 用户id
 
-    private String[] permissions;  // 用户权限
-
-    private String[] roles;  // 用户角色
+    private String accessToken;  // access_token
 
     private String refreshToken;  // refresh_token
 
     private Date expireTime;  // 过期时间
 
-    private Date createTime;  // 创建时间
+    private String[] roles;  // 用户角色
+
+    private String[] permissions;  // 用户权限
 
     public Integer getTokenId() {
         return tokenId;
@@ -30,14 +28,6 @@ public class Token {
 
     public void setTokenId(Integer tokenId) {
         this.tokenId = tokenId;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
     }
 
     public String getUserId() {
@@ -48,20 +38,12 @@ public class Token {
         this.userId = userId;
     }
 
-    public String[] getPermissions() {
-        return permissions;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setPermissions(String[] permissions) {
-        this.permissions = permissions;
-    }
-
-    public String[] getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String[] roles) {
-        this.roles = roles;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public String getRefreshToken() {
@@ -80,12 +62,20 @@ public class Token {
         this.expireTime = expireTime;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String[] getRoles() {
+        return roles;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
+
+    public String[] getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String[] permissions) {
+        this.permissions = permissions;
     }
 
 }

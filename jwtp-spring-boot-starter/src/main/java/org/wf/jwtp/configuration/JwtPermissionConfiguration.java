@@ -36,18 +36,37 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
 
     @Bean
     public TokenStore tokenStore() {
-        if (properties.getStoreType() == null || properties.getStoreType() == 0) {
+        TokenStore tokenStore = null;
+        // 获取数据源
+        DataSource dataSource = null;
+        Collection<DataSource> dataSources = applicationContext.getBeansOfType(DataSource.class).values();
+        if (dataSources.size() > 0) {
+            dataSource = dataSources.iterator().next();
+        }
+        // 判断配置的token存储类型
+        if (properties.getStoreType() == 0) {  // redis存储
             Collection<StringRedisTemplate> stringRedisTemplates = applicationContext.getBeansOfType(StringRedisTemplate.class).values();
             if (stringRedisTemplates.size() > 0) {
-                return new RedisTokenStore(stringRedisTemplates.iterator().next());
+                tokenStore = new RedisTokenStore(stringRedisTemplates.iterator().next(), dataSource);
             }
-        } else {
-            Collection<DataSource> dataSources = applicationContext.getBeansOfType(DataSource.class).values();
-            if (dataSources.size() > 0) {
-                return new JdbcTokenStore(dataSources.iterator().next());
+        } else if (properties.getStoreType() == 1) {  // db存储
+            if (dataSource != null) {
+                tokenStore = new JdbcTokenStore(dataSource);
+            }
+        } else {  // 自定义存储
+            Collection<TokenStore> tokenStores = applicationContext.getBeansOfType(TokenStore.class).values();
+            while (tokenStores.iterator().hasNext()) {
+                tokenStore = tokenStores.iterator().next();
+                if (tokenStore != null) {
+                    break;
+                }
             }
         }
-        return null;
+        // 添加配置参数
+        tokenStore.maxToken = properties.getMaxToken();
+        tokenStore.findRolesSql = properties.getFindRolesSql();
+        tokenStore.findPermissionsSql = properties.getFindPermissionsSql();
+        return tokenStore;
     }
 
     @Override
@@ -65,7 +84,7 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
         if (excludePath == null) {
             excludePath = new String[]{};
         }
-        registry.addInterceptor(new TokenInterceptor(tokenStore(), properties.getMaxToken()))
+        registry.addInterceptor(new TokenInterceptor(tokenStore()))
                 .addPathPatterns(path)
                 .excludePathPatterns(excludePath);
     }

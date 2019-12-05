@@ -57,9 +57,9 @@ public class TokenUtil {
         String refresh_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(refreshExpireDate).compact();
         // 返回Token
         Token token = new Token();
+        token.setUserId(subject);
         token.setAccessToken(access_token);
         token.setRefreshToken(refresh_token);
-        token.setUserId(subject);
         token.setExpireTime(expireDate);
         return token;
     }

@@ -9,13 +9,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "jwtp")
 public class JwtPermissionProperties {
 
-    private Integer storeType;
+    private Integer storeType;  // token存储方式
 
-    private String[] path;
+    private String[] path;  // 拦截路径
 
-    private String[] excludePath;
+    private String[] excludePath;  // 排除拦截路径
 
-    private Integer maxToken;
+    private Integer maxToken;  // 单个用户最大的token数量
+
+    String findRolesSql;  // 查询用户角色的sql
+
+    String findPermissionsSql;  // 查询用户权限的sql
 
     public Integer getStoreType() {
         return storeType;
@@ -47,5 +51,21 @@ public class JwtPermissionProperties {
 
     public void setMaxToken(Integer maxToken) {
         this.maxToken = maxToken;
+    }
+
+    public String getFindRolesSql() {
+        return findRolesSql;
+    }
+
+    public void setFindRolesSql(String findRolesSql) {
+        this.findRolesSql = findRolesSql;
+    }
+
+    public String getFindPermissionsSql() {
+        return findPermissionsSql;
+    }
+
+    public void setFindPermissionsSql(String findPermissionsSql) {
+        this.findPermissionsSql = findPermissionsSql;
     }
 }
