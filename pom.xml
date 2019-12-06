@@ -43,7 +43,7 @@
         <servlet.version>3.1.0</servlet.version>
         <spring.version>5.2.0.RELEASE</spring.version>
         <jjwt.version>0.10.5</jjwt.version>
-        <jackson.version>2.9.10.1</jackson.version>
+        <jackson.version>2.10.1</jackson.version>
         <springboot.version>2.1.5.RELEASE</springboot.version>
         <redis.version>2.0.7.RELEASE</redis.version>
     </properties>
