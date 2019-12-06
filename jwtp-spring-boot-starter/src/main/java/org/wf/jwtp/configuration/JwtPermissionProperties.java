@@ -8,18 +8,35 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "jwtp")
 public class JwtPermissionProperties {
+    /**
+     * token存储方式，0 redis存储，1 数据库存储
+     */
+    private Integer storeType = 0;
 
-    private Integer storeType;  // token存储方式
+    /**
+     * 拦截路径，多个路径用逗号分隔
+     */
+    private String[] path = new String[]{"/**"};
 
-    private String[] path;  // 拦截路径
+    /**
+     * 排除拦截路径，多个路径用逗号分隔
+     */
+    private String[] excludePath = new String[]{};
 
-    private String[] excludePath;  // 排除拦截路径
+    /**
+     * 单个用户最大的token数量
+     */
+    private Integer maxToken = -1;
 
-    private Integer maxToken;  // 单个用户最大的token数量
+    /**
+     * 自定义查询用户角色的sql
+     */
+    String findRolesSql;
 
-    String findRolesSql;  // 查询用户角色的sql
-
-    String findPermissionsSql;  // 查询用户权限的sql
+    /**
+     * 自定义查询用户权限的sql
+     */
+    String findPermissionsSql;
 
     public Integer getStoreType() {
         return storeType;
@@ -68,4 +85,5 @@ public class JwtPermissionProperties {
     public void setFindPermissionsSql(String findPermissionsSql) {
         this.findPermissionsSql = findPermissionsSql;
     }
+
 }

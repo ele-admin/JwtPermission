@@ -16,7 +16,7 @@ public abstract class TokenStore {
      *
      * @return
      */
-    abstract String getTokenKey();
+    public abstract String getTokenKey();
 
     /**
      * 创建新的token
@@ -24,7 +24,7 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    abstract Token createNewToken(String userId);
+    public abstract Token createNewToken(String userId);
 
     /**
      * 创建新的token
@@ -33,7 +33,7 @@ public abstract class TokenStore {
      * @param expire 过期时间,单位秒
      * @return
      */
-    abstract Token createNewToken(String userId, long expire);
+    public abstract Token createNewToken(String userId, long expire);
 
     /**
      * 创建新的token
@@ -43,7 +43,7 @@ public abstract class TokenStore {
      * @param roles       角色
      * @return
      */
-    abstract Token createNewToken(String userId, String[] permissions, String[] roles);
+    public abstract Token createNewToken(String userId, String[] permissions, String[] roles);
 
     /**
      * 创建新的token
@@ -54,7 +54,7 @@ public abstract class TokenStore {
      * @param expire      过期时间,单位秒
      * @return
      */
-    abstract Token createNewToken(String userId, String[] permissions, String[] roles, long expire);
+    public abstract Token createNewToken(String userId, String[] permissions, String[] roles, long expire);
 
     /**
      * 保存Token
@@ -62,7 +62,7 @@ public abstract class TokenStore {
      * @param token
      * @return
      */
-    abstract int storeToken(Token token);
+    public abstract int storeToken(Token token);
 
     /**
      * 查询用户的某个token
@@ -71,7 +71,7 @@ public abstract class TokenStore {
      * @param access_token
      * @return
      */
-    abstract Token findToken(String userId, String access_token);
+    public abstract Token findToken(String userId, String access_token);
 
     /**
      * 查询用户的全部token
@@ -79,7 +79,7 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    abstract List<Token> findTokensByUserId(String userId);
+    public abstract List<Token> findTokensByUserId(String userId);
 
     /**
      * 移除用户的某个token
@@ -88,7 +88,7 @@ public abstract class TokenStore {
      * @param access_token
      * @return
      */
-    abstract int removeToken(String userId, String access_token);
+    public abstract int removeToken(String userId, String access_token);
 
     /**
      * 移除用户的全部token
@@ -96,7 +96,7 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    abstract int removeTokensByUserId(String userId);
+    public abstract int removeTokensByUserId(String userId);
 
     /**
      * 修改某个用户的角色
@@ -105,7 +105,7 @@ public abstract class TokenStore {
      * @param roles  角色
      * @return
      */
-    abstract int updateRolesByUserId(String userId, String[] roles);
+    public abstract int updateRolesByUserId(String userId, String[] roles);
 
     /**
      * 修改某个用户的权限
@@ -114,7 +114,7 @@ public abstract class TokenStore {
      * @param permissions 权限
      * @return
      */
-    abstract int updatePermissionsByUserId(String userId, String[] permissions);
+    public abstract int updatePermissionsByUserId(String userId, String[] permissions);
 
     /**
      * 查询用户的角色列表
@@ -122,7 +122,7 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    abstract String[] findRolesByUserId(String userId, Token token);
+    public abstract String[] findRolesByUserId(String userId, Token token);
 
     /**
      * 查询用户的权限列表
@@ -130,6 +130,6 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    abstract String[] findPermissionsByUserId(String userId, Token token);
+    public abstract String[] findPermissionsByUserId(String userId, Token token);
 
 }
