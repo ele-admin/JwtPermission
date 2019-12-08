@@ -1,11 +1,14 @@
 package org.wf.jwtp.provider;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
+import org.wf.jwtp.exception.ErrorTokenException;
+import org.wf.jwtp.exception.ExpiredTokenException;
 import org.wf.jwtp.util.TokenUtil;
 
 import javax.sql.DataSource;
@@ -24,14 +27,14 @@ public class JdbcTokenStore extends TokenStore {
     private final JdbcTemplate jdbcTemplate;
     private RowMapper<Token> rowMapper = new TokenRowMapper();
     // sql
-    private static final String UPDATE_FIELDS = "user_id, access_token, refresh_token, expire_time, roles, permissions";
+    private static final String UPDATE_FIELDS = "user_id, access_token, refresh_token, expire_time, refresh_token_expire_time, roles, permissions";
     private static final String BASE_SELECT = "select token_id, " + UPDATE_FIELDS + " from oauth_token";
     // 查询用户的某个token
     private static final String SQL_SELECT_BY_TOKEN = BASE_SELECT + " where user_id = ? and access_token = ?";
     // 查询某个用户的全部token
     private static final String SQL_SELECT_BY_USER_ID = BASE_SELECT + " where user_id = ? order by create_time";
     // 插入token
-    private static final String SQL_INSERT = "insert into oauth_token (" + UPDATE_FIELDS + ") values (?,?,?,?,?,?)";
+    private static final String SQL_INSERT = "insert into oauth_token (" + UPDATE_FIELDS + ") values (?,?,?,?,?,?,?)";
     // 删除某个用户指定token
     private static final String SQL_DELETE = "delete from oauth_token where user_id = ? and access_token = ?";
     // 删除某个用户全部token
@@ -75,17 +78,74 @@ public class JdbcTokenStore extends TokenStore {
     }
 
     @Override
+    public Token createNewToken(String userId, long expire, long rtExpire) {
+        return createNewToken(userId, null, null, expire, rtExpire);
+    }
+
+    @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles) {
         return createNewToken(userId, permissions, roles, TokenUtil.DEFAULT_EXPIRE);
     }
 
     @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
+        return createNewToken(userId, permissions, roles, expire, TokenUtil.DEFAULT_EXPIRE_REFRESH_TOKEN);
+    }
+
+    @Override
+    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire) {
         String tokenKey = getTokenKey();
         logger.debug("TOKEN_KEY: " + tokenKey);
-        Token token = TokenUtil.buildToken(userId, expire, TokenUtil.parseHexKey(tokenKey));
+        Token token = TokenUtil.buildToken(userId, expire, rtExpire, TokenUtil.parseHexKey(tokenKey));
         token.setRoles(roles);
         token.setPermissions(permissions);
+        if (storeToken(token) > 0) {
+            if (maxToken != -1) {  // 限制用户的最大token数量
+                List<Token> userTokens = findTokensByUserId(userId);
+                if (userTokens.size() > maxToken) {
+                    for (int i = 0; i < userTokens.size() - maxToken; i++) {
+                        removeToken(userId, userTokens.get(i).getAccessToken());
+                    }
+                }
+            }
+            return token;
+        }
+        return null;
+    }
+
+    @Override
+    public Token refreshToken(String refresh_token) {
+        return refreshToken(refresh_token, TokenUtil.DEFAULT_EXPIRE);
+    }
+
+    @Override
+    public Token refreshToken(String refresh_token, long expire) {
+        return refreshToken(refresh_token, null, null, expire);
+    }
+
+    @Override
+    public Token refreshToken(String refresh_token, String[] permissions, String[] roles, long expire) {
+        String tokenKey = getTokenKey();
+        logger.debug("TOKEN_KEY: " + tokenKey);
+        String userId;
+        try {
+            userId = TokenUtil.parseToken(refresh_token, tokenKey);
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredTokenException();
+        } catch (Exception e) {
+            throw new ErrorTokenException();
+        }
+        // 检查token是否存在系统中
+        Token refreshToken = findToken(userId, access_token);
+        if (refreshToken == null) {
+            throw new ErrorTokenException();
+        }
+        // 生成新的token
+        Token token = TokenUtil.buildToken(userId, expire, null, TokenUtil.parseHexKey(tokenKey), false);
+        token.setRoles(roles);
+        token.setPermissions(permissions);
+        token.setRefreshToken(refresh_token);
+        token.setRefreshTokenExpireTime(refreshToken.getRefreshTokenExpireTime());
         if (storeToken(token) > 0) {
             if (maxToken != -1) {  // 限制用户的最大token数量
                 List<Token> userTokens = findTokensByUserId(userId);
@@ -219,6 +279,7 @@ public class JdbcTokenStore extends TokenStore {
         objects.add(token.getAccessToken());
         objects.add(token.getRefreshToken());
         objects.add(token.getExpireTime());
+        objects.add(token.getRefreshTokenExpireTime());
         // 角色数组转json存储
         String rolesJson = null;
         if (token.getRoles() != null) {
@@ -283,6 +344,7 @@ public class JdbcTokenStore extends TokenStore {
             String access_token = rs.getString("access_token");
             String refresh_token = rs.getString("refresh_token");
             Date expire_time = rs.getDate("expire_time");
+            Date refresh_token_expire_time = rs.getDate("refresh_token_expire_time");
             String roles = rs.getString("roles");
             String permissions = rs.getString("permissions");
             Token token = new Token();
@@ -291,6 +353,7 @@ public class JdbcTokenStore extends TokenStore {
             token.setAccessToken(access_token);
             token.setRefreshToken(refresh_token);
             token.setExpireTime(expire_time);
+            token.setRefreshTokenExpireTime(refresh_token_expire_time);
             if (roles != null && !roles.trim().isEmpty()) {
                 try {
                     com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();

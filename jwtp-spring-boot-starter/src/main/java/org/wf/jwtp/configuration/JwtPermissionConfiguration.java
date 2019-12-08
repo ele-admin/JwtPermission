@@ -1,5 +1,7 @@
 package org.wf.jwtp.configuration;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -23,6 +25,7 @@ import java.util.Collection;
  */
 @EnableConfigurationProperties(JwtPermissionProperties.class)
 public class JwtPermissionConfiguration implements WebMvcConfigurer, ApplicationContextAware {
+    protected final Log logger = LogFactory.getLog(this.getClass());
     @Autowired
     private JwtPermissionProperties properties;
     private ApplicationContext applicationContext;
@@ -42,10 +45,14 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
             Collection<StringRedisTemplate> stringRedisTemplates = applicationContext.getBeansOfType(StringRedisTemplate.class).values();
             if (stringRedisTemplates.size() > 0) {
                 tokenStore = new RedisTokenStore(stringRedisTemplates.iterator().next(), dataSource);
+            } else {
+                logger.error("StringRedisTemplate is null");
             }
         } else if (properties.getStoreType() == 1) {  // db存储
             if (dataSource != null) {
                 tokenStore = new JdbcTokenStore(dataSource);
+            } else {
+                logger.error("DataSource is null");
             }
         } else {  // 自定义存储
             Collection<TokenStore> tokenStores = applicationContext.getBeansOfType(TokenStore.class).values();
@@ -60,6 +67,9 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
         tokenStore.maxToken = properties.getMaxToken();
         tokenStore.findRolesSql = properties.getFindRolesSql();
         tokenStore.findPermissionsSql = properties.getFindPermissionsSql();
+        if (tokenStore == null) {
+            logger.error("Unknown TokenStore");
+        }
         return tokenStore;
     }
 
@@ -68,6 +78,9 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
         this.applicationContext = applicationContext;
     }
 
+    /**
+     * 添加拦截器
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         String[] path = properties.getPath();

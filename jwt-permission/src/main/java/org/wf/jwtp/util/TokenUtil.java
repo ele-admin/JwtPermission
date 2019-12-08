@@ -17,7 +17,8 @@ import java.util.Date;
  * Created by wangfan on 2018-1-21 下午4:30:59
  */
 public class TokenUtil {
-    public static final long DEFAULT_EXPIRE = 60 * 60 * 24;  // 默认过期时长,单位秒
+    public static final long DEFAULT_EXPIRE = 60 * 60;  // 默认token过期时长,单位秒
+    public static final long DEFAULT_EXPIRE_REFRESH_TOKEN = 60 * 60 * 24 * 30 * 3;  // 默认refresh_token过期时长,单位秒
 
     /**
      * 生成token
@@ -33,34 +34,64 @@ public class TokenUtil {
      * 生成token
      *
      * @param subject 载体
-     * @param expire  过期时间，单位秒
+     * @param expire  token过期时间，单位秒
      * @return Token
      */
     public static Token buildToken(String subject, long expire) {
-        return buildToken(subject, expire, getKey());
+        return buildToken(subject, expire, DEFAULT_EXPIRE_REFRESH_TOKEN);
     }
 
     /**
      * 生成token
      *
-     * @param subject 载体
-     * @param expire  过期时间，单位秒
-     * @param key     密钥
+     * @param subject  载体
+     * @param expire   token过期时间，单位秒
+     * @param rtExpire refresh_token过期时间，单位秒
+     * @return
+     */
+    public static Token buildToken(String subject, long expire, long rtExpire) {
+        return buildToken(subject, expire, rtExpire, getKey());
+    }
+
+    /**
+     * 生成token
+     *
+     * @param subject  载体
+     * @param expire   token过期时间，单位秒
+     * @param rtExpire refresh_token过期时间，单位秒
+     * @param key      密钥
      * @return Token
      */
-    public static Token buildToken(String subject, long expire, Key key) {
-        // 生成access_token
+    public static Token buildToken(String subject, Long expire, Long rtExpire, Key key) {
+        return buildToken(subject, expire, rtExpire, key, true);
+    }
+
+    /**
+     * 生成token
+     *
+     * @param subject  载体
+     * @param expire   token过期时间，单位秒
+     * @param rtExpire refresh_token过期时间，单位秒
+     * @param key      密钥
+     * @param needRt   是否生成refresh_token
+     * @return Token
+     */
+    public static Token buildToken(String subject, Long expire, Long rtExpire, Key key, boolean needRt) {
         Date expireDate = new Date(new Date().getTime() + 1000 * expire);
+        // 生成access_token
         String access_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(expireDate).compact();
-        // 生成refresh_token
-        Date refreshExpireDate = new Date(new Date().getTime() + 1000 * expire * 2);
-        String refresh_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(refreshExpireDate).compact();
-        // 返回Token
+        // 构建Token对象
         Token token = new Token();
         token.setUserId(subject);
         token.setAccessToken(access_token);
-        token.setRefreshToken(refresh_token);
         token.setExpireTime(expireDate);
+        // 生成refresh_token
+        if (needRt) {
+            Date refreshExpireDate = new Date(new Date().getTime() + 1000 * rtExpire);
+            String refresh_token = Jwts.builder().setSubject(subject).signWith(key).setExpiration(refreshExpireDate).compact();
+            token.setRefreshToken(refresh_token);
+            token.setRefreshTokenExpireTime(refreshExpireDate);
+        }
         return token;
     }
 

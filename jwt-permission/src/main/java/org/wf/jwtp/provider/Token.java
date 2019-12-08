@@ -18,6 +18,8 @@ public class Token implements Serializable {
 
     private Date expireTime;  // 过期时间
 
+    private Date refreshTokenExpireTime;  // refresh_token过期时间
+
     private String[] roles;  // 用户角色
 
     private String[] permissions;  // 用户权限
@@ -78,4 +80,11 @@ public class Token implements Serializable {
         this.permissions = permissions;
     }
 
+    public Date getRefreshTokenExpireTime() {
+        return refreshTokenExpireTime;
+    }
+
+    public void setRefreshTokenExpireTime(Date refreshTokenExpireTime) {
+        this.refreshTokenExpireTime = refreshTokenExpireTime;
+    }
 }

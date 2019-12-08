@@ -30,10 +30,20 @@ public abstract class TokenStore {
      * 创建新的token
      *
      * @param userId 用户id
-     * @param expire 过期时间,单位秒
+     * @param expire token过期时间,单位秒
      * @return
      */
     public abstract Token createNewToken(String userId, long expire);
+
+    /**
+     * 创建新的token
+     *
+     * @param userId   用户id
+     * @param expire   token过期时间,单位秒
+     * @param rtExpire refresh_token过期时间,单位秒
+     * @return
+     */
+    public abstract Token createNewToken(String userId, long expire, long rtExpire);
 
     /**
      * 创建新的token
@@ -51,10 +61,51 @@ public abstract class TokenStore {
      * @param userId      用户id
      * @param permissions 权限
      * @param roles       角色
-     * @param expire      过期时间,单位秒
+     * @param expire      token过期时间,单位秒
      * @return
      */
     public abstract Token createNewToken(String userId, String[] permissions, String[] roles, long expire);
+
+    /**
+     * 创建新的token
+     *
+     * @param userId      用户id
+     * @param permissions 权限
+     * @param roles       角色
+     * @param expire      token过期时间,单位秒
+     * @param rtExpire    refresh_token过期时间,单位秒
+     * @param rtExpire
+     * @return
+     */
+    public abstract Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire);
+
+    /**
+     * 刷新token
+     *
+     * @param refresh_token refresh_token
+     * @return
+     */
+    public abstract Token refreshToken(String refresh_token);
+
+    /**
+     * 刷新token
+     *
+     * @param refresh_token refresh_token
+     * @param expire        token过期时间,单位秒
+     * @return
+     */
+    public abstract Token refreshToken(String refresh_token, long expire);
+
+    /**
+     * 刷新token
+     *
+     * @param refresh_token refresh_token
+     * @param permissions   权限
+     * @param roles         角色
+     * @param expire        token过期时间,单位秒
+     * @return
+     */
+    public abstract Token refreshToken(String refresh_token, String[] permissions, String[] roles, long expire);
 
     /**
      * 保存Token
@@ -80,6 +131,15 @@ public abstract class TokenStore {
      * @return
      */
     public abstract List<Token> findTokensByUserId(String userId);
+
+    /**
+     * 查询用户的某个refresh_token
+     *
+     * @param userId        用户id
+     * @param refresh_token
+     * @return
+     */
+    public abstract Token findRefreshToken(String userId, String refresh_token);
 
     /**
      * 移除用户的某个token

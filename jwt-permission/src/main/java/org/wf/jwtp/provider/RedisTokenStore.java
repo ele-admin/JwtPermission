@@ -59,15 +59,25 @@ public class RedisTokenStore extends TokenStore {
     }
 
     @Override
+    public Token createNewToken(String userId, long expire, long rtExpire) {
+        return createNewToken(userId, null, null, expire, rtExpire);
+    }
+
+    @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles) {
         return createNewToken(userId, permissions, roles, TokenUtil.DEFAULT_EXPIRE);
     }
 
     @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
+        return createNewToken(userId, permissions, roles, expire, TokenUtil.DEFAULT_EXPIRE_REFRESH_TOKEN);
+    }
+
+    @Override
+    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire) {
         String tokenKey = getTokenKey();
         logger.debug("TOKEN_KEY: " + tokenKey);
-        Token token = TokenUtil.buildToken(userId, expire, TokenUtil.parseHexKey(tokenKey));
+        Token token = TokenUtil.buildToken(userId, expire, rtExpire, TokenUtil.parseHexKey(tokenKey));
         token.setRoles(roles);
         token.setPermissions(permissions);
         if (storeToken(token) > 0) {
