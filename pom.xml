@@ -36,16 +36,16 @@
     </modules>
 
     <properties>
+        <jwtp.version>3.0.0</jwtp.version>
+        <jjwt.version>0.10.7</jjwt.version>
+        <jackson.version>2.10.1</jackson.version>
+        <redis.version>2.2.3.RELEASE</redis.version>
+        <spring.version>5.2.0.RELEASE</spring.version>
+        <springboot.version>2.1.5.RELEASE</springboot.version>
+        <servlet.version>3.1.0</servlet.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jwtp.version>3.0.0</jwtp.version>
-        <java.version>1.8</java.version>
-        <servlet.version>3.1.0</servlet.version>
-        <spring.version>5.2.0.RELEASE</spring.version>
-        <jjwt.version>0.10.5</jjwt.version>
-        <jackson.version>2.9.10.1</jackson.version>
-        <springboot.version>2.1.5.RELEASE</springboot.version>
-        <redis.version>2.0.7.RELEASE</redis.version>
     </properties>
 
     <dependencyManagement>
@@ -55,7 +55,6 @@
                 <artifactId>jwt-permission</artifactId>
                 <version>${jwtp.version}</version>
             </dependency>
-
             <!-- j2ee环境 -->
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -63,52 +62,32 @@
                 <version>${servlet.version}</version>
                 <scope>provided</scope>
             </dependency>
-
             <!-- spring web环境 -->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
-
             <!-- jdbc -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
                 <version>${spring.version}</version>
+                <scope>provided</scope>
             </dependency>
-
             <!-- redis -->
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-redis</artifactId>
                 <version>${redis.version}</version>
+                <scope>provided</scope>
             </dependency>
-
             <!-- jjwt -->
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-api</artifactId>
-                <version>${jjwt.version}</version>
-            </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-impl</artifactId>
                 <version>${jjwt.version}</version>
-                <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-jackson</artifactId>
-                <version>${jjwt.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-
             <!-- jackson -->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -116,7 +95,6 @@
                 <version>${jackson.version}</version>
                 <optional>true</optional>
             </dependency>
-
             <!-- spring-boot-starter -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -128,8 +106,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-autoconfigure</artifactId>
                 <version>${springboot.version}</version>
+                <optional>true</optional>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

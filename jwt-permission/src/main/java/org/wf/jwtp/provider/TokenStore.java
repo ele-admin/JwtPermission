@@ -6,17 +6,14 @@ import java.util.List;
  * 操作token的接口
  * Created by wangfan on 2018-12-28 上午 9:21.
  */
-public abstract class TokenStore {
-    public int maxToken = -1;  // 单个用户最大的token数量
-    public String findRolesSql = null;  // 查询用户角色的sql
-    public String findPermissionsSql = null;  // 查询用户权限的sql
+public interface TokenStore {
 
     /**
      * 获取生成token用的key
      *
      * @return
      */
-    public abstract String getTokenKey();
+    String getTokenKey();
 
     /**
      * 创建新的token
@@ -24,7 +21,7 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    public abstract Token createNewToken(String userId);
+    Token createNewToken(String userId);
 
     /**
      * 创建新的token
@@ -33,7 +30,8 @@ public abstract class TokenStore {
      * @param expire token过期时间,单位秒
      * @return
      */
-    public abstract Token createNewToken(String userId, long expire);
+    Token createNewToken(String userId, long expire);
+
 
     /**
      * 创建新的token
@@ -43,7 +41,8 @@ public abstract class TokenStore {
      * @param rtExpire refresh_token过期时间,单位秒
      * @return
      */
-    public abstract Token createNewToken(String userId, long expire, long rtExpire);
+    Token createNewToken(String userId, long expire, long rtExpire);
+
 
     /**
      * 创建新的token
@@ -53,7 +52,7 @@ public abstract class TokenStore {
      * @param roles       角色
      * @return
      */
-    public abstract Token createNewToken(String userId, String[] permissions, String[] roles);
+    Token createNewToken(String userId, String[] permissions, String[] roles);
 
     /**
      * 创建新的token
@@ -64,7 +63,7 @@ public abstract class TokenStore {
      * @param expire      token过期时间,单位秒
      * @return
      */
-    public abstract Token createNewToken(String userId, String[] permissions, String[] roles, long expire);
+    Token createNewToken(String userId, String[] permissions, String[] roles, long expire);
 
     /**
      * 创建新的token
@@ -77,7 +76,7 @@ public abstract class TokenStore {
      * @param rtExpire
      * @return
      */
-    public abstract Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire);
+    Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire);
 
     /**
      * 刷新token
@@ -85,7 +84,7 @@ public abstract class TokenStore {
      * @param refresh_token refresh_token
      * @return
      */
-    public abstract Token refreshToken(String refresh_token);
+    Token refreshToken(String refresh_token);
 
     /**
      * 刷新token
@@ -94,7 +93,7 @@ public abstract class TokenStore {
      * @param expire        token过期时间,单位秒
      * @return
      */
-    public abstract Token refreshToken(String refresh_token, long expire);
+    Token refreshToken(String refresh_token, long expire);
 
     /**
      * 刷新token
@@ -105,7 +104,7 @@ public abstract class TokenStore {
      * @param expire        token过期时间,单位秒
      * @return
      */
-    public abstract Token refreshToken(String refresh_token, String[] permissions, String[] roles, long expire);
+    Token refreshToken(String refresh_token, String[] permissions, String[] roles, long expire);
 
     /**
      * 保存Token
@@ -113,7 +112,7 @@ public abstract class TokenStore {
      * @param token
      * @return
      */
-    public abstract int storeToken(Token token);
+    int storeToken(Token token);
 
     /**
      * 查询用户的某个token
@@ -122,7 +121,7 @@ public abstract class TokenStore {
      * @param access_token
      * @return
      */
-    public abstract Token findToken(String userId, String access_token);
+    Token findToken(String userId, String access_token);
 
     /**
      * 查询用户的全部token
@@ -130,7 +129,7 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    public abstract List<Token> findTokensByUserId(String userId);
+    List<Token> findTokensByUserId(String userId);
 
     /**
      * 查询用户的某个refresh_token
@@ -139,7 +138,7 @@ public abstract class TokenStore {
      * @param refresh_token
      * @return
      */
-    public abstract Token findRefreshToken(String userId, String refresh_token);
+    Token findRefreshToken(String userId, String refresh_token);
 
     /**
      * 移除用户的某个token
@@ -148,7 +147,7 @@ public abstract class TokenStore {
      * @param access_token
      * @return
      */
-    public abstract int removeToken(String userId, String access_token);
+    int removeToken(String userId, String access_token);
 
     /**
      * 移除用户的全部token
@@ -156,7 +155,7 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    public abstract int removeTokensByUserId(String userId);
+    int removeTokensByUserId(String userId);
 
     /**
      * 修改某个用户的角色
@@ -165,7 +164,7 @@ public abstract class TokenStore {
      * @param roles  角色
      * @return
      */
-    public abstract int updateRolesByUserId(String userId, String[] roles);
+    int updateRolesByUserId(String userId, String[] roles);
 
     /**
      * 修改某个用户的权限
@@ -174,7 +173,7 @@ public abstract class TokenStore {
      * @param permissions 权限
      * @return
      */
-    public abstract int updatePermissionsByUserId(String userId, String[] permissions);
+    int updatePermissionsByUserId(String userId, String[] permissions);
 
     /**
      * 查询用户的角色列表
@@ -182,7 +181,7 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    public abstract String[] findRolesByUserId(String userId, Token token);
+    String[] findRolesByUserId(String userId, Token token);
 
     /**
      * 查询用户的权限列表
@@ -190,6 +189,30 @@ public abstract class TokenStore {
      * @param userId 用户id
      * @return
      */
-    public abstract String[] findPermissionsByUserId(String userId, Token token);
+    String[] findPermissionsByUserId(String userId, Token token);
+
+    /**
+     * 设置单个用户最大token数量
+     * @param maxToken
+     */
+    void setMaxToken(int maxToken);
+
+    /**
+     * 自定义查询角色sql
+     * @param findRolesSql
+     */
+    void setFindRolesSql(String findRolesSql);
+
+    /**
+     * 自定义查询权限sql
+     * @param findPermissionsSql
+     */
+    void setFindPermissionsSql(String findPermissionsSql);
+
+    int getMaxToken();
+
+    String getFindRolesSql();
+
+    String getFindPermissionsSql();
 
 }

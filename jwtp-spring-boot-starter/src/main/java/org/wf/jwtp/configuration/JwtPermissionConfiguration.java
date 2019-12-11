@@ -9,11 +9,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.config.annotation.*;
 import org.wf.jwtp.TokenInterceptor;
-import org.wf.jwtp.provider.JdbcTokenStore;
-import org.wf.jwtp.provider.RedisTokenStore;
+import org.wf.jwtp.perm.RestUrlPerm;
+import org.wf.jwtp.perm.SimpleUrlPerm;
+import org.wf.jwtp.perm.UrlPerm;
 import org.wf.jwtp.provider.TokenStore;
 
 import javax.sql.DataSource;
@@ -42,15 +42,15 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
         }
         // 判断配置的token存储类型
         if (properties.getStoreType() == 0) {  // redis存储
-            Collection<StringRedisTemplate> stringRedisTemplates = applicationContext.getBeansOfType(StringRedisTemplate.class).values();
+            Collection<org.springframework.data.redis.core.StringRedisTemplate> stringRedisTemplates = applicationContext.getBeansOfType(org.springframework.data.redis.core.StringRedisTemplate.class).values();
             if (stringRedisTemplates.size() > 0) {
-                tokenStore = new RedisTokenStore(stringRedisTemplates.iterator().next(), dataSource);
+                tokenStore = new org.wf.jwtp.provider.RedisTokenStore(stringRedisTemplates.iterator().next(), dataSource);
             } else {
                 logger.error("StringRedisTemplate is null");
             }
         } else if (properties.getStoreType() == 1) {  // db存储
             if (dataSource != null) {
-                tokenStore = new JdbcTokenStore(dataSource);
+                tokenStore = new org.wf.jwtp.provider.JdbcTokenStore(dataSource);
             } else {
                 logger.error("DataSource is null");
             }
@@ -64,13 +64,34 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
             }
         }
         // 添加配置参数
-        tokenStore.maxToken = properties.getMaxToken();
-        tokenStore.findRolesSql = properties.getFindRolesSql();
-        tokenStore.findPermissionsSql = properties.getFindPermissionsSql();
+        tokenStore.setMaxToken(properties.getMaxToken());
+        tokenStore.setFindRolesSql(properties.getFindRolesSql());
+        tokenStore.setFindPermissionsSql(properties.getFindPermissionsSql());
         if (tokenStore == null) {
             logger.error("Unknown TokenStore");
         }
         return tokenStore;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public UrlPerm urlPerm() {
+        UrlPerm urlPerm = null;
+        // 判断配置的token存储类型
+        if (properties.getUrlPermType() == 0) {  // 简易模式
+            urlPerm = new SimpleUrlPerm();
+        } else if (properties.getUrlPermType() == 1) {  // RESTful模式
+            urlPerm = new RestUrlPerm();
+        } else {  // 自定义模式
+            Collection<UrlPerm> urlPerms = applicationContext.getBeansOfType(UrlPerm.class).values();
+            while (urlPerms.iterator().hasNext()) {
+                urlPerm = urlPerms.iterator().next();
+                if (urlPerm != null) {
+                    break;
+                }
+            }
+        }
+        return urlPerm;
     }
 
     @Override
@@ -85,7 +106,7 @@ public class JwtPermissionConfiguration implements WebMvcConfigurer, Application
     public void addInterceptors(InterceptorRegistry registry) {
         String[] path = properties.getPath();
         String[] excludePath = properties.getExcludePath();
-        registry.addInterceptor(new TokenInterceptor(tokenStore()))
+        registry.addInterceptor(new TokenInterceptor(tokenStore(), urlPerm()))
                 .addPathPatterns(path)
                 .excludePathPatterns(excludePath);
     }

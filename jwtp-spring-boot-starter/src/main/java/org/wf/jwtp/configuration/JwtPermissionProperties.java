@@ -14,6 +14,11 @@ public class JwtPermissionProperties {
     private Integer storeType = 0;
 
     /**
+     * url自动对应权限方式，0 简易模式，1 RESTful模式
+     */
+    private Integer urlPermType;
+
+    /**
      * 拦截路径，多个路径用逗号分隔
      */
     private String[] path = new String[]{"/**"};
@@ -44,6 +49,14 @@ public class JwtPermissionProperties {
 
     public void setStoreType(Integer storeType) {
         this.storeType = storeType;
+    }
+
+    public Integer getUrlPermType() {
+        return urlPermType;
+    }
+
+    public void setUrlPermType(Integer urlPermType) {
+        this.urlPermType = urlPermType;
     }
 
     public String[] getPath() {

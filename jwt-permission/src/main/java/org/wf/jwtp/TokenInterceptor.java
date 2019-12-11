@@ -12,6 +12,8 @@ import org.wf.jwtp.annotation.RequiresRoles;
 import org.wf.jwtp.exception.ErrorTokenException;
 import org.wf.jwtp.exception.ExpiredTokenException;
 import org.wf.jwtp.exception.UnauthorizedException;
+import org.wf.jwtp.perm.UrlPerm;
+import org.wf.jwtp.perm.UrlPermResult;
 import org.wf.jwtp.provider.Token;
 import org.wf.jwtp.provider.TokenStore;
 import org.wf.jwtp.util.SubjectUtil;
@@ -28,6 +30,7 @@ import java.lang.reflect.Method;
 public class TokenInterceptor extends HandlerInterceptorAdapter {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private TokenStore tokenStore;
+    private UrlPerm urlPerm;
 
     public TokenInterceptor() {
     }
@@ -36,12 +39,25 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         setTokenStore(tokenStore);
     }
 
+    public TokenInterceptor(TokenStore tokenStore, UrlPerm urlPerm) {
+        setTokenStore(tokenStore);
+        setUrlPerm(urlPerm);
+    }
+
     public TokenStore getTokenStore() {
         return tokenStore;
     }
 
     public void setTokenStore(TokenStore tokenStore) {
         this.tokenStore = tokenStore;
+    }
+
+    public void setUrlPerm(UrlPerm urlPerm) {
+        this.urlPerm = urlPerm;
+    }
+
+    public UrlPerm getUrlPerm() {
+        return urlPerm;
     }
 
     @Override
@@ -60,7 +76,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             method = ((HandlerMethod) handler).getMethod();
         }
         // 检查是否忽略权限验证
-        if (method != null && checkIgnore(method)) {
+        if (method == null || checkIgnore(method)) {
             return super.preHandle(request, response, handler);
         }
         // 获取token
@@ -83,19 +99,19 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             logger.debug("ERROR: ExpiredJwtException");
             throw new ExpiredTokenException();
         } catch (Exception e) {
-            logger.debug("ERROR: " + e.getMessage());
             throw new ErrorTokenException();
         }
         // 检查token是否存在系统中
         Token token = tokenStore.findToken(userId, access_token);
         if (token == null) {
+            logger.debug("ERROR: ");
             throw new ErrorTokenException();
         }
         // 查询用户的角色和权限
         token.setRoles(tokenStore.findRolesByUserId(userId, token));
         token.setPermissions(tokenStore.findPermissionsByUserId(userId, token));
         // 检查权限
-        if (method != null && (!checkPermission(method, token) || !checkRole(method, token))) {
+        if (!checkPermission(token, request, response, handler) || !checkRole(token, request, response, handler)) {
             throw new UnauthorizedException();
         }
         request.setAttribute(SubjectUtil.REQUEST_TOKEN_NAME, token);
@@ -119,32 +135,48 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     /**
      * 检查权限是否符合
      */
-    private boolean checkPermission(Method method, Token token) {
+    private boolean checkPermission(Token token, HttpServletRequest request, HttpServletResponse response, Object handler) {
+        Method method = ((HandlerMethod) handler).getMethod();
         RequiresPermissions annotation = method.getAnnotation(RequiresPermissions.class);
         if (annotation == null) {  // 方法上没有注解再检查类上面有没有注解
             annotation = method.getDeclaringClass().getAnnotation(RequiresPermissions.class);
-            if (annotation == null) {
-                return true;
-            }
         }
-        String[] requiresPermissions = annotation.value();
-        Logical logical = annotation.logical();
+        String[] requiresPermissions;
+        Logical logical;
+        if (annotation != null) {
+            requiresPermissions = annotation.value();
+            logical = annotation.logical();
+        } else if (urlPerm != null) {
+            UrlPermResult upr = urlPerm.getPermission(request, response, (HandlerMethod) handler);
+            requiresPermissions = upr.getValues();
+            logical = upr.getLogical();
+        } else {
+            return true;
+        }
         return SubjectUtil.hasPermission(token, requiresPermissions, logical);
     }
 
     /**
      * 检查角色是否符合
      */
-    private boolean checkRole(Method method, Token token) {
+    private boolean checkRole(Token token, HttpServletRequest request, HttpServletResponse response, Object handler) {
+        Method method = ((HandlerMethod) handler).getMethod();
         RequiresRoles annotation = method.getAnnotation(RequiresRoles.class);
         if (annotation == null) {  // 方法上没有注解再检查类上面有没有注解
             annotation = method.getDeclaringClass().getAnnotation(RequiresRoles.class);
-            if (annotation == null) {
-                return true;
-            }
         }
-        String[] requiresRoles = annotation.value();
-        Logical logical = annotation.logical();
+        String[] requiresRoles;
+        Logical logical;
+        if (annotation != null) {
+            requiresRoles = annotation.value();
+            logical = annotation.logical();
+        } else if (urlPerm != null) {
+            UrlPermResult upr = urlPerm.getRoles(request, response, (HandlerMethod) handler);
+            requiresRoles = upr.getValues();
+            logical = upr.getLogical();
+        } else {
+            return true;
+        }
         return SubjectUtil.hasRole(token, requiresRoles, logical);
     }
 

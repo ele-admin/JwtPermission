@@ -16,12 +16,13 @@ import java.util.Set;
  * redis存储token的实现
  * Created by wangfan on 2018-12-29 上午 9:10.
  */
-public class RedisTokenStore extends TokenStore {
-    private StringRedisTemplate redisTemplate;
-    private final JdbcTemplate jdbcTemplate;
+public class RedisTokenStore extends TokenStoreAbstract {
     protected final Log logger = LogFactory.getLog(this.getClass());
+    private final StringRedisTemplate redisTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private static final String KEY_TOKEN_KEY = "oauth_token_key";  // tokenKey存储的key
     private static final String KEY_PRE_TOKEN = "oauth_token:";  // token存储的key前缀
+    private static final String KEY_PRE_REFRESH_TOKEN = "oauth_refresh_token:";  // refresh_token存储的key前缀
     private static final String KEY_PRE_ROLE = "oauth_role:";  // 角色存储的key前缀
     private static final String KEY_PRE_PERM = "oauth_prem:";  // 权限存储的key前缀
 
@@ -49,31 +50,6 @@ public class RedisTokenStore extends TokenStore {
     }
 
     @Override
-    public Token createNewToken(String userId) {
-        return createNewToken(userId, null, null);
-    }
-
-    @Override
-    public Token createNewToken(String userId, long expire) {
-        return createNewToken(userId, null, null, expire);
-    }
-
-    @Override
-    public Token createNewToken(String userId, long expire, long rtExpire) {
-        return createNewToken(userId, null, null, expire, rtExpire);
-    }
-
-    @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles) {
-        return createNewToken(userId, permissions, roles, TokenUtil.DEFAULT_EXPIRE);
-    }
-
-    @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
-        return createNewToken(userId, permissions, roles, expire, TokenUtil.DEFAULT_EXPIRE_REFRESH_TOKEN);
-    }
-
-    @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire) {
         String tokenKey = getTokenKey();
         logger.debug("TOKEN_KEY: " + tokenKey);
@@ -81,14 +57,6 @@ public class RedisTokenStore extends TokenStore {
         token.setRoles(roles);
         token.setPermissions(permissions);
         if (storeToken(token) > 0) {
-            if (maxToken != -1) {  // 限制用户的最大token数量
-                Long userTokenSize = redisTemplate.opsForList().size(KEY_PRE_TOKEN + userId);
-                if (userTokenSize > maxToken) {
-                    for (int i = 0; i < userTokenSize - maxToken; i++) {
-                        redisTemplate.opsForList().leftPop(KEY_PRE_TOKEN + userId);
-                    }
-                }
-            }
             return token;
         }
         return null;
@@ -98,10 +66,20 @@ public class RedisTokenStore extends TokenStore {
     public int storeToken(Token token) {
         // 存储access_token
         redisTemplate.opsForList().rightPush(KEY_PRE_TOKEN + token.getUserId(), token.getAccessToken());
+        // 存储refresh_token
+        redisTemplate.opsForSet().add(KEY_PRE_REFRESH_TOKEN + token.getUserId(), token.getRefreshToken());
         // 存储角色
         updateRolesByUserId(token.getUserId(), token.getRoles());
         // 存储权限
         updatePermissionsByUserId(token.getUserId(), token.getPermissions());
+        if (getMaxToken() != -1) {  // 限制用户的最大token数量
+            Long userTokenSize = redisTemplate.opsForList().size(KEY_PRE_TOKEN + token.getUserId());
+            if (userTokenSize > getMaxToken()) {
+                for (int i = 0; i < userTokenSize - getMaxToken(); i++) {
+                    redisTemplate.opsForList().leftPop(KEY_PRE_TOKEN + token.getUserId());
+                }
+            }
+        }
         return 1;
     }
 
@@ -141,6 +119,20 @@ public class RedisTokenStore extends TokenStore {
     }
 
     @Override
+    public Token findRefreshToken(String userId, String refresh_token) {
+        if (userId != null && !userId.trim().isEmpty()) {
+            Set<String> refreshTokens = redisTemplate.opsForSet().members(KEY_PRE_TOKEN + userId);
+            if (refreshTokens != null && refreshTokens.size() > 0) {
+                Token token = new Token();
+                token.setUserId(userId);
+                token.setRefreshToken(refreshTokens.iterator().next());
+                return token;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public int removeToken(String userId, String access_token) {
         redisTemplate.opsForList().remove(KEY_PRE_TOKEN + userId, 0, access_token);
         return 1;
@@ -175,13 +167,13 @@ public class RedisTokenStore extends TokenStore {
     @Override
     public String[] findRolesByUserId(String userId, Token token) {
         // 判断是否自定义查询
-        if (findRolesSql == null || findRolesSql.trim().isEmpty()) {
+        if (getFindRolesSql() == null || getFindRolesSql().trim().isEmpty()) {
             return token.getRoles();
         }
         if (jdbcTemplate != null) {
             String rolesJson = null;
             try {
-                rolesJson = jdbcTemplate.queryForObject(findRolesSql, String.class);
+                rolesJson = jdbcTemplate.queryForObject(getFindRolesSql(), String.class);
             } catch (EmptyResultDataAccessException e) {
             }
             if (rolesJson != null && !rolesJson.trim().isEmpty()) {
@@ -200,19 +192,19 @@ public class RedisTokenStore extends TokenStore {
     @Override
     public String[] findPermissionsByUserId(String userId, Token token) {
         // 判断是否自定义查询
-        if (findPermissionsSql == null || findPermissionsSql.trim().isEmpty()) {
+        if (getFindPermissionsSql() == null || getFindPermissionsSql().trim().isEmpty()) {
             return token.getPermissions();
         }
         if (jdbcTemplate != null) {
             String permsJson = null;
             try {
-                permsJson = jdbcTemplate.queryForObject(findPermissionsSql, String.class);
+                permsJson = jdbcTemplate.queryForObject(getFindPermissionsSql(), String.class);
             } catch (EmptyResultDataAccessException e) {
             }
             if (permsJson != null && !permsJson.trim().isEmpty()) {
                 try {
                     com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                    List<String> list = mapper.readValue(findPermissionsSql, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class));
+                    List<String> list = mapper.readValue(getFindPermissionsSql(), mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class));
                     return strListToArray(list);
                 } catch (Exception e) {
                     e.printStackTrace();

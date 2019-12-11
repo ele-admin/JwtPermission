@@ -1,14 +1,11 @@
 package org.wf.jwtp.provider;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
-import org.wf.jwtp.exception.ErrorTokenException;
-import org.wf.jwtp.exception.ExpiredTokenException;
 import org.wf.jwtp.util.TokenUtil;
 
 import javax.sql.DataSource;
@@ -22,7 +19,7 @@ import java.util.List;
  * jdbc存储token的实现
  * Created by wangfan on 2018-12-28 下午 1:00.
  */
-public class JdbcTokenStore extends TokenStore {
+public class JdbcTokenStore extends TokenStoreAbstract {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final JdbcTemplate jdbcTemplate;
     private RowMapper<Token> rowMapper = new TokenRowMapper();
@@ -43,6 +40,8 @@ public class JdbcTokenStore extends TokenStore {
     private static final String SQL_UPDATE_ROLES = "update oauth_token set roles = ? where user_id = ?";
     // 修改某个用户的权限
     private static final String SQL_UPDATE_PERMS = "update oauth_token set permissions = ? where user_id = ?";
+    // 查询某个用户的refresh_token
+    private static final String SQL_SELECT_REFRESH_TOKEN = BASE_SELECT + " where user_id = ? and refresh_token= ?";
     // 查询tokenKey
     private static final String SQL_SELECT_KEY = "select token_key from oauth_token_key";
     // 插入tokenKey
@@ -68,31 +67,6 @@ public class JdbcTokenStore extends TokenStore {
     }
 
     @Override
-    public Token createNewToken(String userId) {
-        return createNewToken(userId, null, null);
-    }
-
-    @Override
-    public Token createNewToken(String userId, long expire) {
-        return createNewToken(userId, null, null, expire);
-    }
-
-    @Override
-    public Token createNewToken(String userId, long expire, long rtExpire) {
-        return createNewToken(userId, null, null, expire, rtExpire);
-    }
-
-    @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles) {
-        return createNewToken(userId, permissions, roles, TokenUtil.DEFAULT_EXPIRE);
-    }
-
-    @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire) {
-        return createNewToken(userId, permissions, roles, expire, TokenUtil.DEFAULT_EXPIRE_REFRESH_TOKEN);
-    }
-
-    @Override
     public Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire) {
         String tokenKey = getTokenKey();
         logger.debug("TOKEN_KEY: " + tokenKey);
@@ -100,61 +74,6 @@ public class JdbcTokenStore extends TokenStore {
         token.setRoles(roles);
         token.setPermissions(permissions);
         if (storeToken(token) > 0) {
-            if (maxToken != -1) {  // 限制用户的最大token数量
-                List<Token> userTokens = findTokensByUserId(userId);
-                if (userTokens.size() > maxToken) {
-                    for (int i = 0; i < userTokens.size() - maxToken; i++) {
-                        removeToken(userId, userTokens.get(i).getAccessToken());
-                    }
-                }
-            }
-            return token;
-        }
-        return null;
-    }
-
-    @Override
-    public Token refreshToken(String refresh_token) {
-        return refreshToken(refresh_token, TokenUtil.DEFAULT_EXPIRE);
-    }
-
-    @Override
-    public Token refreshToken(String refresh_token, long expire) {
-        return refreshToken(refresh_token, null, null, expire);
-    }
-
-    @Override
-    public Token refreshToken(String refresh_token, String[] permissions, String[] roles, long expire) {
-        String tokenKey = getTokenKey();
-        logger.debug("TOKEN_KEY: " + tokenKey);
-        String userId;
-        try {
-            userId = TokenUtil.parseToken(refresh_token, tokenKey);
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException();
-        } catch (Exception e) {
-            throw new ErrorTokenException();
-        }
-        // 检查token是否存在系统中
-        Token refreshToken = findToken(userId, access_token);
-        if (refreshToken == null) {
-            throw new ErrorTokenException();
-        }
-        // 生成新的token
-        Token token = TokenUtil.buildToken(userId, expire, null, TokenUtil.parseHexKey(tokenKey), false);
-        token.setRoles(roles);
-        token.setPermissions(permissions);
-        token.setRefreshToken(refresh_token);
-        token.setRefreshTokenExpireTime(refreshToken.getRefreshTokenExpireTime());
-        if (storeToken(token) > 0) {
-            if (maxToken != -1) {  // 限制用户的最大token数量
-                List<Token> userTokens = findTokensByUserId(userId);
-                if (userTokens.size() > maxToken) {
-                    for (int i = 0; i < userTokens.size() - maxToken; i++) {
-                        removeToken(userId, userTokens.get(i).getAccessToken());
-                    }
-                }
-            }
             return token;
         }
         return null;
@@ -163,7 +82,16 @@ public class JdbcTokenStore extends TokenStore {
     @Override
     public int storeToken(Token token) {
         List<Object> objects = getFieldsForUpdate(token);
-        return jdbcTemplate.update(SQL_INSERT, listToArray(objects));
+        int rs = jdbcTemplate.update(SQL_INSERT, listToArray(objects));
+        if (getMaxToken() != -1) {  // 限制用户的最大token数量
+            List<Token> userTokens = findTokensByUserId(token.getUserId());
+            if (userTokens.size() > getMaxToken()) {
+                for (int i = 0; i < userTokens.size() - getMaxToken(); i++) {
+                    removeToken(token.getUserId(), userTokens.get(i).getAccessToken());
+                }
+            }
+        }
+        return rs;
     }
 
     @Override
@@ -179,6 +107,18 @@ public class JdbcTokenStore extends TokenStore {
     public List<Token> findTokensByUserId(String userId) {
         try {
             return jdbcTemplate.query(SQL_SELECT_BY_USER_ID, rowMapper, userId);
+        } catch (EmptyResultDataAccessException e) {
+        }
+        return null;
+    }
+
+    @Override
+    public Token findRefreshToken(String userId, String refresh_token) {
+        try {
+            List<Token> list = jdbcTemplate.query(SQL_SELECT_REFRESH_TOKEN, rowMapper, userId, refresh_token);
+            if (list.size() > 0) {
+                return list.get(0);
+            }
         } catch (EmptyResultDataAccessException e) {
         }
         return null;
@@ -227,12 +167,12 @@ public class JdbcTokenStore extends TokenStore {
     @Override
     public String[] findRolesByUserId(String userId, Token token) {
         // 判断是否自定义查询
-        if (findRolesSql == null || findRolesSql.trim().isEmpty()) {
+        if (getFindRolesSql() == null || getFindRolesSql().trim().isEmpty()) {
             return token.getRoles();
         }
         String rolesJson = null;
         try {
-            rolesJson = jdbcTemplate.queryForObject(findRolesSql, String.class);
+            rolesJson = jdbcTemplate.queryForObject(getFindRolesSql(), String.class);
         } catch (EmptyResultDataAccessException e) {
         }
         if (rolesJson != null && !rolesJson.trim().isEmpty()) {
@@ -250,18 +190,18 @@ public class JdbcTokenStore extends TokenStore {
     @Override
     public String[] findPermissionsByUserId(String userId, Token token) {
         // 判断是否自定义查询
-        if (findPermissionsSql == null || findPermissionsSql.trim().isEmpty()) {
+        if (getFindPermissionsSql() == null || getFindPermissionsSql().trim().isEmpty()) {
             return token.getPermissions();
         }
         String permsJson = null;
         try {
-            permsJson = jdbcTemplate.queryForObject(findPermissionsSql, String.class);
+            permsJson = jdbcTemplate.queryForObject(getFindPermissionsSql(), String.class);
         } catch (EmptyResultDataAccessException e) {
         }
         if (permsJson != null && !permsJson.trim().isEmpty()) {
             try {
                 com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                List<String> list = mapper.readValue(findPermissionsSql, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class));
+                List<String> list = mapper.readValue(getFindPermissionsSql(), mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class));
                 return strListToArray(list);
             } catch (Exception e) {
                 e.printStackTrace();

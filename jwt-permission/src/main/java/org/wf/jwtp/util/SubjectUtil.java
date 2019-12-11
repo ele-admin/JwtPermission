@@ -25,6 +25,9 @@ public class SubjectUtil {
         if (token == null) {
             return false;
         }
+        if (roles == null || roles.length <= 0) {
+            return true;
+        }
         boolean rs = false;
         for (int i = 0; i < roles.length; i++) {
             if (token.getRoles() != null) {
@@ -82,6 +85,9 @@ public class SubjectUtil {
     public static boolean hasPermission(Token token, String[] permissions, Logical logical) {
         if (token == null) {
             return false;
+        }
+        if (permissions == null || permissions.length <= 0) {
+            return true;
         }
         boolean rs = false;
         for (int i = 0; i < permissions.length; i++) {

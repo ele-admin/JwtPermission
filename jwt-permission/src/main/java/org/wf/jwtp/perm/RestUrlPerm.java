@@ -2,108 +2,93 @@ package org.wf.jwtp.perm;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
+import org.wf.jwtp.annotation.Logical;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * url自动对应权限 - RESTful模式
  * Created by wangfan on 2019-01-21 下午 4:19.
  */
-public class RestUrlPerm implements IUrlPerm {
-    @Override
-    public String[] getPermission(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
-        String[] methodMapping = null;
-        String[] requestMethod = null;
-        String controllerMapping = null;
-        String[] rsPermissions = new String[]{};
+public class RestUrlPerm implements UrlPerm {
 
+    @Override
+    public UrlPermResult getPermission(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
         Method method = handler.getMethod();
-        GetMapping annotationGet = method.getAnnotation(GetMapping.class);
-        if (annotationGet != null) {
-            requestMethod = new String[]{"get"};
-            methodMapping = annotationGet.value();
+        List<String> perms = new ArrayList<String>();
+        // 获取Method上的注解
+        String[] urls, types, urlPres;
+        if (method.getAnnotation(GetMapping.class) != null) {
+            urls = method.getAnnotation(GetMapping.class).value();
+            types = new String[]{"get"};
+        } else if (method.getAnnotation(PostMapping.class) != null) {
+            urls = method.getAnnotation(PostMapping.class).value();
+            types = new String[]{"post"};
+        } else if (method.getAnnotation(PutMapping.class) != null) {
+            urls = method.getAnnotation(PutMapping.class).value();
+            types = new String[]{"put"};
+        } else if (method.getAnnotation(DeleteMapping.class) != null) {
+            urls = method.getAnnotation(DeleteMapping.class).value();
+            types = new String[]{"delete"};
+        } else if (method.getAnnotation(RequestMapping.class) != null) {
+            urls = method.getAnnotation(RequestMapping.class).value();
+            types = new String[]{"get", "post", "put", "delete"};
         } else {
-            PostMapping annotationPost = method.getAnnotation(PostMapping.class);
-            if (annotationPost != null) {
-                requestMethod = new String[]{"post"};
-                methodMapping = annotationPost.value();
-            } else {
-                PutMapping annotationPut = method.getAnnotation(PutMapping.class);
-                if (annotationPut != null) {
-                    requestMethod = new String[]{"put"};
-                    methodMapping = annotationPut.value();
-                } else {
-                    DeleteMapping annotationDel = method.getAnnotation(DeleteMapping.class);
-                    if (annotationDel != null) {
-                        requestMethod = new String[]{"delete"};
-                        methodMapping = annotationDel.value();
-                    } else {
-                        RequestMapping annotationReq = method.getAnnotation(RequestMapping.class);
-                        if (annotationReq != null) {
-                            requestMethod = new String[]{"get", "post", "put", "delete"};
-                            methodMapping = annotationReq.value();
-                        }
+            urls = new String[0];
+            types = new String[0];
+        }
+        // 获取Class上的注解
+        Class<?> clazz = method.getDeclaringClass();
+        if (clazz.getAnnotation(GetMapping.class) != null) {
+            urlPres = clazz.getAnnotation(GetMapping.class).value();
+        } else if (clazz.getAnnotation(PostMapping.class) != null) {
+            urlPres = clazz.getAnnotation(PostMapping.class).value();
+        } else if (clazz.getAnnotation(PutMapping.class) != null) {
+            urlPres = clazz.getAnnotation(PutMapping.class).value();
+        } else if (clazz.getAnnotation(DeleteMapping.class) != null) {
+            urlPres = clazz.getAnnotation(DeleteMapping.class).value();
+        } else if (clazz.getAnnotation(RequestMapping.class) != null) {
+            urlPres = clazz.getAnnotation(RequestMapping.class).value();
+        } else {
+            urlPres = new String[0];
+        }
+        // 生成权限
+        for (String type : types) {
+            for (String url : urls) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(type);
+                sb.append(":");
+                if (urlPres != null && urlPres.length > 0) {
+                    if (!urlPres[0].startsWith("/")) {
+                        sb.append("/");
                     }
+                    sb.append(urlPres[0]);
                 }
+                if (!url.startsWith("/")) {
+                    sb.append("/");
+                }
+                sb.append(url);
+                perms.add(sb.toString());
             }
         }
-        controllerMapping = getControllerMapping(method.getDeclaringClass());
-
-        if (requestMethod != null) {
-            for (String rM : requestMethod) {
-                StringBuilder builder = new StringBuilder();
-                builder.append(rM);
-                builder.append(":");
-                if (controllerMapping != null) {
-                    if (!controllerMapping.startsWith("/")) {
-                        builder.append("/");
-                    }
-                    builder.append(controllerMapping);
-                }
-                for (String mp : methodMapping) {
-
-                }
-            }
-        }
-
-        return new String[0];
+        return new UrlPermResult(listToArray(perms), Logical.OR);
     }
 
     @Override
-    public String[] getRoles(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
-        return new String[0];
+    public UrlPermResult getRoles(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
+        return new UrlPermResult(new String[0], Logical.OR);
     }
 
-    private String getControllerMapping(Class<?> clazz) {
-        String[] requestMapping = null;
-        GetMapping annotationGet = clazz.getAnnotation(GetMapping.class);
-        if (annotationGet != null) {
-            requestMapping = annotationGet.value();
-        } else {
-            PostMapping annotationPost = clazz.getAnnotation(PostMapping.class);
-            if (annotationPost != null) {
-                requestMapping = annotationPost.value();
-            } else {
-                PutMapping annotationPut = clazz.getAnnotation(PutMapping.class);
-                if (annotationPut != null) {
-                    requestMapping = annotationPut.value();
-                } else {
-                    DeleteMapping annotationDel = clazz.getAnnotation(DeleteMapping.class);
-                    if (annotationDel != null) {
-                        requestMapping = annotationDel.value();
-                    } else {
-                        RequestMapping annotationReq = clazz.getAnnotation(RequestMapping.class);
-                        if (annotationReq != null) {
-                            requestMapping = annotationReq.value();
-                        }
-                    }
-                }
-            }
+    private String[] listToArray(List<String> list) {
+        String[] array = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            array[i] = list.get(i);
         }
-        if (requestMapping != null && requestMapping.length > 0) {
-            return requestMapping[0];
-        }
-        return null;
+        return array;
     }
+
 }

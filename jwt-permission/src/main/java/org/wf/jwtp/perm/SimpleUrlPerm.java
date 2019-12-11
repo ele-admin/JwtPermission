@@ -1,21 +1,25 @@
 package org.wf.jwtp.perm;
 
 import org.springframework.web.method.HandlerMethod;
+import org.wf.jwtp.annotation.Logical;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * url自动对应权限 - 简易模式
  * Created by wangfan on 2019-01-21 下午 4:18.
  */
-public class SimpleUrlPerm implements IUrlPerm {
+public class SimpleUrlPerm implements UrlPerm {
+
     @Override
-    public String[] getPermission(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
-        return new String[]{request.getRequestURI()};
+    public UrlPermResult getPermission(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
+        return new UrlPermResult(new String[]{request.getRequestURI()}, Logical.OR);
     }
 
     @Override
-    public String[] getRoles(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
-        return new String[0];
+    public UrlPermResult getRoles(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
+        return new UrlPermResult(new String[0], Logical.OR);
     }
+
 }
