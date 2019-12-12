@@ -10,9 +10,10 @@ import org.wf.jwtp.util.TokenUtil;
  * Created by wangfan on 2018-12-28 上午 9:21.
  */
 public abstract class TokenStoreAbstract implements TokenStore {
-    private int maxToken = -1;  // 单个用户最大的token数量
-    private String findRolesSql = null;  // 查询用户角色的sql
-    private String findPermissionsSql = null;  // 查询用户权限的sql
+    private Integer maxToken = -1;  // 单个用户最大的token数量
+    private String findRolesSql;  // 查询用户角色的sql
+    private String findPermissionsSql;  // 查询用户权限的sql
+    public static String mTokenKey;  // 生成token用的Key
 
     @Override
     public Token createNewToken(String userId) {
@@ -80,7 +81,7 @@ public abstract class TokenStoreAbstract implements TokenStore {
     }
 
     @Override
-    public void setMaxToken(int maxToken) {
+    public void setMaxToken(Integer maxToken) {
         this.maxToken = maxToken;
     }
 
@@ -95,7 +96,7 @@ public abstract class TokenStoreAbstract implements TokenStore {
     }
 
     @Override
-    public int getMaxToken() {
+    public Integer getMaxToken() {
         return maxToken;
     }
 

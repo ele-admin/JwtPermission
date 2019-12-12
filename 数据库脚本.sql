@@ -3,12 +3,13 @@ DROP TABLE IF EXISTS `oauth_token`;
 
 CREATE TABLE `oauth_token` (
   `token_id` int(11) NOT NULL AUTO_INCREMENT,
-  `access_token` varchar(128) NOT NULL,
   `user_id` varchar(128) NOT NULL,
-  `permissions` varchar(512) DEFAULT NULL,
-  `roles` varchar(512) DEFAULT NULL,
+  `access_token` varchar(128) NOT NULL,
   `refresh_token` varchar(128) DEFAULT NULL,
   `expire_time` datetime DEFAULT NULL,
+  `refresh_token_expire_time` datetime DEFAULT NULL,
+  `roles` varchar(512) DEFAULT NULL,
+  `permissions` varchar(512) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`token_id`)

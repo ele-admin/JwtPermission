@@ -195,7 +195,7 @@ public interface TokenStore {
      * 设置单个用户最大token数量
      * @param maxToken
      */
-    void setMaxToken(int maxToken);
+    void setMaxToken(Integer maxToken);
 
     /**
      * 自定义查询角色sql
@@ -209,7 +209,7 @@ public interface TokenStore {
      */
     void setFindPermissionsSql(String findPermissionsSql);
 
-    int getMaxToken();
+    Integer getMaxToken();
 
     String getFindRolesSql();
 

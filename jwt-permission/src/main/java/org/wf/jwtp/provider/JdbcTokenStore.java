@@ -54,16 +54,17 @@ public class JdbcTokenStore extends TokenStoreAbstract {
 
     @Override
     public String getTokenKey() {
-        String tokenKey = null;
-        try {
-            tokenKey = jdbcTemplate.queryForObject(SQL_SELECT_KEY, String.class);
-        } catch (EmptyResultDataAccessException e) {
+        if (mTokenKey == null) {
+            try {
+                mTokenKey = jdbcTemplate.queryForObject(SQL_SELECT_KEY, String.class);
+            } catch (EmptyResultDataAccessException e) {
+            }
+            if (mTokenKey == null || mTokenKey.trim().isEmpty()) {
+                mTokenKey = TokenUtil.getHexKey();
+                jdbcTemplate.update(SQL_INSERT_KEY, mTokenKey);
+            }
         }
-        if (tokenKey == null || tokenKey.trim().isEmpty()) {
-            tokenKey = TokenUtil.getHexKey();
-            jdbcTemplate.update(SQL_INSERT_KEY, tokenKey);
-        }
-        return tokenKey;
+        return mTokenKey;
     }
 
     @Override

@@ -41,12 +41,14 @@ public class RedisTokenStore extends TokenStoreAbstract {
 
     @Override
     public String getTokenKey() {
-        String tokenKey = redisTemplate.opsForValue().get(KEY_TOKEN_KEY);
-        if (tokenKey == null || tokenKey.trim().isEmpty()) {
-            tokenKey = TokenUtil.getHexKey();
-            redisTemplate.opsForValue().set(KEY_TOKEN_KEY, tokenKey);
+        if (mTokenKey == null) {
+            mTokenKey = redisTemplate.opsForValue().get(KEY_TOKEN_KEY);
+            if (mTokenKey == null || mTokenKey.trim().isEmpty()) {
+                mTokenKey = TokenUtil.getHexKey();
+                redisTemplate.opsForValue().set(KEY_TOKEN_KEY, mTokenKey);
+            }
         }
-        return tokenKey;
+        return mTokenKey;
     }
 
     @Override
