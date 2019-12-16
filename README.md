@@ -4,76 +4,41 @@
 ![Hex.pm](https://img.shields.io/hexpm/l/plug.svg?style=flat-square)
 
 
-## 简介
-&emsp;基于jjwt实现的一套用于前后端分离项目的权限控制框架，用于实现基于token验证的Web权限框架。
+## 更新日志
 
-<br>
+- 2019-12-16 （v3.0.0）
+    - 增加refresh_token机制
+    - 增加@Ignore注解(用于忽略验证)
+    - 增加url自动匹配权限机制(自带RESTful模式模式和简化模式)
+    - 增加自定义查询权限和角色的sql配置
 
-## 导入
 
-> SpringBoot集成示例：[easyweb-jwt](https://gitee.com/whvse/easyweb-jwt)，xml配置版集成示例：[前往查看](https://gitee.com/whvse/JwtPermission/attach_files)。
+## 1、简介
 
-**maven方式导入：**
-```xml
-<dependency>
-  <groupId>com.github.whvcse</groupId>
-  <artifactId>jwt-permission</artifactId>
-  <version>2.0.3</version>
-</dependency>
-```
+基于token验证的Web权限控制框架，可用于前后端分离项目，功能完善、使用简单。
+[详细开发文档](https://gitee.com/whvse/JwtPermission/wikis/pages)
 
-**SpringBoot项目导入：**
+---
+
+## 2、使用
+
+### 2.1、SpringBoot集成
+
+#### 2.1.1、导入
 ```xml
 <dependency>
   <groupId>com.github.whvcse</groupId>
   <artifactId>jwtp-spring-boot-starter</artifactId>
-  <version>2.0.3</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
-**jar包方式导入：**
+#### 2.1.2、加注解
 
-[jwt-permission最新jar包](https://github.com/whvcse/JwtPermission/releases)
+在`Application`启动类上面加入`@EnableJwtPermission`注解。
 
-[所依赖的jar包](https://gitee.com/whvse/JwtPermission/attach_files)
+#### 2.1.3、配置
 
-
-<br>
-
-## 用法
-
-### 在SpringMVC中使用
-
-```xml
-<beans>
-    <!-- 拦截器配置 -->
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/api/**" />
-            <mvc:exclude-mapping path="/api/login" />
-            <bean class="org.wf.jwtp.TokenInterceptor">
-                <property name="tokenStore" ref="tokenStore" />
-                <property name="maxToken" value="3" /> <!-- 单个用户最大token数 -->
-            </bean>
-        </mvc:interceptor>
-    </mvc:interceptors>
-    
-    <!-- 这里可以选择 JdbcTokenStore 和 RedisTokenStore -->
-    <bean id="tokenStore" class="org.wf.jwtp.provider.JdbcTokenStore">
-        <constructor-arg name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="tokenStore" class="org.wf.jwtp.provider.RedisTokenStore">
-        <constructor-arg name="redisTemplate" ref="stringRedisTemplate" />
-    </bean>
-</beans>
-```
-
-<br>
-
-### 在SpringBoot中使用
-
-&emsp;在你的`Application`类上面加入`@EnableJwtPermission`注解，在`application.properties`有如下配置可选：
 ```text
 ## 0是 redisTokenStore ，1是 jdbcTokenStore ，默认是0
 jwtp.store-type=0
@@ -82,18 +47,29 @@ jwtp.store-type=0
 jwtp.path=/**
 
 ## 排除拦截路径，默认无
-jwtp.exclude-path=/,/index,/login
+jwtp.exclude-path=/login
 
 ## 单个用户最大token数，默认-1不限制
 jwtp.max-token=10
+
+## url自动对应权限方式，0 简易模式，1 RESTful模式
+# jwtp.url-perm-type=0
+
+## 自定义查询用户权限的sql
+# jwtp.find-permissions-sql=SELECT perm FROM user_perm WHERE username = ?
+
+## 自定义查询用户角色的sql
+# jwtp.find-permissions-sql=SELECT perm FROM user_perm WHERE username = ?
 
 ## 日志级别设置debug可以输出详细信息
 logging.level.org.wf.jwtp=DEBUG
 ```
 
-<br>
+> 如果使用jdbcTokenStore需要导入框架提供的sql脚本，如果使用redisTokenStore，需要集成好redis
 
-### 登录签发token
+---
+
+### 2.2、登录签发token
 
 ```java
 @RestController
@@ -112,16 +88,14 @@ public class LoginController {
 }
 ```
 
-token默认过期时间是一天，设置过期时间方法（单位秒）：
+> 关于createNewToken方法的详细介绍以及refresh_token机制的用法请在详细文档中查看
 
-```java
-Token token = tokenStore.createNewToken(userId, permissions, roles, 60*60*24*30);
-```
+---
 
-<br>
+### 2.3、使用注解或代码限制权限
 
-### 使用注解或代码限制权限
-1.使用注解的方式：
+**1.使用注解的方式：**
+
 ```text
 // 需要有system权限才能访问
 @RequiresPermissions("system")
@@ -129,17 +103,19 @@ Token token = tokenStore.createNewToken(userId, permissions, roles, 60*60*24*30)
 // 需要有system和front权限才能访问,logical可以不写,默认是AND
 @RequiresPermissions(value={"system","front"}, logical=Logical.AND)
 
-// 需要有system或者front权限才能访问
+// 需要有system或front权限才能访问
 @RequiresPermissions(value={"system","front"}, logical=Logical.OR)
 
-// 需要有admin或者user角色才能访问
+// 需要有admin或user角色才能访问
 @RequiresRoles(value={"admin","user"}, logical=Logical.OR)
 ```
-> 注解只能加在Controller的方法上面。
 
-<br>
+> 注解加在Controller的方法或类上面。
 
-2.使用代码的方式：
+<br/>
+
+**2.使用代码的方式：**
+
 ```text
 //是否有system权限
 SubjectUtil.hasPermission(request, "system");
@@ -151,9 +127,106 @@ SubjectUtil.hasPermission(request, new String[]{"system","front"}, Logical.OR);
 SubjectUtil.hasRole(request, new String[]{"admin","user"}, Logical.OR)
 ```
 
-<br>
+---
 
-### 前端传递token
+## 2.4、异常处理
+JwtPermistion在token验证失败和没有权限的时候会抛出异常：
+    
+| 异常                  | 描述          | 错误信息                          |
+|:----------------------|:-------------|:----------------------------------|
+| ErrorTokenException   | token验证失败 | 错误信息“身份验证失败”，错误码401 |
+| ExpiredTokenException | token已经过期 | 错误信息“登录已过期”，错误码402   |
+| UnauthorizedException | 没有权限      | 错误信息“没有访问权限”，错误码403 |
+
+建议使用异常处理器来捕获异常并返回json数据：
+```java
+@ControllerAdvice
+public class ExceptionHandler {
+
+   @ResponseBody
+   @ExceptionHandler(Exception.class)
+   public Map<String, Object> errorHandler(Exception ex) {
+       Map<String, Object> map = new HashMap<>();
+       // 根据不同错误获取错误信息
+       if (ex instanceof TokenException) {
+           map.put("code", ((TokenException) ex).getCode());
+           map.put("msg", ex.getMessage());
+       } else {
+           map.put("code", 500);
+           map.put("msg", ex.getMessage());
+           ex.printStackTrace();
+       }
+       return map;
+   }
+}
+```
+
+---
+
+## 2.5、更多用法
+
+### 2.5.1、使用注解忽略验证
+在Controller的方法或类上面添加`@Ignore`注解可排除框架拦截，即表示调用接口不用传递access_token了。
+
+
+### 2.5.2、自定义查询角色和权限的sql
+
+如果是在签发token的时候指定权限和角色，不重新获取token，不主动更新权限，权限和角色不会实时更新，
+可以配置自定义查询角色和权限的sql来实时查询用户的权限和角色：
+
+```text
+## 自定义查询用户权限的sql
+jwtp.find-permissions-sql=SELECT authority FROM sys_user_authorities WHERE user_id = ?
+
+## 自定义查询用户角色的sql
+jwtp.find-permissions-sql=SELECT role_id FROM sys_user_role WHERE user_id = ?
+```
+
+
+### 2.5.3、url自动匹配权限
+如果不想每个接口都加@RequiresPermissions注解来控制权限，可以配置url自动匹配权限：
+
+```text
+## url自动对应权限方式，0 简易模式，1 RESTful模式
+jwtp.url-perm-type=0
+```
+
+RESTful模式(请求方式:url)：post:/api/login
+
+简易模式(url)：/api/login
+
+> 还可以借助Swagger自动扫描所有接口生成权限到数据库中
+
+
+### 2.5.4、获取当前的用户信息
+```text
+Token token = SubjectUtil.getToken(request);
+```   
+
+
+### 2.5.5、主动让token失效：
+```text
+// 移除用户的某个token
+tokenStore.removeToken(userId, access_token);
+
+// 移除用户的全部token
+tokenStore.removeTokensByUserId(userId);
+```
+
+
+### 2.5.6、更新角色和权限列表
+修改了用户的角色和权限需要同步更新框架中的角色和权限：
+```text
+// 更新用户的角色列表
+tokenStore.updateRolesByUserId(userId, roles);
+
+// 更新用户的权限列表
+tokenStore.updatePermissionsByUserId(userId, permissions);
+```
+
+---
+
+## 2.6、前端传递token
 放在参数里面用`access_token`传递：
 ```javascript
 $.get("/xxx", { access_token: token }, function(data) {
@@ -163,184 +236,22 @@ $.get("/xxx", { access_token: token }, function(data) {
 放在header里面用`Authorization`、`Bearer`传递： 
 ```javascript
 $.ajax({
-    url: "/xxx", 
-    beforeSend: function(xhr) {
-        xhr.setRequestHeader("Authorization", 'Bearer '+ token);
-    },
-    success: function(data){ }
+   url: "/xxx", 
+   beforeSend: function(xhr) {
+       xhr.setRequestHeader("Authorization", 'Bearer '+ token);
+   },
+   success: function(data){ }
 });
 ```
 
-<br>
-
-## 注意事项
-### 异常处理
-&emsp;JwtPermistion在token验证失败和没有权限的时候抛出异常，框架定义了几个异常：
-    
-| 异常                  | 描述          | 错误信息                          |
-|:----------------------|:-------------|:----------------------------------|
-| ErrorTokenException   | token验证失败 | 错误信息“身份验证失败”，错误码401 |
-| ExpiredTokenException | token已经过期 | 错误信息“登录已过期”，错误码402   |
-| UnauthorizedException | 没有权限      | 错误信息“没有访问权限”，错误码403 |
-
-&emsp;建议使用异常处理器来捕获异常并返回json数据给前台：
-
-```xml
-<bean id="exceptionHandler" class="com.xxx.ExceptionHandler" />
-```
-
-```java
-public class ExceptionHandler implements HandlerExceptionResolver {
-
-    @Override
-    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object obj, Exception ex) {
-        if(ex instanceof TokenException){
-            writerJson(response, ((TokenException) ex).getCode(), ex.getMessage());
-        } else {
-            writerJson(response, 500, ex.getMessage());
-            ex.printStackTrace();
-        }
-        return new ModelAndView();
-    }
-
-    private void writerJson(HttpServletResponse response, int code, String msg) {
-        response.setContentType("application/json;charset=UTF-8");
-        try {
-            PrintWriter out = response.getWriter();
-            out.write("{\"code\":"+code+",\"msg\":\""+msg+"\"}");
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-}
-```
-
-<br>
-
-### SpringBoot中异常处理
-```java
-@ControllerAdvice
-public class ExceptionHandler {
-
-    @ResponseBody
-    @ExceptionHandler(Exception.class)
-    public Map<String, Object> errorHandler(Exception ex) {
-        Map<String, Object> map = new HashMap<>();
-        // 根据不同错误获取错误信息
-        if (ex instanceof TokenException) {
-            map.put("code", ((TokenException) ex).getCode());
-            map.put("msg", ex.getMessage());
-        } else {
-            map.put("code", 500);
-            map.put("msg", ex.getMessage());
-            ex.printStackTrace();
-        }
-        return map;
-    }
-}
-```
-
-<br>
-
-### 主动让token失效：
-```java
-public class XX {
-    @Autowired
-    private TokenStore tokenStore;
-    
-    public void xx(){
-        // 移除用户的某个token
-        tokenStore.removeToken(userId, access_token);
-        
-        // 移除用户的全部token
-        tokenStore.removeTokensByUserId(userId);
-    }
-}
-```
-
-<br>
-
-### 更新角色和权限列表
-&emsp;修改了用户的角色和权限需要同步更新框架中的角色和权限：
-```java
-public class XX {
-    @Autowired
-    private TokenStore tokenStore;
-    
-    public void xx(){
-        // 更新用户的角色列表
-        tokenStore.updateRolesByUserId(userId, roles);
-        
-        // 更新用户的权限列表
-        tokenStore.updatePermissionsByUserId(userId, permissions);
-    }
-}
-```
-
-<br>
-
-### 获取当前的用户信息
-```text
-Token token = SubjectUtil.getToken(request);
-```   
-
-<br>
-
-### RedisTokenStore需要集成redis
-
-1.SpringMvc集成Redis：
-```xml
-<beans>
-    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxIdle" value="300" />
-        <property name="maxTotal" value="600" />
-        <property name="maxWaitMillis" value="1000" />
-        <property name="testOnBorrow" value="true" />
-    </bean>
-    
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="hostName" value="127.0.0.1" />
-        <property name="password" value="" />
-        <property name="port" value="6379" />
-        <property name="poolConfig" ref="poolConfig" />
-    </bean>
-    
-    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
-        <property name="connectionFactory" ref="jedisConnectionFactory" />
-    </bean>
-</beans>
-```
-
-<br>
-
-2.SpringBoot集成reids：
-
-maven添加依赖
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-data-redis</artifactId>
-</dependency>
-```
-`application.properties`配置：
-```text
-spring.redis.host=127.0.0.1
-spring.redis.database=0
-```
-
-<br>
-
-### JdbcTokenStore需要导入SQL
-&emsp;使用JdbcTokenStore需要导入SQL，需要配置dataSource。
-
-<br>
+---
 
 ## 联系方式
-### 欢迎加入“前后端分离技术交流群”
+前后端分离技术交流群：
 
 ![群二维码](https://ws1.sinaimg.cn/large/006a7GCKgy1fstbxycj1xj305k07m75h.jpg)
 
-### 推荐
-&emsp;`EasyWeb管理系统模板` 一个开箱即用的后台模板，使用简单，模板丰富，包含传统ifram版、spa单页面路由版，
+
+## 推荐
+《EasyWeb管理系统模板》一个开箱即用的后台模板，使用简单，模板丰富，包含传统ifram版、spa单页面路由版，
 [前往查看](https://easyweb.vip)。
