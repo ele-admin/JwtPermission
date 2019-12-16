@@ -1,5 +1,7 @@
 package org.wf.jwtp.perm;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
 import org.wf.jwtp.annotation.Logical;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,6 +18,7 @@ import java.util.List;
  * Created by wangfan on 2019-01-21 下午 4:19.
  */
 public class RestUrlPerm implements UrlPerm {
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Override
     public UrlPermResult getPermission(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
@@ -75,20 +79,14 @@ public class RestUrlPerm implements UrlPerm {
                 perms.add(sb.toString());
             }
         }
-        return new UrlPermResult(listToArray(perms), Logical.OR);
+        String[] arrays = perms.toArray(new String[perms.size()]);
+        logger.debug("Generate Permissions: " + Arrays.toString(arrays));
+        return new UrlPermResult(arrays, Logical.OR);
     }
 
     @Override
     public UrlPermResult getRoles(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
         return new UrlPermResult(new String[0], Logical.OR);
-    }
-
-    private String[] listToArray(List<String> list) {
-        String[] array = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
-        }
-        return array;
     }
 
 }

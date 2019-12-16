@@ -1,11 +1,10 @@
 package org.wf.jwtp.provider;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
+import org.wf.jwtp.util.JacksonUtil;
 import org.wf.jwtp.util.TokenUtil;
 
 import javax.sql.DataSource;
@@ -20,7 +19,6 @@ import java.util.List;
  * Created by wangfan on 2018-12-28 下午 1:00.
  */
 public class JdbcTokenStore extends TokenStoreAbstract {
-    protected final Log logger = LogFactory.getLog(this.getClass());
     private final JdbcTemplate jdbcTemplate;
     private RowMapper<Token> rowMapper = new TokenRowMapper();
     // sql
@@ -31,7 +29,7 @@ public class JdbcTokenStore extends TokenStoreAbstract {
     // 查询某个用户的全部token
     private static final String SQL_SELECT_BY_USER_ID = BASE_SELECT + " where user_id = ? order by create_time";
     // 插入token
-    private static final String SQL_INSERT = "insert into oauth_token (" + UPDATE_FIELDS + ") values (?,?,?,?,?,?,?)";
+    private static final String SQL_INSERT = "insert into oauth_token (" + UPDATE_FIELDS + ") values (?, ?, ?, ?, ?, ?, ?)";
     // 删除某个用户指定token
     private static final String SQL_DELETE = "delete from oauth_token where user_id = ? and access_token = ?";
     // 删除某个用户全部token
@@ -68,23 +66,11 @@ public class JdbcTokenStore extends TokenStoreAbstract {
     }
 
     @Override
-    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire) {
-        String tokenKey = getTokenKey();
-        logger.debug("TOKEN_KEY: " + tokenKey);
-        Token token = TokenUtil.buildToken(userId, expire, rtExpire, TokenUtil.parseHexKey(tokenKey));
-        token.setRoles(roles);
-        token.setPermissions(permissions);
-        if (storeToken(token) > 0) {
-            return token;
-        }
-        return null;
-    }
-
-    @Override
     public int storeToken(Token token) {
         List<Object> objects = getFieldsForUpdate(token);
-        int rs = jdbcTemplate.update(SQL_INSERT, listToArray(objects));
-        if (getMaxToken() != -1) {  // 限制用户的最大token数量
+        int rs = jdbcTemplate.update(SQL_INSERT, JacksonUtil.objectListToArray(objects));
+        // 限制用户的最大token数量
+        if (getMaxToken() != -1) {
             List<Token> userTokens = findTokensByUserId(token.getUserId());
             if (userTokens.size() > getMaxToken()) {
                 for (int i = 0; i < userTokens.size() - getMaxToken(); i++) {
@@ -137,32 +123,14 @@ public class JdbcTokenStore extends TokenStoreAbstract {
 
     @Override
     public int updateRolesByUserId(String userId, String[] roles) {
-        Object[] objects = new Object[2];
-        if (roles != null) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                objects[0] = mapper.writeValueAsString(roles);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        objects[1] = userId;
-        return jdbcTemplate.update(SQL_UPDATE_ROLES, objects);
+        String rolesJson = JacksonUtil.toJSONString(roles);
+        return jdbcTemplate.update(SQL_UPDATE_ROLES, rolesJson, userId);
     }
 
     @Override
     public int updatePermissionsByUserId(String userId, String[] permissions) {
-        Object[] objects = new Object[2];
-        if (permissions != null) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                objects[0] = mapper.writeValueAsString(permissions);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        objects[1] = userId;
-        return jdbcTemplate.update(SQL_UPDATE_PERMS, objects);
+        String permJson = JacksonUtil.toJSONString(permissions);
+        return jdbcTemplate.update(SQL_UPDATE_PERMS, permJson, userId);
     }
 
     @Override
@@ -171,19 +139,15 @@ public class JdbcTokenStore extends TokenStoreAbstract {
         if (getFindRolesSql() == null || getFindRolesSql().trim().isEmpty()) {
             return token.getRoles();
         }
-        String rolesJson = null;
         try {
-            rolesJson = jdbcTemplate.queryForObject(getFindRolesSql(), String.class);
+            List<String> roleList = jdbcTemplate.query(getFindRolesSql(), new RowMapper<String>() {
+                @Override
+                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getString(1);
+                }
+            }, userId);
+            return JacksonUtil.stringListToArray(roleList);
         } catch (EmptyResultDataAccessException e) {
-        }
-        if (rolesJson != null && !rolesJson.trim().isEmpty()) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                List<String> list = mapper.readValue(rolesJson, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class));
-                return strListToArray(list);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         return null;
     }
@@ -194,83 +158,31 @@ public class JdbcTokenStore extends TokenStoreAbstract {
         if (getFindPermissionsSql() == null || getFindPermissionsSql().trim().isEmpty()) {
             return token.getPermissions();
         }
-        String permsJson = null;
         try {
-            permsJson = jdbcTemplate.queryForObject(getFindPermissionsSql(), String.class);
+            List<String> permList = jdbcTemplate.query(getFindPermissionsSql(), new RowMapper<String>() {
+                @Override
+                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getString(1);
+                }
+            }, userId);
+            return JacksonUtil.stringListToArray(permList);
         } catch (EmptyResultDataAccessException e) {
-        }
-        if (permsJson != null && !permsJson.trim().isEmpty()) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                List<String> list = mapper.readValue(getFindPermissionsSql(), mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class));
-                return strListToArray(list);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         return null;
     }
 
     /**
-     * 插入、修改操作的参数
+     * 插入、修改操作的sql参数
      */
     private List<Object> getFieldsForUpdate(Token token) {
         List<Object> objects = new ArrayList();
-        objects.add(token.getUserId());
-        objects.add(token.getAccessToken());
-        objects.add(token.getRefreshToken());
-        objects.add(token.getExpireTime());
-        objects.add(token.getRefreshTokenExpireTime());
-        // 角色数组转json存储
-        String rolesJson = null;
-        if (token.getRoles() != null) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                rolesJson = mapper.writeValueAsString(token.getRoles());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        objects.add(rolesJson);
-        // 权限数组转json存储
-        String permsJson = null;
-        if (token.getPermissions() != null) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                permsJson = mapper.writeValueAsString(token.getPermissions());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        objects.add(permsJson);
-        return objects;
-    }
-
-    /**
-     * listToArray
-     */
-    private Object[] listToArray(List<Object> list) {
-        if (list == null) {
-            return null;
-        }
-        Object[] objects = new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            objects[i] = list.get(i);
-        }
-        return objects;
-    }
-
-    /**
-     * strListToArray
-     */
-    private String[] strListToArray(List<String> list) {
-        if (list == null) {
-            return null;
-        }
-        String[] objects = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            objects[i] = list.get(i);
-        }
+        objects.add(token.getUserId());  // userId
+        objects.add(token.getAccessToken());  // token
+        objects.add(token.getRefreshToken());  // refresh_token
+        objects.add(token.getExpireTime());  // expire_time
+        objects.add(token.getRefreshTokenExpireTime());  // refresh_expire_time
+        objects.add(JacksonUtil.toJSONString(token.getRoles()));  // roles
+        objects.add(JacksonUtil.toJSONString(token.getPermissions()));  // permissions
         return objects;
     }
 
@@ -284,8 +196,8 @@ public class JdbcTokenStore extends TokenStoreAbstract {
             String user_id = rs.getString("user_id");
             String access_token = rs.getString("access_token");
             String refresh_token = rs.getString("refresh_token");
-            Date expire_time = rs.getDate("expire_time");
-            Date refresh_token_expire_time = rs.getDate("refresh_token_expire_time");
+            Date expire_time = timestampToDate(rs.getTimestamp("expire_time"));
+            Date refresh_token_expire_time = timestampToDate(rs.getTimestamp("refresh_token_expire_time"));
             String roles = rs.getString("roles");
             String permissions = rs.getString("permissions");
             Token token = new Token();
@@ -295,34 +207,16 @@ public class JdbcTokenStore extends TokenStoreAbstract {
             token.setRefreshToken(refresh_token);
             token.setExpireTime(expire_time);
             token.setRefreshTokenExpireTime(refresh_token_expire_time);
-            if (roles != null && !roles.trim().isEmpty()) {
-                try {
-                    com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                    token.setRoles(strListToArray((List<String>) mapper.readValue(roles, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class))));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (permissions != null && !permissions.trim().isEmpty()) {
-                try {
-                    com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                    token.setPermissions(strListToArray((List<String>) mapper.readValue(permissions, mapper.getTypeFactory().constructParametricType(ArrayList.class, String.class))));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            token.setRoles(JacksonUtil.stringListToArray(JacksonUtil.parseArray(roles, String.class)));
+            token.setPermissions(JacksonUtil.stringListToArray(JacksonUtil.parseArray(permissions, String.class)));
             return token;
         }
 
-        private String[] strListToArray(List<String> list) {
-            if (list == null) {
-                return null;
+        private Date timestampToDate(java.sql.Timestamp timestamp) {
+            if (timestamp != null) {
+                return new Date(timestamp.getTime());
             }
-            String[] objects = new String[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                objects[i] = list.get(i);
-            }
-            return objects;
+            return null;
         }
     }
 

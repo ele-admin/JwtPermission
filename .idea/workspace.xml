@@ -2,12 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="26b478eb-c35c-43b4-ad89-01a0d0b6cd3e" name="Default" comment="提交代码">
+      <change afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/JacksonUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/jwt-permission.iml" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/jwt-permission.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/RestUrlPerm.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/RestUrlPerm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/SimpleUrlPerm.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/perm/SimpleUrlPerm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/JdbcTokenStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStoreAbstract.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/TokenStoreAbstract.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/数据库脚本.sql" beforeDir="false" afterPath="$PROJECT_DIR$/数据库脚本.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/jwtp-spring-boot-starter.iml" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/jwtp-spring-boot-starter.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,21 +44,9 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>token_key</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="enabledProfiles">
-      <list>
-        <option value="release" />
-      </list>
-    </option>
   </component>
   <component name="ProjectId" id="1Pfct7zqanMhWjg0zhyhNDlbrS2" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -163,7 +158,8 @@
       <workItem from="1575779696567" duration="4204000" />
       <workItem from="1575939874943" duration="225000" />
       <workItem from="1576033874369" duration="15510000" />
-      <workItem from="1576117407986" duration="2448000" />
+      <workItem from="1576117407986" duration="2709000" />
+      <workItem from="1576459014297" duration="17460000" />
     </task>
     <task id="LOCAL-00001" summary="提交代码">
       <created>1545900186883</created>
@@ -375,7 +371,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576057839765</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="提交代码">
+      <created>1576122730523</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1576122730523</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

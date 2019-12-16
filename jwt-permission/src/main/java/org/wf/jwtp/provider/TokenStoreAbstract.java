@@ -1,6 +1,8 @@
 package org.wf.jwtp.provider;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wf.jwtp.exception.ErrorTokenException;
 import org.wf.jwtp.exception.ExpiredTokenException;
 import org.wf.jwtp.util.TokenUtil;
@@ -10,6 +12,7 @@ import org.wf.jwtp.util.TokenUtil;
  * Created by wangfan on 2018-12-28 上午 9:21.
  */
 public abstract class TokenStoreAbstract implements TokenStore {
+    protected final Log logger = LogFactory.getLog(this.getClass());
     private Integer maxToken = -1;  // 单个用户最大的token数量
     private String findRolesSql;  // 查询用户角色的sql
     private String findPermissionsSql;  // 查询用户权限的sql
@@ -41,6 +44,19 @@ public abstract class TokenStoreAbstract implements TokenStore {
     }
 
     @Override
+    public Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire) {
+        String tokenKey = getTokenKey();
+        logger.debug("TOKEN_KEY: " + tokenKey);
+        Token token = TokenUtil.buildToken(userId, expire, rtExpire, TokenUtil.parseHexKey(tokenKey));
+        token.setRoles(roles);
+        token.setPermissions(permissions);
+        if (storeToken(token) > 0) {
+            return token;
+        }
+        return null;
+    }
+
+    @Override
     public Token refreshToken(String refresh_token) {
         return refreshToken(refresh_token, TokenUtil.DEFAULT_EXPIRE);
     }
@@ -53,6 +69,7 @@ public abstract class TokenStoreAbstract implements TokenStore {
     @Override
     public Token refreshToken(String refresh_token, String[] permissions, String[] roles, long expire) {
         String tokenKey = getTokenKey();
+        logger.debug("TOKEN_KEY: " + tokenKey);
         String userId;
         try {
             userId = TokenUtil.parseToken(refresh_token, tokenKey);

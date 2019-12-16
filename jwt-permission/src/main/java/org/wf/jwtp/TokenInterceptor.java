@@ -104,7 +104,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         // 检查token是否存在系统中
         Token token = tokenStore.findToken(userId, access_token);
         if (token == null) {
-            logger.debug("ERROR: ");
+            logger.debug("ERROR: Token Not Found");
             throw new ErrorTokenException();
         }
         // 查询用户的角色和权限
