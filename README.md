@@ -250,7 +250,7 @@ $.ajax({
 ## 联系方式
 前后端分离技术交流群：
 
-![群二维码](https://easyweb.vip/assets/images/img_qqgroup.png)
+![群二维码](https://s2.ax1x.com/2019/07/06/Zw83O1.jpg)
 
 
 ## 推荐
