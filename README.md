@@ -56,10 +56,10 @@ jwtp.max-token=10
 # jwtp.url-perm-type=0
 
 ## 自定义查询用户权限的sql
-# jwtp.find-permissions-sql=SELECT perm FROM user_perm WHERE username = ?
+# jwtp.find-permissions-sql=SELECT authority FROM sys_user_authorities WHERE user_id = ?
 
 ## 自定义查询用户角色的sql
-# jwtp.find-permissions-sql=SELECT perm FROM user_perm WHERE username = ?
+# jwtp.find-permissions-sql=SELECT role_id FROM sys_user_role WHERE user_id = ?
 
 ## 日志级别设置debug可以输出详细信息
 logging.level.org.wf.jwtp=DEBUG
@@ -77,18 +77,19 @@ public class LoginController {
     @Autowired
     private TokenStore tokenStore;
     
-    @PostMapping("/login")
-    public ResultMap login(String account, String password, HttpServletRequest request) {
+    @PostMapping("/token")
+    public Map token(String account, String password) {
         // 你的验证逻辑
         // ......
         // 签发token
         Token token = tokenStore.createNewToken(userId, permissions, roles);
-        return ResultMap.ok("登录成功").put("access_token",token.getAccessToken());
+        System.out("access_token：" + token.getAccessToken());
     }
 }
 ```
 
 > 关于createNewToken方法的详细介绍以及refresh_token机制的用法请在详细文档中查看
+
 
 ---
 
