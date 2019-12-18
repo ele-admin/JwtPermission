@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="26b478eb-c35c-43b4-ad89-01a0d0b6cd3e" name="Default" comment="增加refresh_token机制，增加url自动匹配权限">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -149,7 +148,7 @@
       <workItem from="1576033874369" duration="15510000" />
       <workItem from="1576117407986" duration="2709000" />
       <workItem from="1576459014297" duration="26019000" />
-      <workItem from="1576630861797" duration="1294000" />
+      <workItem from="1576630861797" duration="4616000" />
     </task>
     <task id="LOCAL-00001" summary="提交代码">
       <created>1545900186883</created>
@@ -403,7 +402,21 @@
       <option name="project" value="LOCAL" />
       <updated>1576491243942</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="增加refresh_token机制，增加url自动匹配权限">
+      <created>1576632288342</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1576632288342</updated>
+    </task>
+    <task id="LOCAL-00038" summary="增加refresh_token机制，增加url自动匹配权限">
+      <created>1576632379822</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1576632379822</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
