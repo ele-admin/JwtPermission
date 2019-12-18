@@ -15,8 +15,8 @@
 
 ## 1、简介
 
-基于token验证的Web权限控制框架，可用于前后端分离项目，功能完善、使用简单。
-[详细开发文档](https://gitee.com/whvse/JwtPermission/wikis/pages)
+基于token验证的Java Web权限控制框架，使用jjwt，支持redis和数据库多种存储方式，可用于前后端分离项目，功能完善、使用简单、易于扩展。
+&emsp;[详细开发文档](https://gitee.com/whvse/JwtPermission/wikis/pages)
 
 ---
 
@@ -59,7 +59,7 @@ jwtp.max-token=10
 # jwtp.find-permissions-sql=SELECT authority FROM sys_user_authorities WHERE user_id = ?
 
 ## 自定义查询用户角色的sql
-# jwtp.find-permissions-sql=SELECT role_id FROM sys_user_role WHERE user_id = ?
+# jwtp.find-roles-sql=SELECT role_id FROM sys_user_role WHERE user_id = ?
 
 ## 日志级别设置debug可以输出详细信息
 logging.level.org.wf.jwtp=DEBUG
@@ -82,11 +82,18 @@ public class LoginController {
         // 你的验证逻辑
         // ......
         // 签发token
-        Token token = tokenStore.createNewToken(userId, permissions, roles);
-        System.out("access_token：" + token.getAccessToken());
+        Token token = tokenStore.createNewToken(userId, permissions, roles, expire);
+        System.out.println("access_token：" + token.getAccessToken());
     }
 }
 ```
+
+createNewToken方法参数说明：
+
+- userId   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;   token载体，建议为用户id
+- permissions   &emsp;&emsp;&emsp;&emsp;   权限列表
+- roles   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;   角色列表
+- expire   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;   token过期时间(单位秒)
 
 > 关于createNewToken方法的详细介绍以及refresh_token机制的用法请在详细文档中查看
 
@@ -180,7 +187,7 @@ public class ExceptionHandler {
 jwtp.find-permissions-sql=SELECT authority FROM sys_user_authorities WHERE user_id = ?
 
 ## 自定义查询用户角色的sql
-jwtp.find-permissions-sql=SELECT role_id FROM sys_user_role WHERE user_id = ?
+jwtp.find-roles-sql=SELECT role_id FROM sys_user_role WHERE user_id = ?
 ```
 
 

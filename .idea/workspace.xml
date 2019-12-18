@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="26b478eb-c35c-43b4-ad89-01a0d0b6cd3e" name="Default" comment="增加refresh_token机制，增加url自动匹配权限">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,7 +43,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../EasyCaptcha" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -147,7 +148,8 @@
       <workItem from="1575939874943" duration="225000" />
       <workItem from="1576033874369" duration="15510000" />
       <workItem from="1576117407986" duration="2709000" />
-      <workItem from="1576459014297" duration="26001000" />
+      <workItem from="1576459014297" duration="26019000" />
+      <workItem from="1576630861797" duration="1294000" />
     </task>
     <task id="LOCAL-00001" summary="提交代码">
       <created>1545900186883</created>
@@ -394,7 +396,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576491175511</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="增加refresh_token机制，增加url自动匹配权限">
+      <created>1576491243942</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1576491243942</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
