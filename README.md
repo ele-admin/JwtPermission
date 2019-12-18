@@ -15,7 +15,7 @@
 
 ## 1、简介
 
-基于token验证的Java Web权限控制框架，使用jjwt，支持redis和数据库多种存储方式，可用于前后端分离项目，功能完善、使用简单、易于扩展。
+基于token验证的Java Web权限控制框架，使用jjwt，支持redis和db多种存储方式，可用于前后端分离项目，功能完善、使用简单、易于扩展。
 &emsp;[详细开发文档](https://gitee.com/whvse/JwtPermission/wikis/pages)
 
 ---
