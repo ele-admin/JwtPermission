@@ -11,7 +11,7 @@
     <parent>
         <artifactId>jwt-permission-parent</artifactId>
         <groupId>com.github.whvcse</groupId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
     </parent>
 
     <properties>

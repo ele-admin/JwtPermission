@@ -5,17 +5,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.wf.jwtp.annotation.Ignore;
-import org.wf.jwtp.annotation.Logical;
-import org.wf.jwtp.annotation.RequiresPermissions;
-import org.wf.jwtp.annotation.RequiresRoles;
 import org.wf.jwtp.exception.ErrorTokenException;
 import org.wf.jwtp.exception.ExpiredTokenException;
 import org.wf.jwtp.exception.UnauthorizedException;
 import org.wf.jwtp.perm.UrlPerm;
-import org.wf.jwtp.perm.UrlPermResult;
 import org.wf.jwtp.provider.Token;
 import org.wf.jwtp.provider.TokenStore;
+import org.wf.jwtp.util.CheckPermissionUtil;
 import org.wf.jwtp.util.SubjectUtil;
 import org.wf.jwtp.util.TokenUtil;
 
@@ -64,11 +60,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 放行options请求
         if (request.getMethod().toUpperCase().equals("OPTIONS")) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            response.setHeader("Access-Control-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers", "Content-Type, x-requested-with, X-Custom-Header, Authorization");
+            CheckPermissionUtil.passOptions(response);
             return false;
         }
         Method method = null;
@@ -76,17 +68,11 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             method = ((HandlerMethod) handler).getMethod();
         }
         // 检查是否忽略权限验证
-        if (method == null || checkIgnore(method)) {
+        if (method == null || CheckPermissionUtil.checkIgnore(method)) {
             return super.preHandle(request, response, handler);
         }
         // 获取token
-        String access_token = request.getParameter("access_token");
-        if (access_token == null || access_token.trim().isEmpty()) {
-            access_token = request.getHeader("Authorization");
-            if (access_token != null && access_token.length() >= 7) {
-                access_token = access_token.substring(7);
-            }
-        }
+        String access_token = CheckPermissionUtil.takeToken(request);
         if (access_token == null || access_token.trim().isEmpty()) {
             throw new ErrorTokenException("Token不能为空");
         }
@@ -111,73 +97,11 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         token.setRoles(tokenStore.findRolesByUserId(userId, token));
         token.setPermissions(tokenStore.findPermissionsByUserId(userId, token));
         // 检查权限
-        if (!checkPermission(token, request, response, handler) || !checkRole(token, request, response, handler)) {
+        if (CheckPermissionUtil.isNoPermission(token, request, response, handler, urlPerm)) {
             throw new UnauthorizedException();
         }
         request.setAttribute(SubjectUtil.REQUEST_TOKEN_NAME, token);
         return super.preHandle(request, response, handler);
-    }
-
-    /**
-     * 检查是否忽略权限
-     */
-    private boolean checkIgnore(Method method) {
-        Ignore annotation = method.getAnnotation(Ignore.class);
-        if (annotation == null) {  // 方法上没有注解再检查类上面有没有注解
-            annotation = method.getDeclaringClass().getAnnotation(Ignore.class);
-            if (annotation == null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * 检查权限是否符合
-     */
-    private boolean checkPermission(Token token, HttpServletRequest request, HttpServletResponse response, Object handler) {
-        Method method = ((HandlerMethod) handler).getMethod();
-        RequiresPermissions annotation = method.getAnnotation(RequiresPermissions.class);
-        if (annotation == null) {  // 方法上没有注解再检查类上面有没有注解
-            annotation = method.getDeclaringClass().getAnnotation(RequiresPermissions.class);
-        }
-        String[] requiresPermissions;
-        Logical logical;
-        if (annotation != null) {
-            requiresPermissions = annotation.value();
-            logical = annotation.logical();
-        } else if (urlPerm != null) {
-            UrlPermResult upr = urlPerm.getPermission(request, response, (HandlerMethod) handler);
-            requiresPermissions = upr.getValues();
-            logical = upr.getLogical();
-        } else {
-            return true;
-        }
-        return SubjectUtil.hasPermission(token, requiresPermissions, logical);
-    }
-
-    /**
-     * 检查角色是否符合
-     */
-    private boolean checkRole(Token token, HttpServletRequest request, HttpServletResponse response, Object handler) {
-        Method method = ((HandlerMethod) handler).getMethod();
-        RequiresRoles annotation = method.getAnnotation(RequiresRoles.class);
-        if (annotation == null) {  // 方法上没有注解再检查类上面有没有注解
-            annotation = method.getDeclaringClass().getAnnotation(RequiresRoles.class);
-        }
-        String[] requiresRoles;
-        Logical logical;
-        if (annotation != null) {
-            requiresRoles = annotation.value();
-            logical = annotation.logical();
-        } else if (urlPerm != null) {
-            UrlPermResult upr = urlPerm.getRoles(request, response, (HandlerMethod) handler);
-            requiresRoles = upr.getValues();
-            logical = upr.getLogical();
-        } else {
-            return true;
-        }
-        return SubjectUtil.hasRole(token, requiresRoles, logical);
     }
 
 }

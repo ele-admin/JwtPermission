@@ -1,9 +1,6 @@
 package org.wf.jwtp.provider;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
 import org.wf.jwtp.util.JacksonUtil;
 import org.wf.jwtp.util.TokenUtil;
@@ -25,7 +22,7 @@ public class RedisTokenStore extends TokenStoreAbstract {
     private static final String KEY_PRE_ROLE = "oauth_role:";  // 角色存储的key前缀
     private static final String KEY_PRE_PERM = "oauth_prem:";  // 权限存储的key前缀
     private final StringRedisTemplate redisTemplate;
-    private final JdbcTemplate jdbcTemplate;
+    private final Object jdbcTemplate;
 
     public RedisTokenStore(StringRedisTemplate redisTemplate) {
         this(redisTemplate, null);
@@ -35,7 +32,7 @@ public class RedisTokenStore extends TokenStoreAbstract {
         Assert.notNull(redisTemplate, "StringRedisTemplate required");
         this.redisTemplate = redisTemplate;
         if (dataSource != null) {
-            this.jdbcTemplate = new JdbcTemplate(dataSource);
+            this.jdbcTemplate = new org.springframework.jdbc.core.JdbcTemplate(dataSource);
         } else {
             this.jdbcTemplate = null;
         }
@@ -144,7 +141,7 @@ public class RedisTokenStore extends TokenStoreAbstract {
     public int updateRolesByUserId(String userId, String[] roles) {
         String roleKey = KEY_PRE_ROLE + userId;
         redisTemplate.delete(roleKey);
-        if (roles != null) {
+        if (roles != null && roles.length > 0) {
             redisTemplate.opsForSet().add(roleKey, roles);
         }
         return 1;
@@ -154,7 +151,7 @@ public class RedisTokenStore extends TokenStoreAbstract {
     public int updatePermissionsByUserId(String userId, String[] permissions) {
         String permKey = KEY_PRE_PERM + userId;
         redisTemplate.delete(permKey);
-        if (permissions != null) {
+        if (permissions != null && permissions.length > 0) {
             redisTemplate.opsForSet().add(permKey, permissions);
         }
         return 1;
@@ -168,14 +165,14 @@ public class RedisTokenStore extends TokenStoreAbstract {
         }
         if (jdbcTemplate != null) {
             try {
-                List<String> roleList = jdbcTemplate.query(getFindRolesSql(), new RowMapper<String>() {
+                List<String> roleList = ((org.springframework.jdbc.core.JdbcTemplate) jdbcTemplate).query(getFindRolesSql(), new org.springframework.jdbc.core.RowMapper<String>() {
                     @Override
                     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return rs.getString(1);
                     }
                 }, userId);
                 return JacksonUtil.stringListToArray(roleList);
-            } catch (EmptyResultDataAccessException e) {
+            } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             }
         }
         return null;
@@ -189,14 +186,14 @@ public class RedisTokenStore extends TokenStoreAbstract {
         }
         if (jdbcTemplate != null) {
             try {
-                List<String> permList = jdbcTemplate.query(getFindPermissionsSql(), new RowMapper<String>() {
+                List<String> permList = ((org.springframework.jdbc.core.JdbcTemplate) jdbcTemplate).query(getFindPermissionsSql(), new org.springframework.jdbc.core.RowMapper<String>() {
                     @Override
                     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return rs.getString(1);
                     }
                 }, userId);
                 return JacksonUtil.stringListToArray(permList);
-            } catch (EmptyResultDataAccessException e) {
+            } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             }
         }
         return null;

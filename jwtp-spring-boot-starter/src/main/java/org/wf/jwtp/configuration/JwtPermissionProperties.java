@@ -36,12 +36,17 @@ public class JwtPermissionProperties {
     /**
      * 自定义查询用户角色的sql
      */
-    String findRolesSql;
+    private String findRolesSql;
 
     /**
      * 自定义查询用户权限的sql
      */
-    String findPermissionsSql;
+    private String findPermissionsSql;
+
+    /**
+     * 统一认证中心地址
+     */
+    private String authCenterUrl;
 
     public Integer getStoreType() {
         return storeType;
@@ -97,6 +102,14 @@ public class JwtPermissionProperties {
 
     public void setFindPermissionsSql(String findPermissionsSql) {
         this.findPermissionsSql = findPermissionsSql;
+    }
+
+    public String getAuthCenterUrl() {
+        return authCenterUrl;
+    }
+
+    public void setAuthCenterUrl(String authCenterUrl) {
+        this.authCenterUrl = authCenterUrl;
     }
 
 }

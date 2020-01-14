@@ -1,6 +1,5 @@
-package org.wf.jwtp.configuration;
+package org.wf.jwtp.configuration.client;
 
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.Documented;
@@ -14,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(value = java.lang.annotation.RetentionPolicy.RUNTIME)
 @Target(value = {java.lang.annotation.ElementType.TYPE})
 @Documented
-@Import({JwtPermissionConfiguration.class})
-public @interface EnableJwtPermission {
+@Import({JwtPermissionClientConfiguration.class})
+public @interface EnableJwtPermissionClient {
 
 }

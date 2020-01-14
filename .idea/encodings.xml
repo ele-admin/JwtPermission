@@ -3,7 +3,8 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jwt-permission" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jwt-permission-bootstarter" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jwt-permission/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jwtp-spring-boot-starter" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java" charset="UTF-8" />
   </component>
 </project>

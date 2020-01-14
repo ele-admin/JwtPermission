@@ -1,7 +1,9 @@
 package org.wf.jwtp.util;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.wf.jwtp.annotation.Logical;
 import org.wf.jwtp.provider.Token;
+import org.wf.jwtp.provider.TokenStore;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -145,6 +147,37 @@ public class SubjectUtil {
         Object token = request.getAttribute(REQUEST_TOKEN_NAME);
         return token == null ? null : (Token) token;
     }
+
+    /**
+     * 解析token
+     *
+     * @param request HttpServletRequest
+     * @return Token
+     */
+    public static Token parseToken(HttpServletRequest request, TokenStore tokenStore) {
+        Token token = getToken(request);
+        if (token == null) {
+            // 获取token
+            String access_token = CheckPermissionUtil.takeToken(request);
+            if (access_token != null && !access_token.trim().isEmpty()) {
+                try {
+                    String tokenKey = tokenStore.getTokenKey();
+                    String userId = TokenUtil.parseToken(access_token, tokenKey);
+                    token = tokenStore.findToken(userId, access_token);  // 检查token是否存在系统中
+                    if (token != null) {  // 查询用户的角色和权限
+                        token.setRoles(tokenStore.findRolesByUserId(userId, token));
+                        token.setPermissions(tokenStore.findPermissionsByUserId(userId, token));
+                    }
+                } catch (ExpiredJwtException e) {
+                    System.out.println("token已过期");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        return token;
+    }
+
 
     /**
      * 判断数组是否包含指定元素

@@ -41,6 +41,22 @@ public class JacksonUtil {
     }
 
     /**
+     * JSON字符串转Object
+     */
+    public static <T> T parseObject(String json, Class<T> clazz) {
+        if (json != null && !json.trim().isEmpty()) {
+            try {
+                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                T object = mapper.readValue(json, clazz);
+                return object;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
      * objectListToArray
      */
     public static Object[] objectListToArray(List<Object> list) {

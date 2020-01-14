@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="26b478eb-c35c-43b4-ad89-01a0d0b6cd3e" name="Default" comment="增加refresh_token机制，增加url自动匹配权限">
+    <list default="true" id="26b478eb-c35c-43b4-ad89-01a0d0b6cd3e" name="Default" comment="增加统一认证">
+      <change afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/client/AuthResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/client/ClientInterceptor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/controller/AuthCenterController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/CheckPermissionUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/client/EnableJwtPermissionClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/client/JwtPermissionClientConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/TokenInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/RedisTokenStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/provider/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/JacksonUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/JacksonUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/SubjectUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwt-permission/src/main/java/org/wf/jwtp/util/SubjectUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/EnableJwtPermission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/jwtp-spring-boot-starter/src/main/java/org/wf/jwtp/configuration/JwtPermissionProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,42 +56,38 @@
   </component>
   <component name="ProjectId" id="1Pfct7zqanMhWjg0zhyhNDlbrS2" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../easyweb-shiro" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15820312" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="spring.boot" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.wf.jwtp.configuration.client" />
+      <recent name="org.wf.jwtp.util" />
+      <recent name="org.wf.jwtp" />
       <recent name="org.wf.jwtp.provider" />
       <recent name="org.wf.jwtp.annotation" />
-      <recent name="com.wf.etp.authz.util" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Java\IdeaSpace\JwtPermission\jwt-permission\src\main\java\org\wf\jwtp" />
       <recent name="D:\Java\IdeaSpace\JwtPermission\jwt-permission\src\main\java\org\wf\jwtp\provider" />
       <recent name="D:\Java\IdeaSpace\JwtPermission\jwt-permission\src\main\java" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration default="true" type="Applet">
@@ -114,6 +128,21 @@
       </method>
     </configuration>
   </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SpringBootOptions">
+    <option name="showAdditionalConfigNotification" value="false" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -148,7 +177,9 @@
       <workItem from="1576033874369" duration="15510000" />
       <workItem from="1576117407986" duration="2709000" />
       <workItem from="1576459014297" duration="26019000" />
-      <workItem from="1576630861797" duration="4616000" />
+      <workItem from="1576630861797" duration="4934000" />
+      <workItem from="1576638456956" duration="1879000" />
+      <workItem from="1578963554356" duration="15259000" />
     </task>
     <task id="LOCAL-00001" summary="提交代码">
       <created>1545900186883</created>
@@ -416,7 +447,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576632379822</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="增加refresh_token机制，增加url自动匹配权限">
+      <created>1576636562297</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1576636562297</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -446,5 +484,47 @@
     <MESSAGE value="提交代码" />
     <MESSAGE value="增加refresh_token机制，增加url自动匹配权限" />
     <option name="LAST_COMMIT_MESSAGE" value="增加refresh_token机制，增加url自动匹配权限" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="552" y="185" key="#Auto_Import" timestamp="1578966265580">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="552" y="185" key="#Auto_Import/0.0.1920.1050@0.0.1920.1050" timestamp="1578966265580" />
+    <state x="765" y="217" key="#com.intellij.ide.util.MemberChooser" timestamp="1578968962368">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="765" y="217" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1578968962368" />
+    <state x="479" y="121" key="CommitChangelistDialog2" timestamp="1578981726283">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="479" y="121" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578981726283" />
+    <state x="184" y="86" key="DiffContextDialog" timestamp="1578979409662">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="184" y="86" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578979409662" />
+    <state x="740" y="282" key="FileChooserDialogImpl" timestamp="1578981019104">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="740" y="282" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1578981019104" />
+    <state width="1876" height="280" key="GridCell.Tab.0.bottom" timestamp="1578981259892">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1876" height="280" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578981259892" />
+    <state width="1876" height="280" key="GridCell.Tab.0.center" timestamp="1578981259886">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1876" height="280" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578981259886" />
+    <state width="1876" height="280" key="GridCell.Tab.0.left" timestamp="1578981259886">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1876" height="280" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578981259886" />
+    <state width="1876" height="280" key="GridCell.Tab.0.right" timestamp="1578981259887">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="1876" height="280" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578981259887" />
+    <state x="440" y="101" key="SettingsEditor" timestamp="1578964570567">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="440" y="101" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1578964570567" />
   </component>
 </project>

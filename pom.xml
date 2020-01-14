@@ -5,7 +5,7 @@
 
     <groupId>com.github.whvcse</groupId>
     <artifactId>jwt-permission-parent</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <packaging>pom</packaging>
 
     <name>JwtPermission</name>
@@ -36,7 +36,7 @@
     </modules>
 
     <properties>
-        <jwtp.version>3.0.0</jwtp.version>
+        <jwtp.version>3.1.0</jwtp.version>
         <jjwt.version>0.10.7</jjwt.version>
         <jackson.version>2.10.1</jackson.version>
         <redis.version>2.2.3.RELEASE</redis.version>
