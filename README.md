@@ -9,6 +9,7 @@
 - 2020-01-14 （v3.1.0）
     - 使用RedisTokenStore不需要jdbc相关的包及配置
     - 增加支持统一身份认证（单点登录）功能
+    - 对于排除拦截的接口也提供获取当前用户信息的方法
 
 - 2019-12-16 （v3.0.0）
     - 增加refresh_token机制
@@ -212,7 +213,11 @@ RESTful模式(请求方式:url)：post:/api/login
 
 ### 2.5.4、获取当前的用户信息
 ```text
+// 正常可以这样获取
 Token token = SubjectUtil.getToken(request);
+
+// 对于排除拦截的接口可以这样获取
+Token token = SubjectUtil.parseToken(request);
 ```   
 
 

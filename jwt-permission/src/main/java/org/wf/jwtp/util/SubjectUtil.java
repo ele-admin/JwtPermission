@@ -1,11 +1,16 @@
 package org.wf.jwtp.util;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wf.jwtp.annotation.Logical;
 import org.wf.jwtp.provider.Token;
 import org.wf.jwtp.provider.TokenStore;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 /**
  * 权限检查工具类
@@ -154,9 +159,20 @@ public class SubjectUtil {
      * @param request HttpServletRequest
      * @return Token
      */
+    public static Token parseToken(HttpServletRequest request) {
+        return parseToken(request, getBean(TokenStore.class));
+    }
+
+    /**
+     * 解析token
+     *
+     * @param request    HttpServletRequest
+     * @param tokenStore TokenStore
+     * @return Token
+     */
     public static Token parseToken(HttpServletRequest request, TokenStore tokenStore) {
         Token token = getToken(request);
-        if (token == null) {
+        if (token == null && tokenStore != null) {
             // 获取token
             String access_token = CheckPermissionUtil.takeToken(request);
             if (access_token != null && !access_token.trim().isEmpty()) {
@@ -194,4 +210,26 @@ public class SubjectUtil {
         }
         return false;
     }
+
+    /**
+     * 获取Bean
+     */
+    public static <T> T getBean(Class<T> clazz) {
+        T bean = null;
+        try {
+            ServletContext servletContext = ContextLoader.getCurrentWebApplicationContext().getServletContext();
+            ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+            Collection<T> beans = applicationContext.getBeansOfType(clazz).values();
+            while (beans.iterator().hasNext()) {
+                bean = beans.iterator().next();
+                if (bean != null) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bean;
+    }
+
 }
