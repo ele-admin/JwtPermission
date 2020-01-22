@@ -6,7 +6,7 @@
 
 ## 更新日志
 
-- 2020-01-14 （v3.1.0）
+- 2020-01-14 （v3.1.1）
     - 使用RedisTokenStore不需要jdbc相关的包及配置
     - 增加支持统一身份认证（单点登录）功能
     - 对于排除拦截的接口也提供获取当前用户信息的方法
@@ -34,7 +34,7 @@
 <dependency>
   <groupId>com.github.whvcse</groupId>
   <artifactId>jwtp-spring-boot-starter</artifactId>
-  <version>3.0.0</version>
+  <version>3.1.1</version>
 </dependency>
 ```
 
