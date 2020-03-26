@@ -1,5 +1,6 @@
 package org.wf.jwtp.provider;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,10 +14,10 @@ import org.wf.jwtp.util.TokenUtil;
  */
 public abstract class TokenStoreAbstract implements TokenStore {
     protected final Log logger = LogFactory.getLog(this.getClass());
-    private Integer maxToken = -1;  // 单个用户最大的token数量
-    private String findRolesSql;  // 查询用户角色的sql
-    private String findPermissionsSql;  // 查询用户权限的sql
-    public static String mTokenKey;  // 生成token用的Key
+    protected Integer maxToken = 0;  // 单个用户最大的token数量，0不限制
+    protected String findRolesSql;  // 查询用户角色的sql
+    protected String findPermissionsSql;  // 查询用户权限的sql
+    protected String tokenKey;  // 生成token用的Key
 
     @Override
     public Token createNewToken(String userId) {
@@ -50,9 +51,7 @@ public abstract class TokenStoreAbstract implements TokenStore {
         Token token = TokenUtil.buildToken(userId, expire, rtExpire, TokenUtil.parseHexKey(tokenKey));
         token.setRoles(roles);
         token.setPermissions(permissions);
-        if (storeToken(token) > 0) {
-            return token;
-        }
+        if (storeToken(token) > 0) return token;
         return null;
     }
 
@@ -70,29 +69,23 @@ public abstract class TokenStoreAbstract implements TokenStore {
     public Token refreshToken(String refresh_token, String[] permissions, String[] roles, long expire) {
         String tokenKey = getTokenKey();
         logger.debug("TOKEN_KEY: " + tokenKey);
-        String userId;
         try {
-            userId = TokenUtil.parseToken(refresh_token, tokenKey);
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException();
-        } catch (Exception e) {
-            throw new ErrorTokenException();
-        }
-        if (userId != null) {
+            Claims claims = TokenUtil.parseToken(refresh_token, tokenKey);
+            if (claims == null) return null;
             // 检查token是否存在系统中
-            Token refreshToken = findRefreshToken(userId, refresh_token);
-            if (refreshToken == null) {
-                throw new ErrorTokenException();
-            }
+            Token refreshToken = findRefreshToken(claims.getSubject(), refresh_token);
+            if (refreshToken == null) throw new ErrorTokenException();
             // 生成新的token
-            Token token = TokenUtil.buildToken(userId, expire, null, TokenUtil.parseHexKey(tokenKey), false);
+            Token token = TokenUtil.buildToken(claims.getSubject(), expire, null, TokenUtil.parseHexKey(tokenKey), false);
             token.setRoles(roles);
             token.setPermissions(permissions);
             token.setRefreshToken(refresh_token);
             token.setRefreshTokenExpireTime(refreshToken.getRefreshTokenExpireTime());
-            if (storeToken(token) > 0) {
-                return token;
-            }
+            if (storeToken(token) > 0) return token;
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredTokenException();
+        } catch (Exception e) {
+            throw new ErrorTokenException();
         }
         return null;
     }
@@ -125,6 +118,16 @@ public abstract class TokenStoreAbstract implements TokenStore {
     @Override
     public String getFindPermissionsSql() {
         return findPermissionsSql;
+    }
+
+    @Override
+    public String getTokenKey() {
+        return tokenKey;
+    }
+
+    @Override
+    public void setTokenKey(String tokenKey) {
+        this.tokenKey = tokenKey;
     }
 
 }

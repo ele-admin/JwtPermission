@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 /**
  * 角色判断注解
- * <p>
  * Created by wangfan on 2018-2-1 上午10:50:34
  */
 @Target({ElementType.TYPE, ElementType.METHOD})

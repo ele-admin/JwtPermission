@@ -7,13 +7,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.wf.jwtp.provider.Token;
 
-import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 
 /**
  * Token工具类
- * <p>
  * Created by wangfan on 2018-1-21 下午4:30:59
  */
 public class TokenUtil {
@@ -47,10 +45,10 @@ public class TokenUtil {
      * @param subject  载体
      * @param expire   token过期时间，单位秒
      * @param rtExpire refresh_token过期时间，单位秒
-     * @return
+     * @return Token
      */
     public static Token buildToken(String subject, long expire, long rtExpire) {
-        return buildToken(subject, expire, rtExpire, getKey());
+        return buildToken(subject, expire, rtExpire, genKey());
     }
 
     /**
@@ -100,11 +98,11 @@ public class TokenUtil {
      *
      * @param token  token
      * @param hexKey 16进制密钥
-     * @return 载体
+     * @return Claims
      */
-    public static String parseToken(String token, String hexKey) {
+    public static Claims parseToken(String token, String hexKey) {
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(parseHexKey(hexKey)).parseClaimsJws(token);
-        return claimsJws.getBody().getSubject();
+        return claimsJws.getBody();
     }
 
     /**
@@ -112,7 +110,7 @@ public class TokenUtil {
      *
      * @return Key
      */
-    public static Key getKey() {
+    public static Key genKey() {
         return Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
@@ -121,8 +119,8 @@ public class TokenUtil {
      *
      * @return hexKey
      */
-    public static String getHexKey() {
-        return getHexKey(getKey());
+    public static String genHexKey() {
+        return genHexKey(genKey());
     }
 
     /**
@@ -131,7 +129,7 @@ public class TokenUtil {
      * @param key 密钥Key
      * @return hexKey
      */
-    public static String getHexKey(Key key) {
+    public static String genHexKey(Key key) {
         return Hex.encodeToString(key.getEncoded());
     }
 
@@ -142,11 +140,8 @@ public class TokenUtil {
      * @return Key
      */
     public static Key parseHexKey(String hexKey) {
-        if (hexKey == null || hexKey.trim().isEmpty()) {
-            return null;
-        }
-        SecretKey key = Keys.hmacShaKeyFor(Hex.decode(hexKey));
-        return key;
+        if (hexKey == null || hexKey.trim().isEmpty()) return null;
+        return Keys.hmacShaKeyFor(Hex.decode(hexKey));
     }
 
 }

@@ -52,17 +52,18 @@ public class JdbcTokenStore extends TokenStoreAbstract {
 
     @Override
     public String getTokenKey() {
-        if (mTokenKey == null) {
+        if (tokenKey == null) {
             try {
-                mTokenKey = jdbcTemplate.queryForObject(SQL_SELECT_KEY, String.class);
+                tokenKey = jdbcTemplate.queryForObject(SQL_SELECT_KEY, String.class);
             } catch (EmptyResultDataAccessException e) {
+                logger.debug("JwtPermission", e.getCause());
             }
-            if (mTokenKey == null || mTokenKey.trim().isEmpty()) {
-                mTokenKey = TokenUtil.getHexKey();
-                jdbcTemplate.update(SQL_INSERT_KEY, mTokenKey);
+            if (tokenKey == null || tokenKey.trim().isEmpty()) {
+                tokenKey = TokenUtil.genHexKey();
+                jdbcTemplate.update(SQL_INSERT_KEY, tokenKey);
             }
         }
-        return mTokenKey;
+        return tokenKey;
     }
 
     @Override
@@ -86,6 +87,7 @@ public class JdbcTokenStore extends TokenStoreAbstract {
         try {
             return jdbcTemplate.queryForObject(SQL_SELECT_BY_TOKEN, rowMapper, userId, access_token);
         } catch (EmptyResultDataAccessException e) {
+            logger.debug("JwtPermission", e.getCause());
         }
         return null;
     }
@@ -95,6 +97,7 @@ public class JdbcTokenStore extends TokenStoreAbstract {
         try {
             return jdbcTemplate.query(SQL_SELECT_BY_USER_ID, rowMapper, userId);
         } catch (EmptyResultDataAccessException e) {
+            logger.debug("JwtPermission", e.getCause());
         }
         return null;
     }
@@ -103,10 +106,9 @@ public class JdbcTokenStore extends TokenStoreAbstract {
     public Token findRefreshToken(String userId, String refresh_token) {
         try {
             List<Token> list = jdbcTemplate.query(SQL_SELECT_REFRESH_TOKEN, rowMapper, userId, refresh_token);
-            if (list.size() > 0) {
-                return list.get(0);
-            }
+            if (list.size() > 0) return list.get(0);
         } catch (EmptyResultDataAccessException e) {
+            logger.debug("JwtPermission", e.getCause());
         }
         return null;
     }
@@ -148,6 +150,7 @@ public class JdbcTokenStore extends TokenStoreAbstract {
             }, userId);
             return JacksonUtil.stringListToArray(roleList);
         } catch (EmptyResultDataAccessException e) {
+            logger.debug("JwtPermission", e.getCause());
         }
         return null;
     }
@@ -167,6 +170,7 @@ public class JdbcTokenStore extends TokenStoreAbstract {
             }, userId);
             return JacksonUtil.stringListToArray(permList);
         } catch (EmptyResultDataAccessException e) {
+            logger.debug("JwtPermission", e.getCause());
         }
         return null;
     }
@@ -175,7 +179,7 @@ public class JdbcTokenStore extends TokenStoreAbstract {
      * 插入、修改操作的sql参数
      */
     private List<Object> getFieldsForUpdate(Token token) {
-        List<Object> objects = new ArrayList();
+        List<Object> objects = new ArrayList<Object>();
         objects.add(token.getUserId());  // userId
         objects.add(token.getAccessToken());  // token
         objects.add(token.getRefreshToken());  // refresh_token
@@ -190,6 +194,7 @@ public class JdbcTokenStore extends TokenStoreAbstract {
      * Token结果集映射
      */
     private static class TokenRowMapper implements RowMapper<Token> {
+
         @Override
         public Token mapRow(ResultSet rs, int rowNum) throws SQLException {
             int token_id = rs.getInt("token_id");
@@ -213,11 +218,10 @@ public class JdbcTokenStore extends TokenStoreAbstract {
         }
 
         private Date timestampToDate(java.sql.Timestamp timestamp) {
-            if (timestamp != null) {
-                return new Date(timestamp.getTime());
-            }
+            if (timestamp != null) return new Date(timestamp.getTime());
             return null;
         }
+
     }
 
 }

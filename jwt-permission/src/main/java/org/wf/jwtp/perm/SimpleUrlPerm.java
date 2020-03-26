@@ -18,7 +18,7 @@ public class SimpleUrlPerm implements UrlPerm {
     @Override
     public UrlPermResult getPermission(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
         String perm = request.getRequestURI();
-        logger.debug("Generate Permissions: " + perm);
+        logger.debug("JwtPermissions: Url Auth " + perm);
         return new UrlPermResult(new String[]{perm}, Logical.OR);
     }
 

@@ -34,12 +34,12 @@ public class AuthCenterController {
         }
         try {
             String tokenKey = tokenStore.getTokenKey();
-            logger.debug("ACCESS_TOKEN: " + access_token + "   TOKEN_KEY: " + tokenKey);
+            logger.debug("JwtPermission: ACCESS_TOKEN[" + access_token + "]   TOKEN_KEY[" + tokenKey + "]");
             String userId = TokenUtil.parseToken(access_token, tokenKey);
             // 检查token是否存在系统中
             Token token = tokenStore.findToken(userId, access_token);
             if (token == null) {
-                logger.debug("ERROR: Token Not Found");
+                logger.debug("JwtPermission: Token Not Found");
                 authResult.setCode(AuthResult.CODE_ERROR);
                 return authResult;
             }
@@ -49,9 +49,10 @@ public class AuthCenterController {
             authResult.setCode(AuthResult.CODE_OK);
             authResult.setToken(token);
         } catch (ExpiredJwtException e) {
-            logger.debug("ERROR: ExpiredJwtException");
+            logger.debug("JwtPermission", e.getCause());
             authResult.setCode(AuthResult.CODE_EXPIRED);
         } catch (Exception e) {
+            logger.debug("JwtPermission", e.getCause());
             authResult.setCode(AuthResult.CODE_ERROR);
         }
         return authResult;

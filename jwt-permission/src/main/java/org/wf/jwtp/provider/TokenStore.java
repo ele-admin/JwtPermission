@@ -11,15 +11,22 @@ public interface TokenStore {
     /**
      * 获取生成token用的key
      *
-     * @return
+     * @return 16进制的Key值
      */
     String getTokenKey();
+
+    /**
+     * 设置生成token用的key
+     *
+     * @param tokenKey 16进制的Key值
+     */
+    void setTokenKey(String tokenKey);
 
     /**
      * 创建新的token
      *
      * @param userId 用户id
-     * @return
+     * @return Token
      */
     Token createNewToken(String userId);
 
@@ -28,7 +35,7 @@ public interface TokenStore {
      *
      * @param userId 用户id
      * @param expire token过期时间,单位秒
-     * @return
+     * @return Token
      */
     Token createNewToken(String userId, long expire);
 
@@ -39,7 +46,7 @@ public interface TokenStore {
      * @param userId   用户id
      * @param expire   token过期时间,单位秒
      * @param rtExpire refresh_token过期时间,单位秒
-     * @return
+     * @return Token
      */
     Token createNewToken(String userId, long expire, long rtExpire);
 
@@ -50,7 +57,7 @@ public interface TokenStore {
      * @param userId      用户id
      * @param permissions 权限
      * @param roles       角色
-     * @return
+     * @return Token
      */
     Token createNewToken(String userId, String[] permissions, String[] roles);
 
@@ -61,7 +68,7 @@ public interface TokenStore {
      * @param permissions 权限
      * @param roles       角色
      * @param expire      token过期时间,单位秒
-     * @return
+     * @return Token
      */
     Token createNewToken(String userId, String[] permissions, String[] roles, long expire);
 
@@ -73,8 +80,7 @@ public interface TokenStore {
      * @param roles       角色
      * @param expire      token过期时间,单位秒
      * @param rtExpire    refresh_token过期时间,单位秒
-     * @param rtExpire
-     * @return
+     * @return Token
      */
     Token createNewToken(String userId, String[] permissions, String[] roles, long expire, long rtExpire);
 
@@ -82,7 +88,7 @@ public interface TokenStore {
      * 刷新token
      *
      * @param refresh_token refresh_token
-     * @return
+     * @return Token
      */
     Token refreshToken(String refresh_token);
 
@@ -91,7 +97,7 @@ public interface TokenStore {
      *
      * @param refresh_token refresh_token
      * @param expire        token过期时间,单位秒
-     * @return
+     * @return Token
      */
     Token refreshToken(String refresh_token, long expire);
 
@@ -102,15 +108,15 @@ public interface TokenStore {
      * @param permissions   权限
      * @param roles         角色
      * @param expire        token过期时间,单位秒
-     * @return
+     * @return Token
      */
     Token refreshToken(String refresh_token, String[] permissions, String[] roles, long expire);
 
     /**
      * 保存Token
      *
-     * @param token
-     * @return
+     * @param token Token
+     * @return int
      */
     int storeToken(Token token);
 
@@ -118,8 +124,8 @@ public interface TokenStore {
      * 查询用户的某个token
      *
      * @param userId       用户id
-     * @param access_token
-     * @return
+     * @param access_token String
+     * @return Token
      */
     Token findToken(String userId, String access_token);
 
@@ -127,7 +133,7 @@ public interface TokenStore {
      * 查询用户的全部token
      *
      * @param userId 用户id
-     * @return
+     * @return List<Token>
      */
     List<Token> findTokensByUserId(String userId);
 
@@ -135,8 +141,8 @@ public interface TokenStore {
      * 查询用户的某个refresh_token
      *
      * @param userId        用户id
-     * @param refresh_token
-     * @return
+     * @param refresh_token String
+     * @return int
      */
     Token findRefreshToken(String userId, String refresh_token);
 
@@ -144,8 +150,8 @@ public interface TokenStore {
      * 移除用户的某个token
      *
      * @param userId       用户id
-     * @param access_token
-     * @return
+     * @param access_token String
+     * @return int
      */
     int removeToken(String userId, String access_token);
 
@@ -153,7 +159,7 @@ public interface TokenStore {
      * 移除用户的全部token
      *
      * @param userId 用户id
-     * @return
+     * @return int
      */
     int removeTokensByUserId(String userId);
 
@@ -162,7 +168,7 @@ public interface TokenStore {
      *
      * @param userId 用户id
      * @param roles  角色
-     * @return
+     * @return int
      */
     int updateRolesByUserId(String userId, String[] roles);
 
@@ -171,7 +177,7 @@ public interface TokenStore {
      *
      * @param userId      用户id
      * @param permissions 权限
-     * @return
+     * @return int
      */
     int updatePermissionsByUserId(String userId, String[] permissions);
 
@@ -179,7 +185,7 @@ public interface TokenStore {
      * 查询用户的角色列表
      *
      * @param userId 用户id
-     * @return
+     * @return 角色列表
      */
     String[] findRolesByUserId(String userId, Token token);
 
@@ -187,32 +193,44 @@ public interface TokenStore {
      * 查询用户的权限列表
      *
      * @param userId 用户id
-     * @return
+     * @return 权限列表
      */
     String[] findPermissionsByUserId(String userId, Token token);
 
     /**
      * 设置单个用户最大token数量
-     * @param maxToken
+     *
+     * @param maxToken 最大token数
      */
     void setMaxToken(Integer maxToken);
 
     /**
      * 自定义查询角色sql
-     * @param findRolesSql
+     *
+     * @param findRolesSql 查询角色sql
      */
     void setFindRolesSql(String findRolesSql);
 
     /**
      * 自定义查询权限sql
-     * @param findPermissionsSql
+     *
+     * @param findPermissionsSql 查询权限的sql
      */
     void setFindPermissionsSql(String findPermissionsSql);
 
+    /**
+     * 获取单个用户最大token数量
+     */
     Integer getMaxToken();
 
+    /**
+     * 获取自定义查询角色的sql
+     */
     String getFindRolesSql();
 
+    /**
+     * 获取自定义查询权限的sql
+     */
     String getFindPermissionsSql();
 
 }

@@ -60,13 +60,13 @@ public class RestUrlPerm implements UrlPerm {
         } else {
             urlPres = new String[0];
         }
-        // 生成权限
+        // 生成权限标识
         for (String type : types) {
             for (String url : urls) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(type);
                 sb.append(":");
-                if (urlPres != null && urlPres.length > 0) {
+                if (urlPres.length > 0) {
                     if (!urlPres[0].startsWith("/")) {
                         sb.append("/");
                     }
@@ -79,8 +79,8 @@ public class RestUrlPerm implements UrlPerm {
                 perms.add(sb.toString());
             }
         }
-        String[] arrays = perms.toArray(new String[perms.size()]);
-        logger.debug("Generate Permissions: " + Arrays.toString(arrays));
+        String[] arrays = perms.toArray(new String[0]);
+        logger.debug("JwtPermissions: RESTful Auth " + Arrays.toString(arrays));
         return new UrlPermResult(arrays, Logical.OR);
     }
 

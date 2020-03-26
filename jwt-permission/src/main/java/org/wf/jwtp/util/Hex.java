@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * 16进制编码
- * <p>
  * Created by wangfan on 2018-09-21 下午 4:20.
  */
 public class Hex {
@@ -19,12 +18,8 @@ public class Hex {
     }
 
     public static char[] encode(byte[] data) {
-
         int l = data.length;
-
         char[] out = new char[l << 1];
-
-        // two characters form the hex value.
         for (int i = 0, j = 0; i < l; i++) {
             out[j++] = DIGITS[(0xF0 & data[i]) >>> 4];
             out[j++] = DIGITS[0x0F & data[i]];
@@ -43,15 +38,11 @@ public class Hex {
     }
 
     public static byte[] decode(char[] data) throws IllegalArgumentException {
-
         int len = data.length;
-
         if ((len & 0x01) != 0) {
             throw new IllegalArgumentException("Odd number of characters.");
         }
-
         byte[] out = new byte[len >> 1];
-
         for (int i = 0, j = 0; j < len; i++) {
             int f = toDigit(data[j], j) << 4;
             j++;
@@ -59,7 +50,6 @@ public class Hex {
             j++;
             out[i] = (byte) (f & 0xFF);
         }
-
         return out;
     }
 

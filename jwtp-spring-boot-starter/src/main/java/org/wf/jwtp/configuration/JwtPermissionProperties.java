@@ -9,40 +9,33 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "jwtp")
 public class JwtPermissionProperties {
     /**
-     * token存储方式，0 redis存储，1 数据库存储
+     * token存储方式, 0 redis存储, 1 数据库存储
      */
     private Integer storeType = 0;
-
     /**
-     * url自动对应权限方式，0 简易模式，1 RESTful模式
+     * url自动对应权限方式, 0 简易模式, 1 RESTful模式
      */
     private Integer urlPermType;
-
     /**
-     * 拦截路径，多个路径用逗号分隔
+     * 拦截路径, 多个路径用逗号分隔
      */
     private String[] path = new String[]{"/**"};
-
     /**
-     * 排除拦截路径，多个路径用逗号分隔
+     * 排除拦截路径, 多个路径用逗号分隔
      */
     private String[] excludePath = new String[]{};
-
     /**
      * 单个用户最大的token数量
      */
     private Integer maxToken = -1;
-
     /**
      * 自定义查询用户角色的sql
      */
     private String findRolesSql;
-
     /**
      * 自定义查询用户权限的sql
      */
     private String findPermissionsSql;
-
     /**
      * 统一认证中心地址
      */

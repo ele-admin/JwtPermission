@@ -14,23 +14,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
- * CheckPermissionUtil
+ * 权限检查工具类
  * Created by wangfan on 2018-12-27 下午 4:46.
  */
 public class CheckPermissionUtil {
+    private static final String TOKEN_TYPE = "Bearer";  // token类型
+    private static final String TOKEN_HEADER_NAME = "Authorization";  // token在header中名称
+    private static final String TOKEN_PARAM_NAME = "access_token";  // token在参数中名称
 
     /**
      * 检查是否忽略权限
      */
     public static boolean checkIgnore(Method method) {
         Ignore annotation = method.getAnnotation(Ignore.class);
-        if (annotation == null) {  // 方法上没有注解再检查类上面有没有注解
-            annotation = method.getDeclaringClass().getAnnotation(Ignore.class);
-            if (annotation == null) {
-                return false;
-            }
-        }
-        return true;
+        // 方法上没有注解再检查类上面有没有注解
+        if (annotation == null) annotation = method.getDeclaringClass().getAnnotation(Ignore.class);
+        return annotation != null;
     }
 
     /**
@@ -39,9 +38,8 @@ public class CheckPermissionUtil {
     public static boolean checkPermission(Token token, HttpServletRequest request, HttpServletResponse response, Object handler, UrlPerm urlPerm) {
         Method method = ((HandlerMethod) handler).getMethod();
         RequiresPermissions annotation = method.getAnnotation(RequiresPermissions.class);
-        if (annotation == null) {  // 方法上没有注解再检查类上面有没有注解
-            annotation = method.getDeclaringClass().getAnnotation(RequiresPermissions.class);
-        }
+        // 方法上没有注解再检查类上面有没有注解
+        if (annotation == null) annotation = method.getDeclaringClass().getAnnotation(RequiresPermissions.class);
         String[] requiresPermissions;
         Logical logical;
         if (annotation != null) {
@@ -63,9 +61,8 @@ public class CheckPermissionUtil {
     public static boolean checkRole(Token token, HttpServletRequest request, HttpServletResponse response, Object handler, UrlPerm urlPerm) {
         Method method = ((HandlerMethod) handler).getMethod();
         RequiresRoles annotation = method.getAnnotation(RequiresRoles.class);
-        if (annotation == null) {  // 方法上没有注解再检查类上面有没有注解
-            annotation = method.getDeclaringClass().getAnnotation(RequiresRoles.class);
-        }
+        // 方法上没有注解再检查类上面有没有注解
+        if (annotation == null) annotation = method.getDeclaringClass().getAnnotation(RequiresRoles.class);
         String[] requiresRoles;
         Logical logical;
         if (annotation != null) {
@@ -100,14 +97,17 @@ public class CheckPermissionUtil {
     }
 
     /**
-     * 取出前端传递的token
+     * 从request中取出前端传递的token
+     *
+     * @param request HttpServletRequest
+     * @return String
      */
     public static String takeToken(HttpServletRequest request) {
-        String access_token = request.getParameter("access_token");
+        String access_token = request.getParameter(TOKEN_PARAM_NAME);
         if (access_token == null || access_token.trim().isEmpty()) {
-            access_token = request.getHeader("Authorization");
-            if (access_token != null && access_token.length() >= 7) {
-                access_token = access_token.substring(7);
+            access_token = request.getHeader(TOKEN_HEADER_NAME);
+            if (access_token != null && access_token.startsWith(TOKEN_TYPE)) {
+                access_token = access_token.substring(TOKEN_TYPE.length() + 1);
             }
         }
         return access_token;

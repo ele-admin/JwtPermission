@@ -40,14 +40,14 @@ public class RedisTokenStore extends TokenStoreAbstract {
 
     @Override
     public String getTokenKey() {
-        if (mTokenKey == null) {
-            mTokenKey = redisTemplate.opsForValue().get(KEY_TOKEN_KEY);
-            if (mTokenKey == null || mTokenKey.trim().isEmpty()) {
-                mTokenKey = TokenUtil.getHexKey();
-                redisTemplate.opsForValue().set(KEY_TOKEN_KEY, mTokenKey);
+        if (tokenKey == null) {
+            tokenKey = redisTemplate.opsForValue().get(KEY_TOKEN_KEY);
+            if (tokenKey == null || tokenKey.trim().isEmpty()) {
+                tokenKey = TokenUtil.genHexKey();
+                redisTemplate.opsForValue().set(KEY_TOKEN_KEY, tokenKey);
             }
         }
-        return mTokenKey;
+        return tokenKey;
     }
 
     @Override
@@ -85,9 +85,7 @@ public class RedisTokenStore extends TokenStoreAbstract {
 
     @Override
     public List<Token> findTokensByUserId(String userId) {
-        if (userId == null || userId.trim().isEmpty()) {
-            return null;
-        }
+        if (userId == null || userId.trim().isEmpty()) return null;
         List<Token> tokens = new ArrayList<Token>();
         List<String> accessTokens = redisTemplate.opsForList().range(KEY_PRE_TOKEN + userId, 0, -1);
         if (accessTokens != null && accessTokens.size() > 0) {
@@ -109,12 +107,14 @@ public class RedisTokenStore extends TokenStoreAbstract {
     public Token findRefreshToken(String userId, String refresh_token) {
         if (userId != null && !userId.trim().isEmpty() && refresh_token != null) {
             List<String> refreshTokens = redisTemplate.opsForList().range(KEY_PRE_REFRESH_TOKEN + userId, 0, -1);
-            for (String refreshToken : refreshTokens) {
-                if (refresh_token.equals(refreshToken)) {
-                    Token token = new Token();
-                    token.setUserId(userId);
-                    token.setRefreshToken(refresh_token);
-                    return token;
+            if (refreshTokens != null && refreshTokens.size() > 0) {
+                for (String refreshToken : refreshTokens) {
+                    if (refresh_token.equals(refreshToken)) {
+                        Token token = new Token();
+                        token.setUserId(userId);
+                        token.setRefreshToken(refresh_token);
+                        return token;
+                    }
                 }
             }
         }
@@ -173,6 +173,7 @@ public class RedisTokenStore extends TokenStoreAbstract {
                 }, userId);
                 return JacksonUtil.stringListToArray(roleList);
             } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+                logger.debug("JwtPermission", e.getCause());
             }
         }
         return null;
@@ -194,6 +195,7 @@ public class RedisTokenStore extends TokenStoreAbstract {
                 }, userId);
                 return JacksonUtil.stringListToArray(permList);
             } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+                logger.debug("JwtPermission", e.getCause());
             }
         }
         return null;
@@ -204,7 +206,7 @@ public class RedisTokenStore extends TokenStoreAbstract {
      */
     private void listMaxLimit(String key, int max) {
         Long userTokenSize = redisTemplate.opsForList().size(key);
-        if (userTokenSize > max) {
+        if (userTokenSize != null && userTokenSize > max) {
             for (int i = 0; i < userTokenSize - max; i++) {
                 redisTemplate.opsForList().leftPop(key);
             }

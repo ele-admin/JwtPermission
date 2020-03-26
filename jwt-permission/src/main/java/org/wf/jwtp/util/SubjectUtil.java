@@ -3,6 +3,7 @@ package org.wf.jwtp.util;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wf.jwtp.annotation.Logical;
 import org.wf.jwtp.provider.Token;
@@ -14,7 +15,6 @@ import java.util.Collection;
 
 /**
  * 权限检查工具类
- * <p>
  * Created by wangfan on 2018-1-23 上午9:58:40
  */
 public class SubjectUtil {
@@ -29,17 +29,11 @@ public class SubjectUtil {
      * @return boolean
      */
     public static boolean hasRole(Token token, String[] roles, Logical logical) {
-        if (token == null) {
-            return false;
-        }
-        if (roles == null || roles.length <= 0) {
-            return true;
-        }
+        if (token == null) return false;
+        if (roles == null || roles.length <= 0) return true;
         boolean rs = false;
-        for (int i = 0; i < roles.length; i++) {
-            if (token.getRoles() != null) {
-                rs = contains(token.getRoles(), roles[i]);
-            }
+        for (String role : roles) {
+            rs = contains(token.getRoles(), role);
             if (logical == (rs ? Logical.OR : Logical.AND)) {
                 break;
             }
@@ -90,17 +84,11 @@ public class SubjectUtil {
      * @return boolean
      */
     public static boolean hasPermission(Token token, String[] permissions, Logical logical) {
-        if (token == null) {
-            return false;
-        }
-        if (permissions == null || permissions.length <= 0) {
-            return true;
-        }
+        if (token == null) return false;
+        if (permissions == null || permissions.length <= 0) return true;
         boolean rs = false;
-        for (int i = 0; i < permissions.length; i++) {
-            if (token.getPermissions() != null) {
-                rs = contains(token.getPermissions(), permissions[i]);
-            }
+        for (String perm : permissions) {
+            rs = contains(token.getPermissions(), perm);
             if (logical == (rs ? Logical.OR : Logical.AND)) {
                 break;
             }
@@ -179,7 +167,7 @@ public class SubjectUtil {
                 try {
                     String tokenKey = tokenStore.getTokenKey();
                     String userId = TokenUtil.parseToken(access_token, tokenKey);
-                    token = tokenStore.findToken(userId, access_token);  // 检查token是否存在系统中
+                    token = tokenStore.findToken(userId, access_token);
                     if (token != null) {  // 查询用户的角色和权限
                         token.setRoles(tokenStore.findRolesByUserId(userId, token));
                         token.setPermissions(tokenStore.findPermissionsByUserId(userId, token));
@@ -198,13 +186,14 @@ public class SubjectUtil {
     /**
      * 判断数组是否包含指定元素
      *
-     * @param strs 数组
-     * @param str  元素
+     * @param array 数组
+     * @param str   元素
      * @return boolean
      */
-    private static boolean contains(String[] strs, String str) {
-        for (int i = 0; i < strs.length; i++) {
-            if (strs[i].equals(str)) {
+    private static boolean contains(String[] array, String str) {
+        if (array == null || array.length == 0) return false;
+        for (String item : array) {
+            if (item.equals(str)) {
                 return true;
             }
         }
@@ -215,21 +204,22 @@ public class SubjectUtil {
      * 获取Bean
      */
     public static <T> T getBean(Class<T> clazz) {
-        T bean = null;
         try {
-            ServletContext servletContext = ContextLoader.getCurrentWebApplicationContext().getServletContext();
-            ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-            Collection<T> beans = applicationContext.getBeansOfType(clazz).values();
+            WebApplicationContext applicationContext = ContextLoader.getCurrentWebApplicationContext();
+            if (applicationContext == null) return null;
+            ServletContext servletContext = applicationContext.getServletContext();
+            if (servletContext == null) return null;
+            ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+            if (context == null) return null;
+            Collection<T> beans = context.getBeansOfType(clazz).values();
             while (beans.iterator().hasNext()) {
-                bean = beans.iterator().next();
-                if (bean != null) {
-                    break;
-                }
+                T bean = beans.iterator().next();
+                if (bean != null) return bean;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return bean;
+        return null;
     }
 
 }

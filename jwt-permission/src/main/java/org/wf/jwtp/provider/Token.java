@@ -17,6 +17,10 @@ public class Token implements Serializable {
      */
     private String userId;
     /**
+     * 客户端id
+     */
+    private String clientId;
+    /**
      * access_token
      */
     private String accessToken;
@@ -24,6 +28,10 @@ public class Token implements Serializable {
      * refresh_token
      */
     private String refreshToken;
+    /**
+     * 签发时间
+     */
+    private Date issuedAt;
     /**
      * 过期时间
      */
@@ -57,6 +65,14 @@ public class Token implements Serializable {
         this.userId = userId;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
     public String getAccessToken() {
         return accessToken;
     }
@@ -71,6 +87,14 @@ public class Token implements Serializable {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public Date getIssuedAt() {
+        return issuedAt;
+    }
+
+    public void setIssuedAt(Date issuedAt) {
+        this.issuedAt = issuedAt;
     }
 
     public Date getExpireTime() {

@@ -13,13 +13,12 @@ public class JacksonUtil {
      * Object转JSON字符串
      */
     public static String toJSONString(Object object) {
-        if (object != null) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                return mapper.writeValueAsString(object);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (object == null) return null;
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            return mapper.writeValueAsString(object);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -28,14 +27,12 @@ public class JacksonUtil {
      * JSON字符串转List
      */
     public static <T> List<T> parseArray(String json, Class<T> clazz) {
-        if (json != null && !json.trim().isEmpty()) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                List<T> list = mapper.readValue(json, mapper.getTypeFactory().constructParametricType(ArrayList.class, clazz));
-                return list;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (json == null || json.trim().isEmpty()) return null;
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(ArrayList.class, clazz));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -44,14 +41,12 @@ public class JacksonUtil {
      * JSON字符串转Object
      */
     public static <T> T parseObject(String json, Class<T> clazz) {
-        if (json != null && !json.trim().isEmpty()) {
-            try {
-                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-                T object = mapper.readValue(json, clazz);
-                return object;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (json == null || json.trim().isEmpty()) return null;
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            return mapper.readValue(json, clazz);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -60,30 +55,24 @@ public class JacksonUtil {
      * objectListToArray
      */
     public static Object[] objectListToArray(List<Object> list) {
-        if (list != null) {
-            return list.toArray(new Object[list.size()]);
-        }
-        return null;
+        if (list == null) return null;
+        return list.toArray(new Object[0]);
     }
 
     /**
      * stringListToArray
      */
     public static String[] stringListToArray(List<String> list) {
-        if (list != null) {
-            return list.toArray(new String[list.size()]);
-        }
-        return null;
+        if (list == null) return null;
+        return list.toArray(new String[0]);
     }
 
     /**
-     * stringSetToArray
+     * setToArray
      */
     public static String[] stringSetToArray(Set<String> set) {
-        if (set != null) {
-            return set.toArray(new String[set.size()]);
-        }
-        return null;
+        if (set == null) return null;
+        return set.toArray(new String[0]);
     }
 
 }

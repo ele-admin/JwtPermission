@@ -13,8 +13,8 @@ public class UrlPermResult {
     }
 
     public UrlPermResult(String[] values, Logical logical) {
-        this.values = values;
-        this.logical = logical;
+        setValues(values);
+        setLogical(logical);
     }
 
     public String[] getValues() {

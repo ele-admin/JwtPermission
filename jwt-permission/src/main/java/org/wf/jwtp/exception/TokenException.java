@@ -2,7 +2,6 @@ package org.wf.jwtp.exception;
 
 /**
  * TokenException
- *
  * Created by wangfan on 2018-1-23 上午11:33:21
  */
 public abstract class TokenException extends RuntimeException {
@@ -21,4 +20,5 @@ public abstract class TokenException extends RuntimeException {
         super(message);
         this.code = code;
     }
+
 }
