@@ -38,7 +38,7 @@
     <properties>
         <jwtp.version>3.1.1</jwtp.version>
         <jjwt.version>0.10.7</jjwt.version>
-        <jackson.version>2.10.1</jackson.version>
+        <jackson.version>2.10.5.1</jackson.version>
         <redis.version>2.2.3.RELEASE</redis.version>
         <spring.version>5.2.0.RELEASE</spring.version>
         <springboot.version>2.1.5.RELEASE</springboot.version>
